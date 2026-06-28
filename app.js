@@ -6,6 +6,9 @@ let activeCompany = 'all';
 let activeBrand   = 'all';
 let searchQuery   = '';
 let mineSort      = 'company'; // 'company' | 'color'
+const THEME_KEY    = 'colors-of-mini-theme';
+const AVAILABLE_THEMES = ['dark', 'light'];
+let allSort       = 'default'; // 'default' | 'color'
 
 /* ── LocalStorage helpers ─────────────────────────────────── */
 function getOwned() {
@@ -14,6 +17,20 @@ function getOwned() {
 }
 function saveOwned(set) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify([...set]));
+}
+function getSavedTheme() {
+  const saved = localStorage.getItem(THEME_KEY);
+  return AVAILABLE_THEMES.includes(saved) ? saved : 'dark';
+}
+function applyTheme(theme) {
+  const finalTheme = AVAILABLE_THEMES.includes(theme) ? theme : 'dark';
+  document.documentElement.dataset.theme = finalTheme;
+  localStorage.setItem(THEME_KEY, finalTheme);
+  const sel = document.getElementById('theme-select');
+  if (sel) sel.value = finalTheme;
+}
+function initTheme() {
+  applyTheme(getSavedTheme());
 }
 function toggleOwned(id) {
   const owned = getOwned();
@@ -208,6 +225,7 @@ const countPalettes = document.getElementById('count-palettes');
 const resultCount   = document.getElementById('result-count');
 const toolbarAll    = document.getElementById('toolbar-all');
 const searchInput   = document.getElementById('search');
+const themeSelect   = document.getElementById('theme-select');
 
 /* ── Card builder ─────────────────────────────────────────── */
 function buildCard(color, owned) {
@@ -320,13 +338,42 @@ function filteredColors() {
 function renderAll() {
   const owned  = getOwned();
   const colors = filteredColors();
-  const frag   = document.createDocumentFragment();
-  colors.forEach(c => frag.appendChild(buildCard(c, owned)));
   listAll.innerHTML = '';
-  listAll.appendChild(frag);
   emptySearch.hidden = colors.length > 0;
   resultCount.textContent = colors.length < allColors.length
     ? `${colors.length} of ${allColors.length} colors` : '';
+
+  if (allSort === 'color') {
+    renderAllByColor(colors, owned);
+  } else {
+    const grid = document.createElement('div');
+    grid.className = 'color-list';
+    colors.forEach(c => grid.appendChild(buildCard(c, owned)));
+    listAll.appendChild(grid);
+  }
+}
+
+function renderAllByColor(colors, owned) {
+  const groups = {};
+  colors.forEach(c => {
+    const f = getColorFamily(c.hex);
+    if (!groups[f]) groups[f] = [];
+    groups[f].push(c);
+  });
+  Object.values(groups).forEach(arr => arr.sort((a, b) => colorSortKey(a) - colorSortKey(b)));
+
+  const frag = document.createDocumentFragment();
+  FAMILIES.forEach(({ name, label }) => {
+    const arr = groups[name];
+    if (!arr || arr.length === 0) return;
+    const swatch = arr[Math.floor(arr.length / 2)].hex;
+    frag.appendChild(buildGroupHeader(label, swatch, arr.length));
+    const grid = document.createElement('div');
+    grid.className = 'color-list';
+    arr.forEach(c => grid.appendChild(buildCard(c, owned)));
+    frag.appendChild(grid);
+  });
+  listAll.appendChild(frag);
 }
 
 function hexToRgb(hex) {
@@ -531,11 +578,22 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   });
 });
 
+/* ── All Colors sort pills ────────────────────────────────── */
+document.querySelectorAll('#all-sort-pills .sort-pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.dataset.allsort === allSort) return;
+    document.querySelectorAll('#all-sort-pills .sort-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    allSort = btn.dataset.allsort;
+    renderAll();
+  });
+});
+
 /* ── Mine sort pills ──────────────────────────────────────── */
-document.querySelectorAll('.sort-pill').forEach(btn => {
+document.querySelectorAll('#mine-toolbar .sort-pill').forEach(btn => {
   btn.addEventListener('click', () => {
     if (btn.dataset.sort === mineSort) return;
-    document.querySelectorAll('.sort-pill').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#mine-toolbar .sort-pill').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     mineSort = btn.dataset.sort;
     renderMine();
@@ -558,6 +616,11 @@ document.querySelectorAll('.company-pills .pill').forEach(btn => {
     renderAll();
   });
 });
+
+if (themeSelect) {
+  themeSelect.addEventListener('change', e => applyTheme(e.target.value));
+}
+initTheme();
 
 /* ── Toast ────────────────────────────────────────────────── */
 function showToast(msg, isError = false) {

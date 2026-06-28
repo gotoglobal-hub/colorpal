@@ -10,8 +10,17 @@
 
   <header class="site-header">
     <div class="header-inner">
-      <h1 class="site-title">Colors of Mini</h1>
-      <p class="site-sub">Track your miniature paint collection</p>
+      <div>
+        <h1 class="site-title">Colors of Mini</h1>
+        <p class="site-sub">Track your miniature paint collection</p>
+      </div>
+      <div class="theme-control">
+        <label for="theme-select">Theme</label>
+        <select id="theme-select" aria-label="Select theme">
+          <option value="dark" selected>Dark</option>
+          <option value="light">Light</option>
+        </select>
+      </div>
     </div>
   </header>
 
@@ -42,12 +51,19 @@
       <span class="filter-label">Brand</span>
       <div class="company-pills" id="brand-pills"></div>
     </div>
+    <div class="all-sort-row" id="all-sort-row">
+      <span class="filter-label">Sort</span>
+      <div class="sort-pills" id="all-sort-pills">
+        <button class="sort-pill active" data-allsort="default">Default</button>
+        <button class="sort-pill" data-allsort="color">Color family</button>
+      </div>
+    </div>
     <span class="result-count" id="result-count"></span>
   </div>
 
   <main>
     <section id="view-all" class="view active">
-      <div class="color-list" id="list-all"></div>
+      <div id="list-all"></div>
       <p class="empty-msg" id="empty-search" hidden>No colors match your search.</p>
     </section>
 
