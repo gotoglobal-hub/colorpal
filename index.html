@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colors of Mini</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <h1 class="site-title">Colors of Mini</h1>
+      <p class="site-sub">Track your miniature paint collection</p>
+    </div>
+  </header>
+
+  <nav class="tab-nav">
+    <button class="tab-btn active" data-tab="all">
+      All Colors <span class="tab-badge" id="count-all">0</span>
+    </button>
+    <button class="tab-btn" data-tab="mine">
+      My Colors <span class="tab-badge owned" id="count-mine">0</span>
+    </button>
+  </nav>
+
+  <div class="toolbar" id="toolbar-all">
+    <input class="search-input" id="search" type="search" placeholder="Search by name, brand…" autocomplete="off">
+    <div class="company-pills">
+      <button class="pill active" data-company="all">All</button>
+      <button class="pill citadel"      data-company="Citadel">Citadel</button>
+      <button class="pill vallejo"      data-company="Vallejo">Vallejo</button>
+      <button class="pill army-painter" data-company="Army Painter">Army Painter</button>
+    </div>
+    <span class="result-count" id="result-count"></span>
+  </div>
+
+  <main>
+    <section id="view-all" class="view active">
+      <div class="color-list" id="list-all"></div>
+      <p class="empty-msg" id="empty-search" hidden>No colors match your search.</p>
+    </section>
+
+    <section id="view-mine" class="view">
+      <div class="mine-toolbar" id="mine-toolbar">
+        <span class="mine-sort-label">Sort by</span>
+        <div class="sort-pills">
+          <button class="sort-pill active" data-sort="company">Company</button>
+          <button class="sort-pill"        data-sort="color">Color family</button>
+        </div>
+      </div>
+      <div id="list-mine"></div>
+      <div class="empty-state" id="empty-mine">
+        <div class="empty-icon">🎨</div>
+        <p>Your collection is empty.</p>
+        <p class="empty-hint">Switch to <strong>All Colors</strong> and click <strong>+</strong> to add paints.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
