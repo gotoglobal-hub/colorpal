@@ -22,6 +22,9 @@
     <button class="tab-btn" data-tab="mine">
       My Colors <span class="tab-badge owned" id="count-mine">0</span>
     </button>
+    <button class="tab-btn" data-tab="palettes">
+      Palettes <span class="tab-badge" id="count-palettes">0</span>
+    </button>
   </nav>
 
   <div class="toolbar" id="toolbar-all">
@@ -30,7 +33,14 @@
       <button class="pill active" data-company="all">All</button>
       <button class="pill citadel"      data-company="Citadel">Citadel</button>
       <button class="pill vallejo"      data-company="Vallejo">Vallejo</button>
-      <button class="pill army-painter" data-company="Army Painter">Army Painter</button>
+      <button class="pill army-painter"     data-company="Army Painter">Army Painter</button>
+      <button class="pill ak-interactive"   data-company="AK Interactive">AK Interactive</button>
+      <button class="pill p3-paints"        data-company="P3 Paints">P3 Paints</button>
+      <button class="pill greenstuff-world" data-company="Greenstuff World">Greenstuff World</button>
+    </div>
+    <div class="brand-row" id="brand-row" hidden>
+      <span class="filter-label">Brand</span>
+      <div class="company-pills" id="brand-pills"></div>
     </div>
     <span class="result-count" id="result-count"></span>
   </div>
@@ -48,12 +58,43 @@
           <button class="sort-pill active" data-sort="company">Company</button>
           <button class="sort-pill"        data-sort="color">Color family</button>
         </div>
+        <div class="mine-actions">
+          <button class="action-btn" id="btn-export">↓ Export</button>
+          <label  class="action-btn" id="btn-import-label" title="Import collection">
+            ↑ Import
+            <input type="file" id="import-file" accept=".json" hidden>
+          </label>
+          <button class="action-btn danger" id="btn-clear">✕ Clear all</button>
+        </div>
       </div>
       <div id="list-mine"></div>
       <div class="empty-state" id="empty-mine">
         <div class="empty-icon">🎨</div>
         <p>Your collection is empty.</p>
         <p class="empty-hint">Switch to <strong>All Colors</strong> and click <strong>+</strong> to add paints.</p>
+      </div>
+    </section>
+
+    <section id="view-palettes" class="view">
+      <div class="palette-intro">
+        <p>Explore curated miniature palettes and get tailored suggestions from your collection. If a palette is missing paint, this tab will recommend colors to complete it.</p>
+      </div>
+      <div class="palette-grid" id="palette-list"></div>
+      <div class="palette-feedback">
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Your palette suggestions</h2>
+            <p>Based on the colors you own, the app recommends core paint palettes and matching colors to fill gaps.</p>
+          </div>
+          <div id="palette-analysis"></div>
+        </section>
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Missing color recommendations</h2>
+            <p>Colors you don't own yet are matched with nearest available paints from the collection.</p>
+          </div>
+          <div id="missing-list"></div>
+        </section>
       </div>
     </section>
   </main>
