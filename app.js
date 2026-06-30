@@ -278,112 +278,112 @@ const PALETTE_TEMPLATES = [
 /* ── Paint guides per palette (paint IDs from colors.json) ── */
 const PAINT_GUIDES = {
   'complementary': [
-    { role: 'Blue — Base',        ids: ['citadel-base-macragge-blue',       'citadel-layer-altdorf-guard-blue'] },
-    { role: 'Blue — Highlight',   ids: ['citadel-layer-hoeth-blue',          'citadel-layer-calgar-blue'] },
-    { role: 'Orange — Base',      ids: ['citadel-base-jokaero-orange',       'vallejo-game-color-orange-fire'] },
-    { role: 'Orange — Highlight', ids: ['citadel-layer-troll-slayer-orange', 'citadel-dry-ryza-rust'] },
-    { role: 'Shade',              ids: ['citadel-shade-nuln-oil',            'citadel-shade-agrax-earthshade'] },
+    { role: 'Blue — Base',        ids: ['citadel-base-macragge-blue',          'army-painter-sp2-beowulf-blue',        'gsw-acrylic-marine-blue'] },
+    { role: 'Blue — Highlight',   ids: ['citadel-layer-hoeth-blue',             'p3-formula-p3-cygnar-blue-highlight',  'gsw-acrylic-zima-blue'] },
+    { role: 'Orange — Dark',      ids: ['citadel-layer-tau-light-ochre',        'vallejo-game-color-parasite-brown',    'gsw-acrylic-foxhide-brown'] },
+    { role: 'Orange — Bright',    ids: ['citadel-layer-troll-slayer-orange',    'vallejo-model-color-bright-orange',    'army-painter-sp2-nuclear-sunrise'] },
+    { role: 'Shade',              ids: ['citadel-shade-nuln-oil',               'vallejo-game-color-smokey-ink',        'p3-formula-p3-brown-ink'] },
   ],
   'split-complementary': [
-    { role: 'Blue — Base',        ids: ['citadel-base-macragge-blue',        'citadel-layer-altdorf-guard-blue'] },
-    { role: 'Blue — Highlight',   ids: ['citadel-layer-hoeth-blue',          'citadel-layer-calgar-blue'] },
-    { role: 'Orange',             ids: ['citadel-base-jokaero-orange',       'citadel-layer-troll-slayer-orange'] },
-    { role: 'Yellow',             ids: ['citadel-base-averland-sunset',      'citadel-layer-yriel-yellow'] },
-    { role: 'Shade',              ids: ['citadel-shade-nuln-oil',            'citadel-shade-agrax-earthshade'] },
+    { role: 'Blue — Base',        ids: ['citadel-base-macragge-blue',           'army-painter-sp2-beowulf-blue',        'ak-quick-gen-night-blue'] },
+    { role: 'Blue — Highlight',   ids: ['citadel-layer-hoeth-blue',             'p3-formula-p3-cygnar-blue-highlight',  'gsw-acrylic-zima-blue'] },
+    { role: 'Orange',             ids: ['citadel-layer-troll-slayer-orange',    'vallejo-model-color-bright-orange',    'army-painter-sp2-nuclear-sunrise'] },
+    { role: 'Yellow',             ids: ['citadel-base-averland-sunset',         'army-painter-sp2-zealot-yellow',       'ak-quick-gen-solar-yellow'] },
+    { role: 'Shade',              ids: ['citadel-shade-nuln-oil',               'vallejo-game-color-smokey-ink'] },
   ],
   'analogous': [
-    { role: 'Red — Base',         ids: ['citadel-base-mephiston-red',        'citadel-base-khorne-red'] },
-    { role: 'Red — Midtone',      ids: ['citadel-layer-evil-sunz-scarlet',   'p3-formula-p3-skorne-red'] },
-    { role: 'Orange Transition',  ids: ['citadel-layer-troll-slayer-orange', 'citadel-base-jokaero-orange'] },
-    { role: 'Yellow Glow',        ids: ['citadel-base-averland-sunset',      'citadel-layer-yriel-yellow'] },
-    { role: 'Shade',              ids: ['citadel-shade-agrax-earthshade',    'citadel-shade-nuln-oil'] },
+    { role: 'Red — Base',         ids: ['citadel-base-mephiston-red',           'army-painter-sp2-slaughter-red',       'gsw-acrylic-cutthroat-red'] },
+    { role: 'Red — Midtone',      ids: ['citadel-layer-evil-sunz-scarlet',      'vallejo-game-color-bloody-red',        'ak-quick-gen-space-red'] },
+    { role: 'Orange Transition',  ids: ['citadel-layer-troll-slayer-orange',    'vallejo-model-color-bright-orange',    'army-painter-sp2-nuclear-sunrise'] },
+    { role: 'Yellow Glow',        ids: ['citadel-base-averland-sunset',         'army-painter-sp2-zealot-yellow',       'ak-quick-gen-solar-yellow'] },
+    { role: 'Shade',              ids: ['citadel-shade-agrax-earthshade',       'p3-formula-p3-brown-ink'] },
   ],
   'triadic': [
-    { role: 'Purple — Base',      ids: ['citadel-contrast-leviathan-purple', 'citadel-layer-xereus-purple'] },
-    { role: 'Purple — Shade',     ids: ['citadel-shade-druchii-violet'] },
-    { role: 'Orange',             ids: ['citadel-base-jokaero-orange',       'citadel-layer-troll-slayer-orange'] },
-    { role: 'Green',              ids: ['citadel-base-caliban-green',        'citadel-layer-warpstone-glow'] },
-    { role: 'Shade',              ids: ['citadel-shade-nuln-oil'] },
+    { role: 'Purple — Base',      ids: ['citadel-contrast-leviathan-purple',    'gsw-acrylic-liche-purple',             'ak-quick-gen-necromancer-purple'] },
+    { role: 'Purple — Midtone',   ids: ['citadel-layer-xereus-purple',          'vallejo-model-color-royal-purple'] },
+    { role: 'Orange',             ids: ['citadel-layer-troll-slayer-orange',    'vallejo-model-color-bright-orange',    'army-painter-sp2-nuclear-sunrise'] },
+    { role: 'Green',              ids: ['citadel-base-caliban-green',           'gsw-acrylic-warcry-green',             'ak-quick-gen-forest-green'] },
+    { role: 'Shade',              ids: ['citadel-shade-nuln-oil',               'vallejo-game-color-smokey-ink'] },
   ],
   'monochromatic': [
-    { role: 'Dark Base',          ids: ['citadel-base-macragge-blue'] },
-    { role: 'Midtone',            ids: ['citadel-base-caledor-sky',          'citadel-layer-hoeth-blue'] },
-    { role: 'Highlight',          ids: ['citadel-layer-calgar-blue',         'citadel-base-celestra-grey'] },
-    { role: 'Lightest Edge',      ids: ['citadel-layer-ulthuan-grey'] },
-    { role: 'Shade',              ids: ['citadel-shade-nuln-oil'] },
+    { role: 'Dark Base',          ids: ['citadel-base-macragge-blue',           'army-painter-sp2-beowulf-blue',        'p3-formula-p3-exile-blue'] },
+    { role: 'Midtone',            ids: ['citadel-base-caledor-sky',             'p3-formula-p3-cygnar-blue-highlight',  'gsw-acrylic-zima-blue'] },
+    { role: 'Highlight',          ids: ['citadel-layer-hoeth-blue',             'citadel-layer-calgar-blue'] },
+    { role: 'Lightest Edge',      ids: ['citadel-layer-ulthuan-grey',           'citadel-base-celestra-grey'] },
+    { role: 'Shade',              ids: ['citadel-shade-nuln-oil',               'p3-formula-p3-blue-ink'] },
   ],
   'high-fantasy': [
-    { role: 'Blue',               ids: ['citadel-base-macragge-blue',        'citadel-layer-hoeth-blue'] },
-    { role: 'Purple',             ids: ['citadel-layer-xereus-purple',       'citadel-contrast-leviathan-purple'] },
-    { role: 'Gold',               ids: ['citadel-base-retributor-armour',    'citadel-layer-auric-armour-gold'] },
-    { role: 'Teal',               ids: ['citadel-base-incubi-darkness',      'citadel-layer-sotek-green'] },
-    { role: 'Shade',              ids: ['citadel-shade-nuln-oil',            'citadel-shade-druchii-violet'] },
+    { role: 'Blue',               ids: ['citadel-base-macragge-blue',           'army-painter-sp2-beowulf-blue',        'ak-quick-gen-night-blue'] },
+    { role: 'Purple',             ids: ['citadel-layer-xereus-purple',          'vallejo-model-color-royal-purple',     'gsw-acrylic-liche-purple'] },
+    { role: 'Gold',               ids: ['citadel-base-retributor-armour',       'citadel-layer-auric-armour-gold',      'army-painter-sp2-sand-golem'] },
+    { role: 'Teal',               ids: ['citadel-base-incubi-darkness',         'army-painter-sp2-raging-sea',          'gsw-acrylic-arachnid-green'] },
+    { role: 'Shade',              ids: ['citadel-shade-nuln-oil',               'vallejo-game-color-smokey-ink',        'citadel-shade-druchii-violet'] },
   ],
   'grimdark': [
-    { role: 'Armour — Dark',      ids: ['citadel-base-mechanicus-standard-grey', 'citadel-base-abaddon-black'] },
-    { role: 'Armour — Highlight', ids: ['citadel-layer-dawnstone'] },
-    { role: 'Leather / Wood',     ids: ['citadel-base-dryad-bark',           'citadel-base-rhinox-hide'] },
-    { role: 'Rust',               ids: ['citadel-shade-fuegan-orange',       'citadel-layer-tau-light-ochre', 'citadel-dry-ryza-rust'] },
-    { role: 'Cloth',              ids: ['citadel-base-castellan-green',      'citadel-base-death-guard-green'] },
-    { role: 'Shade',              ids: ['citadel-shade-agrax-earthshade',    'citadel-shade-nuln-oil'] },
+    { role: 'Armour — Dark',      ids: ['citadel-base-mechanicus-standard-grey','army-painter-sp2-gravelord-grey',      'ak-quick-gen-german-grey'] },
+    { role: 'Armour — Highlight', ids: ['citadel-layer-dawnstone',              'ak-quick-gen-dirty-grey',              'gsw-acrylic-starship-grey'] },
+    { role: 'Leather / Wood',     ids: ['citadel-base-dryad-bark',              'p3-formula-p3-tharn-flesh',            'ak-quick-gen-dark-flesh'] },
+    { role: 'Rust',               ids: ['citadel-shade-fuegan-orange',          'gsw-acrylic-foxhide-brown',            'ak-quick-gen-orange-brown'] },
+    { role: 'Cloth',              ids: ['citadel-base-castellan-green',         'p3-formula-p3-cryx-bane-base',         'ak-quick-gen-forest-green'] },
+    { role: 'Shade',              ids: ['citadel-shade-agrax-earthshade',       'p3-formula-p3-muddy-wash',             'p3-formula-p3-brown-ink'] },
   ],
   'sci-fi': [
-    { role: 'Black Body',         ids: ['citadel-base-abaddon-black',        'citadel-base-mechanicus-standard-grey'] },
-    { role: 'Cyan Glow',          ids: ['citadel-layer-sotek-green',         'citadel-layer-temple-guard-blue'] },
-    { role: 'Pink / Magenta',     ids: ['citadel-base-screamer-pink',        'citadel-layer-pink-horror'] },
-    { role: 'Lime Glow',          ids: ['citadel-layer-warpstone-glow',      'citadel-layer-moot-green'] },
-    { role: 'Shade',              ids: ['citadel-shade-nuln-oil'] },
+    { role: 'Black Body',         ids: ['citadel-base-abaddon-black',           'army-painter-sp2-grim-black',          'vallejo-game-color-smokey-ink'] },
+    { role: 'Cyan Glow',          ids: ['citadel-layer-sotek-green',            'army-painter-sp2-raging-sea',          'gsw-acrylic-viridian-green'] },
+    { role: 'Pink / Magenta',     ids: ['citadel-base-screamer-pink',           'army-painter-spm-familiar-pink',       'gsw-acrylic-liche-purple'] },
+    { role: 'Lime Glow',          ids: ['citadel-layer-warpstone-glow',         'army-painter-sp2-orc-skin',            'gsw-acrylic-warcry-green'] },
+    { role: 'Shade',              ids: ['citadel-shade-nuln-oil',               'vallejo-game-color-smokey-ink'] },
   ],
   'historical-military': [
-    { role: 'Uniform Green',      ids: ['citadel-base-castellan-green',      'citadel-base-death-guard-green'] },
-    { role: 'Webbing / Khaki',    ids: ['citadel-base-zandri-dust',          'vallejo-game-color-khaki'] },
-    { role: 'Desert Highlight',   ids: ['citadel-layer-tau-light-ochre',     'citadel-base-averland-sunset'] },
-    { role: 'Leather',            ids: ['citadel-base-rhinox-hide',          'ak-quick-gen-dark-flesh'] },
-    { role: 'Shade',              ids: ['citadel-shade-agrax-earthshade',    'citadel-shade-nuln-oil'] },
+    { role: 'Uniform Green',      ids: ['citadel-base-castellan-green',         'p3-formula-p3-cryx-bane-base',         'ak-quick-gen-forest-green'] },
+    { role: 'Webbing / Khaki',    ids: ['citadel-base-zandri-dust',             'vallejo-model-color-dark-yellow',      'vallejo-game-color-khaki'] },
+    { role: 'Desert Highlight',   ids: ['citadel-layer-tau-light-ochre',        'ak-quick-gen-dirty-grey',              'citadel-base-averland-sunset'] },
+    { role: 'Leather',            ids: ['citadel-base-rhinox-hide',             'p3-formula-p3-tharn-flesh',            'ak-quick-gen-dark-flesh'] },
+    { role: 'Shade',              ids: ['citadel-shade-agrax-earthshade',       'p3-formula-p3-muddy-wash'] },
   ],
   'role-leader': [
-    { role: 'Red — Dark Base',    ids: ['citadel-base-khorne-red',           'p3-formula-p3-sanguine-base'] },
-    { role: 'Red — Midtone',      ids: ['citadel-base-mephiston-red',        'citadel-layer-evil-sunz-scarlet'] },
-    { role: 'Red — Highlight',    ids: ['citadel-layer-wild-rider-red',      'citadel-layer-troll-slayer-orange'] },
-    { role: 'Gold Trim',          ids: ['citadel-base-balthasar-gold',       'citadel-layer-auric-armour-gold'] },
-    { role: 'Shade',              ids: ['citadel-shade-nuln-oil',            'citadel-shade-agrax-earthshade'] },
+    { role: 'Red — Dark Base',    ids: ['citadel-base-khorne-red',              'p3-formula-p3-sanguine-base',          'ak-quick-gen-infernal-red'] },
+    { role: 'Red — Midtone',      ids: ['citadel-base-mephiston-red',           'army-painter-sp2-slaughter-red',       'gsw-acrylic-cutthroat-red'] },
+    { role: 'Red — Highlight',    ids: ['citadel-layer-evil-sunz-scarlet',      'vallejo-game-color-bloody-red',        'gsw-acrylic-hellfire-red'] },
+    { role: 'Gold Trim',          ids: ['citadel-base-balthasar-gold',          'citadel-layer-auric-armour-gold',      'army-painter-sp2-sand-golem'] },
+    { role: 'Shade',              ids: ['citadel-shade-nuln-oil',               'p3-formula-p3-brown-ink',              'vallejo-game-color-smokey-ink'] },
   ],
   'role-mage': [
-    { role: 'Purple — Base',      ids: ['citadel-contrast-leviathan-purple', 'citadel-layer-xereus-purple'] },
-    { role: 'Purple — Shade',     ids: ['citadel-shade-druchii-violet'] },
-    { role: 'Blue Glow',          ids: ['citadel-layer-altdorf-guard-blue',  'citadel-layer-calgar-blue'] },
-    { role: 'Gold Accent',        ids: ['citadel-base-balthasar-gold',       'citadel-layer-auric-armour-gold'] },
-    { role: 'Shade',              ids: ['citadel-shade-nuln-oil'] },
+    { role: 'Purple — Base',      ids: ['citadel-contrast-leviathan-purple',    'gsw-acrylic-liche-purple',             'ak-quick-gen-necromancer-purple'] },
+    { role: 'Purple — Midtone',   ids: ['citadel-layer-xereus-purple',          'vallejo-model-color-royal-purple'] },
+    { role: 'Purple — Shade',     ids: ['citadel-shade-druchii-violet',         'p3-formula-p3-blue-ink'] },
+    { role: 'Blue Glow',          ids: ['citadel-layer-altdorf-guard-blue',     'p3-formula-p3-cygnar-blue-highlight',  'gsw-acrylic-zima-blue'] },
+    { role: 'Gold Accent',        ids: ['citadel-base-balthasar-gold',          'citadel-layer-auric-armour-gold'] },
   ],
   'role-holy': [
-    { role: 'Armour — White',     ids: ['citadel-base-ceramite-white',       'citadel-layer-ulthuan-grey'] },
-    { role: 'Armour — Shade',     ids: ['citadel-shade-agrax-earthshade',    'citadel-shade-reikland-fleshshade'] },
-    { role: 'Bone / Parchment',   ids: ['citadel-base-rakarth-flesh',        'citadel-layer-ushabti-bone'] },
-    { role: 'Gold',               ids: ['citadel-base-retributor-armour',    'citadel-layer-liberator-gold'] },
-    { role: 'Blue Trim',          ids: ['citadel-base-caledor-sky',          'citadel-layer-hoeth-blue'] },
+    { role: 'Armour — White',     ids: ['citadel-base-ceramite-white',          'vallejo-game-color-dead-white',        'p3-formula-p3-morrow-white'] },
+    { role: 'Armour — Shade',     ids: ['citadel-shade-agrax-earthshade',       'p3-formula-p3-muddy-wash'] },
+    { role: 'Bone / Parchment',   ids: ['citadel-layer-ushabti-bone',           'vallejo-game-color-dead-flesh',        'p3-formula-p3-icy-yellow'] },
+    { role: 'Gold',               ids: ['citadel-base-retributor-armour',       'citadel-layer-auric-armour-gold',      'army-painter-sp2-sand-golem'] },
+    { role: 'Blue Trim',          ids: ['citadel-base-caledor-sky',             'army-painter-sp2-beowulf-blue',        'p3-formula-p3-exile-blue'] },
   ],
   'ap-orc-warrior': [
-    { role: 'Skin — Base',        ids: ['citadel-base-caledor-sky',          'citadel-base-macragge-blue'] },
-    { role: 'Skin — Highlight',   ids: ['citadel-layer-hoeth-blue',          'citadel-layer-calgar-blue'] },
-    { role: 'Armour — Base',      ids: ['citadel-layer-tau-light-ochre',     'vallejo-game-color-parasite-brown'] },
-    { role: 'Armour — Rust',      ids: ['citadel-shade-fuegan-orange',       'citadel-dry-ryza-rust'] },
-    { role: 'Bone Details',       ids: ['citadel-layer-ushabti-bone',        'citadel-layer-screaming-skull'] },
-    { role: 'Shade',              ids: ['citadel-shade-agrax-earthshade',    'citadel-shade-nuln-oil'] },
+    { role: 'Skin — Base',        ids: ['citadel-base-caledor-sky',             'army-painter-sp2-beowulf-blue',        'p3-formula-p3-exile-blue'] },
+    { role: 'Skin — Highlight',   ids: ['citadel-layer-hoeth-blue',             'p3-formula-p3-cygnar-blue-highlight',  'gsw-acrylic-zima-blue'] },
+    { role: 'Armour — Base',      ids: ['citadel-layer-tau-light-ochre',        'vallejo-game-color-parasite-brown',    'gsw-acrylic-foxhide-brown'] },
+    { role: 'Armour — Rust',      ids: ['citadel-shade-fuegan-orange',          'army-painter-sp2-nuclear-sunrise',     'ak-quick-gen-reddish-orange'] },
+    { role: 'Bone Details',       ids: ['citadel-layer-ushabti-bone',           'vallejo-game-color-dead-flesh',        'gsw-acrylic-zombie-flesh'] },
+    { role: 'Shade',              ids: ['citadel-shade-agrax-earthshade',       'p3-formula-p3-muddy-wash',             'p3-formula-p3-brown-ink'] },
   ],
   'ap-verdigris-champion': [
-    { role: 'Skin — Base',        ids: ['citadel-base-incubi-darkness',      'citadel-layer-sotek-green'] },
-    { role: 'Skin — Highlight',   ids: ['citadel-layer-temple-guard-blue'] },
-    { role: 'Armour — Metal',     ids: ['citadel-base-warplock-bronze',      'citadel-base-balthasar-gold'] },
-    { role: 'Verdigris Effect',   ids: ['vallejo-game-color-verdigris',      'citadel-layer-temple-guard-blue'] },
-    { role: 'Rust / Warm Accent', ids: ['citadel-layer-tau-light-ochre',     'citadel-dry-ryza-rust'] },
-    { role: 'Shade',              ids: ['citadel-shade-nuln-oil',            'citadel-shade-agrax-earthshade'] },
+    { role: 'Skin — Base',        ids: ['citadel-base-incubi-darkness',         'vallejo-game-color-scurvy-green',      'gsw-acrylic-arachnid-green'] },
+    { role: 'Skin — Highlight',   ids: ['citadel-layer-sotek-green',            'army-painter-sp2-raging-sea',          'gsw-acrylic-viridian-green'] },
+    { role: 'Armour — Metal',     ids: ['citadel-base-warplock-bronze',         'citadel-base-balthasar-gold'] },
+    { role: 'Verdigris Effect',   ids: ['vallejo-game-color-verdigris',         'p3-formula-p3-turquoise-ink',          'citadel-layer-temple-guard-blue'] },
+    { role: 'Rust Accent',        ids: ['citadel-shade-fuegan-orange',          'ak-quick-gen-orange-brown',            'army-painter-sp2-nuclear-sunrise'] },
+    { role: 'Shade',              ids: ['citadel-shade-nuln-oil',               'vallejo-game-color-smokey-ink'] },
   ],
   'ap-fire-mage': [
-    { role: 'Dark Base',          ids: ['citadel-base-mephiston-red',        'citadel-base-khorne-red'] },
-    { role: 'Red — Midtone',      ids: ['citadel-layer-evil-sunz-scarlet',   'citadel-base-jokaero-orange'] },
-    { role: 'Orange Transition',  ids: ['citadel-layer-troll-slayer-orange'] },
-    { role: 'Yellow Glow Tip',    ids: ['citadel-base-averland-sunset',      'citadel-layer-yriel-yellow'] },
-    { role: 'Shade (shadows)',    ids: ['citadel-shade-agrax-earthshade'] },
+    { role: 'Dark Base',          ids: ['citadel-base-mephiston-red',           'army-painter-sp2-slaughter-red',       'gsw-acrylic-cutthroat-red'] },
+    { role: 'Red — Midtone',      ids: ['citadel-layer-evil-sunz-scarlet',      'vallejo-game-color-bloody-red',        'ak-quick-gen-space-red'] },
+    { role: 'Orange Transition',  ids: ['citadel-layer-troll-slayer-orange',    'vallejo-model-color-bright-orange',    'army-painter-sp2-nuclear-sunrise'] },
+    { role: 'Yellow Glow Tip',    ids: ['citadel-base-averland-sunset',         'army-painter-sp2-zealot-yellow',       'ak-quick-gen-solar-yellow'] },
+    { role: 'Shade',              ids: ['citadel-shade-agrax-earthshade',       'p3-formula-p3-brown-ink'] },
   ],
 };
 
@@ -671,15 +671,19 @@ function buildPaletteCard(palette) {
   const guide = PAINT_GUIDES[palette.id] || [];
   let guideHtml = '';
   if (guide.length > 0) {
+    const owned = getOwned();
     const rows = guide.map(entry => {
       const paints = entry.ids.map(id => allColors.find(c => c.id === id)).filter(Boolean);
       if (!paints.length) return '';
-      const chips = paints.map(p => `
-        <span class="guide-chip" title="${p.company} ${p.brand}">
+      const chips = paints.map(p => {
+        const have = owned.has(p.id);
+        return `<span class="guide-chip${have ? ' guide-chip-owned' : ''}" title="${p.company} · ${p.brand}${have ? ' — in your collection' : ''}">
           <span class="swatch" style="background:${p.hex}"></span>
           <span class="guide-paint-name">${p.name}</span>
           <span class="guide-paint-meta">${p.company} · ${p.brand}</span>
-        </span>`).join('');
+          ${have ? '<span class="guide-owned-badge">✓ Owned</span>' : ''}
+        </span>`;
+      }).join('');
       return `<div class="guide-row"><span class="guide-role">${entry.role}</span><div class="guide-chips">${chips}</div></div>`;
     }).join('');
     guideHtml = `

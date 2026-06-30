@@ -660,6 +660,19 @@ details[open] .paint-guide-toggle::before { content: '▾ '; }
   font-size: 0.67rem;
   white-space: nowrap;
 }
+.guide-chip-owned {
+  background: var(--cart-dim);
+  border-color: var(--cart-ring);
+}
+.guide-owned-badge {
+  background: var(--cart-dim);
+  border-radius: 4px;
+  color: var(--cart);
+  font-size: 0.64rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  white-space: nowrap;
+}
 
 .suggestion-chip,
 .missing-chip {
