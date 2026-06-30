@@ -7,6 +7,7 @@ let activeBrand   = 'all';
 let searchQuery   = '';
 let mineSort      = 'company'; // 'company' | 'color'
 const THEME_KEY    = 'colors-of-mini-theme';
+const CART_KEY     = 'colors-of-mini-cart-v1';
 const AVAILABLE_THEMES = ['dark', 'light'];
 let allSort       = 'default'; // 'default' | 'color'
 
@@ -17,6 +18,19 @@ function getOwned() {
 }
 function saveOwned(set) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify([...set]));
+}
+function getCart() {
+  try { return new Set(JSON.parse(localStorage.getItem(CART_KEY) || '[]')); }
+  catch { return new Set(); }
+}
+function saveCart(set) {
+  localStorage.setItem(CART_KEY, JSON.stringify([...set]));
+}
+function toggleCart(id) {
+  const cart = getCart();
+  cart.has(id) ? cart.delete(id) : cart.add(id);
+  saveCart(cart);
+  return cart.has(id);
 }
 function getSavedTheme() {
   const saved = localStorage.getItem(THEME_KEY);
@@ -79,109 +93,299 @@ const FAMILY_ORDER = Object.fromEntries(FAMILIES.map((f, i) => [f.name, i]));
 const FAMILY_LABEL = Object.fromEntries(FAMILIES.map(f => [f.name, f.label]));
 
 const PALETTE_TEMPLATES = [
+  // ── Color Theory ────────────────────────────────────────────
   {
     id: 'complementary',
     title: 'Complementary',
-    description: 'Two colors directly opposite each other for high visual contrast.',
+    description: 'Colors directly opposite on the wheel create maximum contrast — great for making key details pop at tabletop distance.',
     sample: [
-      { name: 'Blue', hex: '#3B82F6' },
-      { name: 'Orange', hex: '#F59E0B' },
-    ],
-    category: 'Color Theory',
-  },
-  {
-    id: 'analogous',
-    title: 'Analogous',
-    description: 'Three colors sitting next to each other for a natural unified palette.',
-    sample: [
-      { name: 'Green', hex: '#22C55E' },
-      { name: 'Lime', hex: '#84CC16' },
-      { name: 'Yellow', hex: '#EAB308' },
-    ],
-    category: 'Color Theory',
-  },
-  {
-    id: 'triadic',
-    title: 'Triadic',
-    description: 'Three evenly spaced colors for vibrant, high-energy contrast.',
-    sample: [
-      { name: 'Purple', hex: '#8B5CF6' },
-      { name: 'Orange', hex: '#F97316' },
-      { name: 'Green', hex: '#22C55E' },
+      { name: 'Deep Blue',    hex: '#1A3D7C' },
+      { name: 'Orange Fire',  hex: '#C85A00' },
     ],
     category: 'Color Theory',
   },
   {
     id: 'split-complementary',
     title: 'Split Complementary',
-    description: 'A base color with the two colors adjacent to its opposite for easier balance.',
+    description: 'A base color plus the two hues flanking its complement — strong contrast with a more balanced, forgiving result than pure complementary.',
     sample: [
-      { name: 'Blue', hex: '#2563EB' },
-      { name: 'Red-Orange', hex: '#F97316' },
-      { name: 'Yellow-Orange', hex: '#F59E0B' },
+      { name: 'Deep Blue',     hex: '#1A3D7C' },
+      { name: 'Orange Fire',   hex: '#C85A00' },
+      { name: 'Sun Yellow',    hex: '#D4A400' },
+    ],
+    category: 'Color Theory',
+  },
+  {
+    id: 'analogous',
+    title: 'Analogous',
+    description: 'Adjacent wheel colors produce a cohesive, harmonious result — ideal for realistic shading and unified colour schemes like fire or foliage.',
+    sample: [
+      { name: 'Dragon Red',   hex: '#BD1313' },
+      { name: 'Orange Fire',  hex: '#C85A00' },
+      { name: 'Sun Yellow',   hex: '#D4A400' },
+    ],
+    category: 'Color Theory',
+  },
+  {
+    id: 'triadic',
+    title: 'Triadic',
+    description: 'Three evenly spaced colors for vibrant, high-energy contrast without the harshness of pure complementary.',
+    sample: [
+      { name: 'Purple',  hex: '#8B5CF6' },
+      { name: 'Orange',  hex: '#F97316' },
+      { name: 'Green',   hex: '#22C55E' },
     ],
     category: 'Color Theory',
   },
   {
     id: 'monochromatic',
     title: 'Monochromatic',
-    description: 'Shades and tints of a single base color for a clean, cohesive look.',
+    description: 'Shades and tints of a single base color. Clean and cohesive — great for uniforms or when you want highlights and shadows to feel natural.',
     sample: [
-      { name: 'Dark Blue', hex: '#1D4ED8' },
-      { name: 'Blue', hex: '#3B82F6' },
+      { name: 'Dark Blue',  hex: '#1A3D7C' },
+      { name: 'Mid Blue',   hex: '#4A89C0' },
       { name: 'Light Blue', hex: '#93C5FD' },
     ],
     category: 'Color Theory',
   },
+
+  // ── Genre ───────────────────────────────────────────────────
   {
     id: 'high-fantasy',
     title: 'High Fantasy',
-    description: 'Saturated primaries, bright purples, magentas, golds, and glowing teals.',
+    description: 'Saturated primaries, bright purples, magentas, golds, and glowing teals for vibrant heroic characters.',
     sample: [
-      { name: 'Royal Blue', hex: '#4F46E5' },
+      { name: 'Royal Blue',   hex: '#4F46E5' },
       { name: 'Vivid Purple', hex: '#DB2777' },
-      { name: 'Gold', hex: '#F59E0B' },
-      { name: 'Teal', hex: '#14B8A6' },
+      { name: 'Gold',         hex: '#F59E0B' },
+      { name: 'Teal',         hex: '#14B8A6' },
     ],
     category: 'Genre',
   },
   {
     id: 'grimdark',
     title: 'Grimdark / Low Fantasy',
-    description: 'Desaturated olive drabs, grimy browns, sepia tones, and rusted iron.',
+    description: 'Desaturated olive drabs, grimy browns, sepia tones, and rusted iron for a battle-worn aesthetic.',
     sample: [
-      { name: 'Olive', hex: '#6B7280' },
-      { name: 'Brown', hex: '#92400E' },
-      { name: 'Rust', hex: '#B45309' },
-      { name: 'Dirty Green', hex: '#4B6F44' },
+      { name: 'Olive',        hex: '#6B7280' },
+      { name: 'Brown',        hex: '#92400E' },
+      { name: 'Rust',         hex: '#B45309' },
+      { name: 'Dirty Green',  hex: '#4B6F44' },
     ],
     category: 'Genre',
   },
   {
     id: 'sci-fi',
     title: 'Sci-Fi / Cyberpunk',
-    description: 'Dark greys and blacks paired with neon pinks, cyans, and lime greens.',
+    description: 'Dark greys and blacks paired with neon pinks, cyans, and lime greens for a futuristic tabletop look.',
     sample: [
       { name: 'Matte Black', hex: '#111827' },
-      { name: 'Neon Cyan', hex: '#06B6D4' },
-      { name: 'Neon Pink', hex: '#EC4899' },
-      { name: 'Lime', hex: '#84CC16' },
+      { name: 'Neon Cyan',   hex: '#06B6D4' },
+      { name: 'Neon Pink',   hex: '#EC4899' },
+      { name: 'Lime',        hex: '#84CC16' },
     ],
     category: 'Genre',
   },
   {
     id: 'historical-military',
     title: 'Historical Military',
-    description: 'Field grey, olive drab, khaki, desert yellow, and realistic leather browns.',
+    description: 'Field grey, olive drab, khaki, desert yellow, and realistic leather browns for accurate historical miniatures.',
     sample: [
-      { name: 'Olive Drab', hex: '#4B5320' },
-      { name: 'Khaki', hex: '#A78B56' },
-      { name: 'Desert Yellow', hex: '#D4B15F' },
-      { name: 'Leather Brown', hex: '#7C4A2F' },
+      { name: 'Olive Drab',     hex: '#4B5320' },
+      { name: 'Khaki',          hex: '#A78B56' },
+      { name: 'Desert Yellow',  hex: '#D4B15F' },
+      { name: 'Leather Brown',  hex: '#7C4A2F' },
     ],
     category: 'Genre',
   },
+
+  // ── Character Role (Army Painter method) ───────────────────
+  {
+    id: 'role-leader',
+    title: 'Aggressive Leader',
+    description: 'Red dominates to convey aggression, authority and elite status — perfect for warlords, champion units, and faction leaders.',
+    sample: [
+      { name: 'Dragon Red',  hex: '#BD1313' },
+      { name: 'Orange Fire', hex: '#C85A00' },
+      { name: 'Greedy Gold', hex: '#C49A0A' },
+      { name: 'Dark Shade',  hex: '#3A0808' },
+    ],
+    category: 'Character Role',
+  },
+  {
+    id: 'role-mage',
+    title: 'Arcane Mage',
+    description: 'Purple signals royalty and magical power; electric blue glows suggest active spellcraft and otherworldly energy.',
+    sample: [
+      { name: 'Deep Purple',    hex: '#3A1155' },
+      { name: 'Purple Warpaint',hex: '#6B2E8A' },
+      { name: 'Electric Blue',  hex: '#2457BA' },
+      { name: 'Greedy Gold',    hex: '#C49A0A' },
+    ],
+    category: 'Character Role',
+  },
+  {
+    id: 'role-holy',
+    title: 'Holy Champion',
+    description: 'White and gold convey purity, divine blessing and good-aligned factions — classic paladin and cleric tones.',
+    sample: [
+      { name: 'Pure White',    hex: '#F2F2F2' },
+      { name: 'Skeleton Bone', hex: '#C4B56E' },
+      { name: 'Greedy Gold',   hex: '#C49A0A' },
+      { name: 'Crystal Blue',  hex: '#4A89C0' },
+    ],
+    category: 'Character Role',
+  },
+
+  // ── Army Painter Showcase ───────────────────────────────────
+  {
+    id: 'ap-orc-warrior',
+    title: 'Orc Warrior',
+    description: 'From the Army Painter guide: complementary blue skin vs rust-orange armour creates maximum tabletop contrast on a classic orc warrior.',
+    sample: [
+      { name: 'Muted Blue',    hex: '#4A7BAB' },
+      { name: 'Rust Orange',   hex: '#B85C1C' },
+      { name: 'Dark Shadow',   hex: '#2D3A2A' },
+      { name: 'Skeleton Bone', hex: '#C4B56E' },
+    ],
+    category: 'Army Painter',
+  },
+  {
+    id: 'ap-verdigris-champion',
+    title: 'Verdigris Champion',
+    description: 'From the Army Painter guide: split-complementary turquoise skin and verdigris armour, balanced with warm gold and rust accents.',
+    sample: [
+      { name: 'Hydra Turquoise', hex: '#1E9B96' },
+      { name: 'Verdigris',       hex: '#4A7260' },
+      { name: 'Greedy Gold',     hex: '#C49A0A' },
+      { name: 'Warm Rust',       hex: '#C85A00' },
+    ],
+    category: 'Army Painter',
+  },
+  {
+    id: 'ap-fire-mage',
+    title: 'Fire Magic',
+    description: 'From the Army Painter guide: analogous reds, oranges and yellows for glowing magical fire effects — cohesive and naturally blending.',
+    sample: [
+      { name: 'Dragon Red',  hex: '#BD1313' },
+      { name: 'Orange Fire', hex: '#C85A00' },
+      { name: 'Sun Yellow',  hex: '#D4A400' },
+    ],
+    category: 'Army Painter',
+  },
 ];
+
+/* ── Paint guides per palette (paint IDs from colors.json) ── */
+const PAINT_GUIDES = {
+  'complementary': [
+    { role: 'Blue — Base',        ids: ['citadel-base-macragge-blue',       'citadel-layer-altdorf-guard-blue'] },
+    { role: 'Blue — Highlight',   ids: ['citadel-layer-hoeth-blue',          'citadel-layer-calgar-blue'] },
+    { role: 'Orange — Base',      ids: ['citadel-base-jokaero-orange',       'vallejo-game-color-orange-fire'] },
+    { role: 'Orange — Highlight', ids: ['citadel-layer-troll-slayer-orange', 'citadel-dry-ryza-rust'] },
+    { role: 'Shade',              ids: ['citadel-shade-nuln-oil',            'citadel-shade-agrax-earthshade'] },
+  ],
+  'split-complementary': [
+    { role: 'Blue — Base',        ids: ['citadel-base-macragge-blue',        'citadel-layer-altdorf-guard-blue'] },
+    { role: 'Blue — Highlight',   ids: ['citadel-layer-hoeth-blue',          'citadel-layer-calgar-blue'] },
+    { role: 'Orange',             ids: ['citadel-base-jokaero-orange',       'citadel-layer-troll-slayer-orange'] },
+    { role: 'Yellow',             ids: ['citadel-base-averland-sunset',      'citadel-layer-yriel-yellow'] },
+    { role: 'Shade',              ids: ['citadel-shade-nuln-oil',            'citadel-shade-agrax-earthshade'] },
+  ],
+  'analogous': [
+    { role: 'Red — Base',         ids: ['citadel-base-mephiston-red',        'citadel-base-khorne-red'] },
+    { role: 'Red — Midtone',      ids: ['citadel-layer-evil-sunz-scarlet',   'p3-formula-p3-skorne-red'] },
+    { role: 'Orange Transition',  ids: ['citadel-layer-troll-slayer-orange', 'citadel-base-jokaero-orange'] },
+    { role: 'Yellow Glow',        ids: ['citadel-base-averland-sunset',      'citadel-layer-yriel-yellow'] },
+    { role: 'Shade',              ids: ['citadel-shade-agrax-earthshade',    'citadel-shade-nuln-oil'] },
+  ],
+  'triadic': [
+    { role: 'Purple — Base',      ids: ['citadel-contrast-leviathan-purple', 'citadel-layer-xereus-purple'] },
+    { role: 'Purple — Shade',     ids: ['citadel-shade-druchii-violet'] },
+    { role: 'Orange',             ids: ['citadel-base-jokaero-orange',       'citadel-layer-troll-slayer-orange'] },
+    { role: 'Green',              ids: ['citadel-base-caliban-green',        'citadel-layer-warpstone-glow'] },
+    { role: 'Shade',              ids: ['citadel-shade-nuln-oil'] },
+  ],
+  'monochromatic': [
+    { role: 'Dark Base',          ids: ['citadel-base-macragge-blue'] },
+    { role: 'Midtone',            ids: ['citadel-base-caledor-sky',          'citadel-layer-hoeth-blue'] },
+    { role: 'Highlight',          ids: ['citadel-layer-calgar-blue',         'citadel-base-celestra-grey'] },
+    { role: 'Lightest Edge',      ids: ['citadel-layer-ulthuan-grey'] },
+    { role: 'Shade',              ids: ['citadel-shade-nuln-oil'] },
+  ],
+  'high-fantasy': [
+    { role: 'Blue',               ids: ['citadel-base-macragge-blue',        'citadel-layer-hoeth-blue'] },
+    { role: 'Purple',             ids: ['citadel-layer-xereus-purple',       'citadel-contrast-leviathan-purple'] },
+    { role: 'Gold',               ids: ['citadel-base-retributor-armour',    'citadel-layer-auric-armour-gold'] },
+    { role: 'Teal',               ids: ['citadel-base-incubi-darkness',      'citadel-layer-sotek-green'] },
+    { role: 'Shade',              ids: ['citadel-shade-nuln-oil',            'citadel-shade-druchii-violet'] },
+  ],
+  'grimdark': [
+    { role: 'Armour — Dark',      ids: ['citadel-base-mechanicus-standard-grey', 'citadel-base-abaddon-black'] },
+    { role: 'Armour — Highlight', ids: ['citadel-layer-dawnstone'] },
+    { role: 'Leather / Wood',     ids: ['citadel-base-dryad-bark',           'citadel-base-rhinox-hide'] },
+    { role: 'Rust',               ids: ['citadel-shade-fuegan-orange',       'citadel-layer-tau-light-ochre', 'citadel-dry-ryza-rust'] },
+    { role: 'Cloth',              ids: ['citadel-base-castellan-green',      'citadel-base-death-guard-green'] },
+    { role: 'Shade',              ids: ['citadel-shade-agrax-earthshade',    'citadel-shade-nuln-oil'] },
+  ],
+  'sci-fi': [
+    { role: 'Black Body',         ids: ['citadel-base-abaddon-black',        'citadel-base-mechanicus-standard-grey'] },
+    { role: 'Cyan Glow',          ids: ['citadel-layer-sotek-green',         'citadel-layer-temple-guard-blue'] },
+    { role: 'Pink / Magenta',     ids: ['citadel-base-screamer-pink',        'citadel-layer-pink-horror'] },
+    { role: 'Lime Glow',          ids: ['citadel-layer-warpstone-glow',      'citadel-layer-moot-green'] },
+    { role: 'Shade',              ids: ['citadel-shade-nuln-oil'] },
+  ],
+  'historical-military': [
+    { role: 'Uniform Green',      ids: ['citadel-base-castellan-green',      'citadel-base-death-guard-green'] },
+    { role: 'Webbing / Khaki',    ids: ['citadel-base-zandri-dust',          'vallejo-game-color-khaki'] },
+    { role: 'Desert Highlight',   ids: ['citadel-layer-tau-light-ochre',     'citadel-base-averland-sunset'] },
+    { role: 'Leather',            ids: ['citadel-base-rhinox-hide',          'ak-quick-gen-dark-flesh'] },
+    { role: 'Shade',              ids: ['citadel-shade-agrax-earthshade',    'citadel-shade-nuln-oil'] },
+  ],
+  'role-leader': [
+    { role: 'Red — Dark Base',    ids: ['citadel-base-khorne-red',           'p3-formula-p3-sanguine-base'] },
+    { role: 'Red — Midtone',      ids: ['citadel-base-mephiston-red',        'citadel-layer-evil-sunz-scarlet'] },
+    { role: 'Red — Highlight',    ids: ['citadel-layer-wild-rider-red',      'citadel-layer-troll-slayer-orange'] },
+    { role: 'Gold Trim',          ids: ['citadel-base-balthasar-gold',       'citadel-layer-auric-armour-gold'] },
+    { role: 'Shade',              ids: ['citadel-shade-nuln-oil',            'citadel-shade-agrax-earthshade'] },
+  ],
+  'role-mage': [
+    { role: 'Purple — Base',      ids: ['citadel-contrast-leviathan-purple', 'citadel-layer-xereus-purple'] },
+    { role: 'Purple — Shade',     ids: ['citadel-shade-druchii-violet'] },
+    { role: 'Blue Glow',          ids: ['citadel-layer-altdorf-guard-blue',  'citadel-layer-calgar-blue'] },
+    { role: 'Gold Accent',        ids: ['citadel-base-balthasar-gold',       'citadel-layer-auric-armour-gold'] },
+    { role: 'Shade',              ids: ['citadel-shade-nuln-oil'] },
+  ],
+  'role-holy': [
+    { role: 'Armour — White',     ids: ['citadel-base-ceramite-white',       'citadel-layer-ulthuan-grey'] },
+    { role: 'Armour — Shade',     ids: ['citadel-shade-agrax-earthshade',    'citadel-shade-reikland-fleshshade'] },
+    { role: 'Bone / Parchment',   ids: ['citadel-base-rakarth-flesh',        'citadel-layer-ushabti-bone'] },
+    { role: 'Gold',               ids: ['citadel-base-retributor-armour',    'citadel-layer-liberator-gold'] },
+    { role: 'Blue Trim',          ids: ['citadel-base-caledor-sky',          'citadel-layer-hoeth-blue'] },
+  ],
+  'ap-orc-warrior': [
+    { role: 'Skin — Base',        ids: ['citadel-base-caledor-sky',          'citadel-base-macragge-blue'] },
+    { role: 'Skin — Highlight',   ids: ['citadel-layer-hoeth-blue',          'citadel-layer-calgar-blue'] },
+    { role: 'Armour — Base',      ids: ['citadel-layer-tau-light-ochre',     'vallejo-game-color-parasite-brown'] },
+    { role: 'Armour — Rust',      ids: ['citadel-shade-fuegan-orange',       'citadel-dry-ryza-rust'] },
+    { role: 'Bone Details',       ids: ['citadel-layer-ushabti-bone',        'citadel-layer-screaming-skull'] },
+    { role: 'Shade',              ids: ['citadel-shade-agrax-earthshade',    'citadel-shade-nuln-oil'] },
+  ],
+  'ap-verdigris-champion': [
+    { role: 'Skin — Base',        ids: ['citadel-base-incubi-darkness',      'citadel-layer-sotek-green'] },
+    { role: 'Skin — Highlight',   ids: ['citadel-layer-temple-guard-blue'] },
+    { role: 'Armour — Metal',     ids: ['citadel-base-warplock-bronze',      'citadel-base-balthasar-gold'] },
+    { role: 'Verdigris Effect',   ids: ['vallejo-game-color-verdigris',      'citadel-layer-temple-guard-blue'] },
+    { role: 'Rust / Warm Accent', ids: ['citadel-layer-tau-light-ochre',     'citadel-dry-ryza-rust'] },
+    { role: 'Shade',              ids: ['citadel-shade-nuln-oil',            'citadel-shade-agrax-earthshade'] },
+  ],
+  'ap-fire-mage': [
+    { role: 'Dark Base',          ids: ['citadel-base-mephiston-red',        'citadel-base-khorne-red'] },
+    { role: 'Red — Midtone',      ids: ['citadel-layer-evil-sunz-scarlet',   'citadel-base-jokaero-orange'] },
+    { role: 'Orange Transition',  ids: ['citadel-layer-troll-slayer-orange'] },
+    { role: 'Yellow Glow Tip',    ids: ['citadel-base-averland-sunset',      'citadel-layer-yriel-yellow'] },
+    { role: 'Shade (shadows)',    ids: ['citadel-shade-agrax-earthshade'] },
+  ],
+};
 
 function getColorFamily(hex) {
   const { h, s, l } = hexToHsl(hex);
@@ -211,25 +415,32 @@ function colorSortKey(color) {
 }
 
 /* ── DOM refs ─────────────────────────────────────────────── */
-const listAll       = document.getElementById('list-all');
-const listMine      = document.getElementById('list-mine');
-const paletteList   = document.getElementById('palette-list');
-const paletteAnalysis = document.getElementById('palette-analysis');
-const missingList   = document.getElementById('missing-list');
-const emptySearch   = document.getElementById('empty-search');
-const emptyMine     = document.getElementById('empty-mine');
-const mineToolbar   = document.getElementById('mine-toolbar');
-const countAll      = document.getElementById('count-all');
-const countMine     = document.getElementById('count-mine');
-const countPalettes = document.getElementById('count-palettes');
-const resultCount   = document.getElementById('result-count');
-const toolbarAll    = document.getElementById('toolbar-all');
-const searchInput   = document.getElementById('search');
-const themeSelect   = document.getElementById('theme-select');
+const listAll            = document.getElementById('list-all');
+const listMine           = document.getElementById('list-mine');
+const listShopping       = document.getElementById('list-shopping');
+const paletteList        = document.getElementById('palette-list');
+const paletteAnalysis    = document.getElementById('palette-analysis');
+const missingList        = document.getElementById('missing-list');
+const emptySearch        = document.getElementById('empty-search');
+const emptyMine          = document.getElementById('empty-mine');
+const emptyShopping      = document.getElementById('empty-shopping');
+const mineToolbar        = document.getElementById('mine-toolbar');
+const countAll           = document.getElementById('count-all');
+const countMine          = document.getElementById('count-mine');
+const countPalettes      = document.getElementById('count-palettes');
+const countCart          = document.getElementById('count-cart');
+const resultCount        = document.getElementById('result-count');
+const shoppingCountLabel = document.getElementById('shopping-count-label');
+const toolbarAll         = document.getElementById('toolbar-all');
+const searchInput        = document.getElementById('search');
+const themeSelect        = document.getElementById('theme-select');
 
 /* ── Card builder ─────────────────────────────────────────── */
+const CART_SVG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>`;
+
 function buildCard(color, owned) {
   const isOwned   = owned.has(color.id);
+  const inCart    = getCart().has(color.id);
   const coSlug    = color.company.replace(' ', '-');
   const card      = document.createElement('div');
   card.className  = `color-card${isOwned ? ' owned' : ''}`;
@@ -244,11 +455,33 @@ function buildCard(color, owned) {
       </div>
       <div class="color-name" title="${color.name}">${color.name}</div>
     </div>
+    <button class="cart-btn${inCart ? ' in-cart' : ''}"
+            aria-label="${inCart ? 'Remove from shopping list' : 'Add to shopping list'}">
+      ${CART_SVG}
+    </button>
     <button class="toggle-btn${isOwned ? ' owned' : ''}"
             aria-label="${isOwned ? 'Remove from collection' : 'Add to collection'}">
       ${isOwned ? '✓' : '+'}
     </button>
   `;
+
+  card.querySelector('.cart-btn').addEventListener('click', () => {
+    const nowInCart = toggleCart(color.id);
+    const btn = card.querySelector('.cart-btn');
+    btn.classList.toggle('in-cart', nowInCart);
+    btn.setAttribute('aria-label', nowInCart ? 'Remove from shopping list' : 'Add to shopping list');
+    updateBadges();
+
+    if (activeTab === 'shopping' && !nowInCart) {
+      const grid = card.parentElement;
+      card.remove();
+      if (grid && grid.classList.contains('color-list') && grid.children.length === 0) {
+        grid.previousElementSibling?.remove();
+        grid.remove();
+      }
+      toggleShoppingEmpty();
+    }
+  });
 
   card.querySelector('.toggle-btn').addEventListener('click', () => {
     const nowOwned = toggleOwned(color.id);
@@ -260,11 +493,10 @@ function buildCard(color, owned) {
     updateBadges();
 
     if (activeTab === 'mine' && !nowOwned) {
-      card.remove();
-      // Remove group header if it has no more cards
       const grid = card.parentElement;
+      card.remove();
       if (grid && grid.classList.contains('color-list') && grid.children.length === 0) {
-        grid.previousElementSibling?.remove(); // remove the h3 header
+        grid.previousElementSibling?.remove();
         grid.remove();
       }
       toggleMineEmpty();
@@ -414,19 +646,56 @@ function findNearestOwnedColor(hex) {
 
 function renderPalettes() {
   paletteList.innerHTML = '';
-  PALETTE_TEMPLATES.forEach(palette => paletteList.appendChild(buildPaletteCard(palette)));
+  const byCategory = {};
+  PALETTE_TEMPLATES.forEach(p => {
+    if (!byCategory[p.category]) byCategory[p.category] = [];
+    byCategory[p.category].push(p);
+  });
+  Object.entries(byCategory).forEach(([cat, palettes]) => {
+    const heading = document.createElement('h3');
+    heading.className = 'palette-category-heading';
+    heading.textContent = cat;
+    paletteList.appendChild(heading);
+    const grid = document.createElement('div');
+    grid.className = 'palette-grid-inner';
+    palettes.forEach(p => grid.appendChild(buildPaletteCard(p)));
+    paletteList.appendChild(grid);
+  });
   renderPaletteAnalysis();
 }
 
 function buildPaletteCard(palette) {
   const card = document.createElement('div');
   card.className = 'palette-card';
+
+  const guide = PAINT_GUIDES[palette.id] || [];
+  let guideHtml = '';
+  if (guide.length > 0) {
+    const rows = guide.map(entry => {
+      const paints = entry.ids.map(id => allColors.find(c => c.id === id)).filter(Boolean);
+      if (!paints.length) return '';
+      const chips = paints.map(p => `
+        <span class="guide-chip" title="${p.company} ${p.brand}">
+          <span class="swatch" style="background:${p.hex}"></span>
+          <span class="guide-paint-name">${p.name}</span>
+          <span class="guide-paint-meta">${p.company} · ${p.brand}</span>
+        </span>`).join('');
+      return `<div class="guide-row"><span class="guide-role">${entry.role}</span><div class="guide-chips">${chips}</div></div>`;
+    }).join('');
+    guideHtml = `
+      <details class="paint-guide">
+        <summary class="paint-guide-toggle">Paint suggestions</summary>
+        <div class="paint-guide-body">${rows}</div>
+      </details>`;
+  }
+
   card.innerHTML = `
     <h3>${palette.title}</h3>
     <p>${palette.description}</p>
     <div class="palette-sample">
       ${palette.sample.map(s => `<span class="palette-swatch" title="${s.name}" style="background:${s.hex}"></span>`).join('')}
     </div>
+    ${guideHtml}
   `;
   return card;
 }
@@ -554,13 +823,60 @@ function toggleMineEmpty() {
   document.querySelector('.sort-pills').style.opacity = hasCards ? '1' : '0.4';
 }
 
+/* ── Render Shopping List ─────────────────────────────────── */
+function renderShoppingList() {
+  const cart = getCart();
+  const colors = allColors.filter(c => cart.has(c.id));
+  listShopping.innerHTML = '';
+
+  const count = colors.length;
+  shoppingCountLabel.textContent = count === 0 ? '0 items' : `${count} item${count !== 1 ? 's' : ''}`;
+
+  if (count === 0) { toggleShoppingEmpty(); return; }
+
+  const groups = {};
+  colors.forEach(c => {
+    if (!groups[c.company]) groups[c.company] = [];
+    groups[c.company].push(c);
+  });
+
+  const owned = getOwned();
+  const frag = document.createDocumentFragment();
+  Object.entries(groups)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .forEach(([company, list]) => {
+      const coSlug = company.replace(' ', '-');
+      const header = document.createElement('div');
+      header.className = 'group-header';
+      header.innerHTML = `
+        <span class="badge badge-co ${coSlug}">${company}</span>
+        <span class="group-count">${list.length}</span>
+      `;
+      frag.appendChild(header);
+      const grid = document.createElement('div');
+      grid.className = 'color-list';
+      list.forEach(c => grid.appendChild(buildCard(c, owned)));
+      frag.appendChild(grid);
+    });
+  listShopping.appendChild(frag);
+  toggleShoppingEmpty();
+}
+
+function toggleShoppingEmpty() {
+  const hasCards = listShopping.querySelector('.color-card') !== null;
+  emptyShopping.style.display = hasCards ? 'none' : 'block';
+}
+
 /* ── Count badges ─────────────────────────────────────────── */
 function updateBadges() {
-  const size = getOwned().size;
-  countAll.textContent    = allColors.length;
-  countMine.textContent   = size;
+  const size     = getOwned().size;
+  const cartSize = getCart().size;
+  countAll.textContent      = allColors.length;
+  countMine.textContent     = size;
   countPalettes.textContent = PALETTE_TEMPLATES.length;
+  countCart.textContent     = cartSize;
   countMine.classList.toggle('owned', size > 0);
+  countCart.classList.toggle('has-items', cartSize > 0);
 }
 
 /* ── Tab switching ────────────────────────────────────────── */
@@ -575,6 +891,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     toolbarAll.hidden = activeTab !== 'all';
     if (activeTab === 'mine') renderMine();
     if (activeTab === 'palettes') renderPalettes();
+    if (activeTab === 'shopping') renderShoppingList();
   });
 });
 
@@ -692,6 +1009,21 @@ document.getElementById('btn-clear').addEventListener('click', () => {
   updateBadges();
   if (activeTab === 'mine') renderMine();
   showToast('Collection cleared.');
+});
+
+/* ── Shopping list actions ────────────────────────────────── */
+document.getElementById('btn-print-cart').addEventListener('click', () => {
+  window.print();
+});
+
+document.getElementById('btn-clear-cart').addEventListener('click', () => {
+  const cart = getCart();
+  if (cart.size === 0) { showToast('Shopping list is already empty.', true); return; }
+  if (!confirm(`Remove all ${cart.size} color${cart.size !== 1 ? 's' : ''} from your shopping list?`)) return;
+  saveCart(new Set());
+  updateBadges();
+  if (activeTab === 'shopping') renderShoppingList();
+  showToast('Shopping list cleared.');
 });
 
 /* ── Init ─────────────────────────────────────────────────── */

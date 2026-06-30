@@ -34,6 +34,9 @@
     <button class="tab-btn" data-tab="palettes">
       Palettes <span class="tab-badge" id="count-palettes">0</span>
     </button>
+    <button class="tab-btn" data-tab="shopping">
+      Shopping List <span class="tab-badge" id="count-cart">0</span>
+    </button>
   </nav>
 
   <div class="toolbar" id="toolbar-all">
@@ -93,7 +96,7 @@
 
     <section id="view-palettes" class="view">
       <div class="palette-intro">
-        <p>Explore curated miniature palettes and get tailored suggestions from your collection. If a palette is missing paint, this tab will recommend colors to complete it.</p>
+        <p>Explore curated miniature palettes and get tailored suggestions from your collection. Palettes are organised by <strong>Color Theory</strong>, <strong>Genre</strong>, <strong>Character Role</strong> (based on <a href="https://thearmypainter.com/blogs/explore/how-to-pick-a-colour-scheme" target="_blank" rel="noopener" style="color:var(--accent)">The Army Painter's colour guide</a>), and <strong>Army Painter Showcase</strong>. If a palette is missing paint, this tab will recommend colors to complete it.</p>
       </div>
       <div class="palette-grid" id="palette-list"></div>
       <div class="palette-feedback">
@@ -111,6 +114,22 @@
           </div>
           <div id="missing-list"></div>
         </section>
+      </div>
+    </section>
+
+    <section id="view-shopping" class="view">
+      <div class="mine-toolbar" id="shopping-toolbar">
+        <span class="mine-sort-label" id="shopping-count-label">0 items</span>
+        <div class="mine-actions">
+          <button class="action-btn" id="btn-print-cart">Print</button>
+          <button class="action-btn danger" id="btn-clear-cart">✕ Clear list</button>
+        </div>
+      </div>
+      <div id="list-shopping"></div>
+      <div class="empty-state" id="empty-shopping">
+        <div class="empty-icon">🛒</div>
+        <p>Your shopping list is empty.</p>
+        <p class="empty-hint">Click the <strong>cart</strong> button on any color to add it to your list.</p>
       </div>
     </section>
   </main>
