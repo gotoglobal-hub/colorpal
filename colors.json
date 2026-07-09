@@ -2072,6 +2072,48 @@
     "hex": "#063B2F"
   },
   {
+    "id": "vallejo-game-color-barbarian-skin",
+    "company": "Vallejo",
+    "brand": "Game Color",
+    "name": "Barbarian Skin",
+    "hex": "#C9A876"
+  },
+  {
+    "id": "vallejo-game-color-evil-red",
+    "company": "Vallejo",
+    "brand": "Game Color",
+    "name": "Evil Red",
+    "hex": "#46101B"
+  },
+  {
+    "id": "vallejo-game-color-succubus-skin",
+    "company": "Vallejo",
+    "brand": "Game Color",
+    "name": "Succubus Skin",
+    "hex": "#A85D52"
+  },
+  {
+    "id": "vallejo-game-color-grunge-brown",
+    "company": "Vallejo",
+    "brand": "Game Color",
+    "name": "Grunge Brown",
+    "hex": "#A15A22"
+  },
+  {
+    "id": "vallejo-game-color-imperial-blue",
+    "company": "Vallejo",
+    "brand": "Game Color",
+    "name": "Imperial Blue",
+    "hex": "#2C5F8A"
+  },
+  {
+    "id": "vallejo-game-color-neutral-grey",
+    "company": "Vallejo",
+    "brand": "Game Color",
+    "name": "Neutral Grey",
+    "hex": "#8A9195"
+  },
+  {
     "id": "vallejo-game-color-terracota",
     "company": "Vallejo",
     "brand": "Game Color",
@@ -4583,6 +4625,62 @@
     "brand": "Speedpaint 2.0",
     "name": "Zealot Yellow",
     "hex": "#F4D008"
+  },
+  {
+    "id": "army-painter-sp2-plasmatic-bolt",
+    "company": "Army Painter",
+    "brand": "Speedpaint 2.0",
+    "name": "Plasmatic Bolt",
+    "hex": "#29C4B8"
+  },
+  {
+    "id": "army-painter-sp2-fire-drake",
+    "company": "Army Painter",
+    "brand": "Speedpaint 2.0",
+    "name": "Fire Drake",
+    "hex": "#D8451F"
+  },
+  {
+    "id": "army-painter-sp2-familiar-pink",
+    "company": "Army Painter",
+    "brand": "Speedpaint 2.0",
+    "name": "Familiar Pink",
+    "hex": "#F0B8C4"
+  },
+  {
+    "id": "army-painter-sp2-moonlake-coral",
+    "company": "Army Painter",
+    "brand": "Speedpaint 2.0",
+    "name": "Moonlake Coral",
+    "hex": "#F08670"
+  },
+  {
+    "id": "army-painter-sp2-noble-skin",
+    "company": "Army Painter",
+    "brand": "Speedpaint 2.0",
+    "name": "Noble Skin",
+    "hex": "#C98459"
+  },
+  {
+    "id": "army-painter-sp2-goddess-glow",
+    "company": "Army Painter",
+    "brand": "Speedpaint 2.0",
+    "name": "Goddess Glow",
+    "hex": "#F5C896"
+  },
+  {
+    "id": "army-painter-sp2-polished-silver",
+    "company": "Army Painter",
+    "brand": "Speedpaint 2.0",
+    "name": "Polished Silver Metallic",
+    "hex": "#A8A9A6"
+  },
+  {
+    "id": "army-painter-sp2-enchanted-steel",
+    "company": "Army Painter",
+    "brand": "Speedpaint 2.0",
+    "name": "Enchanted Steel Metallic",
+    "hex": "#5C6B75"
   },
   {
     "id": "army-painter-spm-hoplite-gold",

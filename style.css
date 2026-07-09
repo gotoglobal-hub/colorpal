@@ -242,6 +242,9 @@ body {
   margin-left: auto;
 }
 
+.filter-panel { display: contents; }
+.filter-toggle-btn { display: none; }
+
 /* ── Views ────────────────────────────────────────────────── */
 .view { display: none; }
 .view.active { display: block; }
@@ -1243,6 +1246,32 @@ details[open] .paint-guide-toggle::before { content: '▾ '; }
   .color-list { grid-template-columns: 1fr; }
   .search-input { width: 100%; }
   .result-count { margin-left: 0; }
+
+  /* Tab nav: scroll horizontally instead of wrapping, so its height
+     stays predictable and doesn't collide with the sticky toolbar below it. */
+  .tab-nav {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tab-btn { flex-shrink: 0; }
+
+  /* Filters collapse behind a toggle button so the sticky toolbar stays
+     short and never covers the first color cards in the list below it. */
+  .filter-toggle-btn { display: inline-flex; }
+  .filter-toggle-btn.active {
+    background: var(--accent-dim);
+    border-color: var(--accent-ring);
+    color: var(--accent);
+  }
+  .filter-panel {
+    display: none;
+    flex-direction: column;
+    flex-basis: 100%;
+    gap: 8px;
+    padding-top: 8px;
+  }
+  .filter-panel.open { display: flex; }
 }
 
 /* ── Print ────────────────────────────────────────────────── */

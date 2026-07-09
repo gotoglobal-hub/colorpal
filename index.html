@@ -51,33 +51,36 @@
 
   <div class="toolbar" id="toolbar-all">
     <input class="search-input" id="search" type="search" placeholder="Search by name, brand, or hex (#1a3d7c)…" autocomplete="off">
-    <input type="color" id="color-picker" value="#7c6af7" title="Pick a color to find the closest paints">
-    <div class="company-pills">
-      <button class="pill active" data-company="all">All</button>
-      <button class="pill citadel"      data-company="Citadel">Citadel</button>
-      <button class="pill vallejo"      data-company="Vallejo">Vallejo</button>
-      <button class="pill army-painter"     data-company="Army Painter">Army Painter</button>
-      <button class="pill ak-interactive"   data-company="AK Interactive">AK Interactive</button>
-      <button class="pill p3-paints"        data-company="P3 Paints">P3 Paints</button>
-      <button class="pill greenstuff-world" data-company="Greenstuff World">Greenstuff World</button>
-    </div>
-    <div class="brand-row" id="brand-row" hidden>
-      <span class="filter-label">Brand</span>
-      <div class="company-pills" id="brand-pills"></div>
-    </div>
-    <div class="all-sort-row" id="all-sort-row">
-      <span class="filter-label">Sort</span>
-      <div class="sort-pills" id="all-sort-pills">
-        <button class="sort-pill active" data-allsort="default">Default</button>
-        <button class="sort-pill" data-allsort="color">Color family</button>
-      </div>
-    </div>
-    <div class="all-sort-row" id="tag-filter-row" hidden>
-      <span class="filter-label">Tag</span>
-      <div class="sort-pills" id="tag-filter-pills"></div>
-    </div>
+    <button class="action-btn filter-toggle-btn" id="btn-toggle-filters" type="button" aria-expanded="false" aria-controls="filter-panel">⚙ Filters</button>
     <span class="result-count" id="result-count"></span>
     <button class="action-btn" id="btn-select-mode">☑ Select</button>
+    <div class="filter-panel" id="filter-panel">
+      <input type="color" id="color-picker" value="#7c6af7" title="Pick a color to find the closest paints">
+      <div class="company-pills">
+        <button class="pill active" data-company="all">All</button>
+        <button class="pill citadel"      data-company="Citadel">Citadel</button>
+        <button class="pill vallejo"      data-company="Vallejo">Vallejo</button>
+        <button class="pill army-painter"     data-company="Army Painter">Army Painter</button>
+        <button class="pill ak-interactive"   data-company="AK Interactive">AK Interactive</button>
+        <button class="pill p3-paints"        data-company="P3 Paints">P3 Paints</button>
+        <button class="pill greenstuff-world" data-company="Greenstuff World">Greenstuff World</button>
+      </div>
+      <div class="brand-row" id="brand-row" hidden>
+        <span class="filter-label">Brand</span>
+        <div class="company-pills" id="brand-pills"></div>
+      </div>
+      <div class="all-sort-row" id="all-sort-row">
+        <span class="filter-label">Sort</span>
+        <div class="sort-pills" id="all-sort-pills">
+          <button class="sort-pill active" data-allsort="default">Default</button>
+          <button class="sort-pill" data-allsort="color">Color family</button>
+        </div>
+      </div>
+      <div class="all-sort-row" id="tag-filter-row" hidden>
+        <span class="filter-label">Tag</span>
+        <div class="sort-pills" id="tag-filter-pills"></div>
+      </div>
+    </div>
   </div>
 
   <div class="selection-bar" id="selection-bar" hidden>
