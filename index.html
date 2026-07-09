@@ -15,6 +15,7 @@
         <p class="site-sub">Track your miniature paint collection</p>
       </div>
       <div class="theme-control">
+        <button class="action-btn" id="btn-show-onboarding">? Getting started</button>
         <label for="theme-select">Theme</label>
         <select id="theme-select" aria-label="Select theme">
           <option value="dark" selected>Dark</option>
@@ -31,8 +32,17 @@
     <button class="tab-btn" data-tab="mine">
       My Colors <span class="tab-badge owned" id="count-mine">0</span>
     </button>
+    <button class="tab-btn" data-tab="learn">
+      Learn
+    </button>
     <button class="tab-btn" data-tab="palettes">
       Palettes <span class="tab-badge" id="count-palettes">0</span>
+    </button>
+    <button class="tab-btn" data-tab="gradient">
+      Gradient Builder
+    </button>
+    <button class="tab-btn" data-tab="projects">
+      Projects <span class="tab-badge" id="count-projects">0</span>
     </button>
     <button class="tab-btn" data-tab="shopping">
       Shopping List <span class="tab-badge" id="count-cart">0</span>
@@ -40,7 +50,8 @@
   </nav>
 
   <div class="toolbar" id="toolbar-all">
-    <input class="search-input" id="search" type="search" placeholder="Search by name, brand…" autocomplete="off">
+    <input class="search-input" id="search" type="search" placeholder="Search by name, brand, or hex (#1a3d7c)…" autocomplete="off">
+    <input type="color" id="color-picker" value="#7c6af7" title="Pick a color to find the closest paints">
     <div class="company-pills">
       <button class="pill active" data-company="all">All</button>
       <button class="pill citadel"      data-company="Citadel">Citadel</button>
@@ -61,7 +72,31 @@
         <button class="sort-pill" data-allsort="color">Color family</button>
       </div>
     </div>
+    <div class="all-sort-row" id="tag-filter-row" hidden>
+      <span class="filter-label">Tag</span>
+      <div class="sort-pills" id="tag-filter-pills"></div>
+    </div>
     <span class="result-count" id="result-count"></span>
+    <button class="action-btn" id="btn-select-mode">☑ Select</button>
+  </div>
+
+  <div class="selection-bar" id="selection-bar" hidden>
+    <span id="selection-count">0 selected</span>
+    <button class="action-btn" id="btn-select-add-owned">Add to collection</button>
+    <button class="action-btn" id="btn-select-add-cart">Add to shopping list</button>
+    <button class="action-btn" id="btn-select-clear">Clear selection</button>
+  </div>
+
+  <div class="onboarding-banner" id="onboarding-banner" hidden>
+    <button class="onboarding-close" id="btn-close-onboarding" aria-label="Close">✕</button>
+    <h3>Getting started</h3>
+    <ol class="onboarding-checklist" id="onboarding-checklist">
+      <li data-tab="all">Mark paints you already own in <strong>All Colors</strong></li>
+      <li data-tab="learn">Check the <strong>Learn</strong> tab for a starter kit if you're just beginning</li>
+      <li data-tab="palettes">Browse <strong>Palettes</strong> for ready-made color scheme ideas</li>
+      <li data-tab="gradient">Try the <strong>Gradient Builder</strong> for a blending ramp</li>
+      <li data-tab="shopping">Build a <strong>Shopping List</strong> for what's missing</li>
+    </ol>
   </div>
 
   <main>
@@ -73,11 +108,15 @@
     <section id="view-mine" class="view">
       <div class="mine-toolbar" id="mine-toolbar">
         <span class="mine-sort-label">Sort by</span>
-        <div class="sort-pills">
+        <div class="sort-pills" id="mine-sort-pills">
           <button class="sort-pill active" data-sort="company">Company</button>
           <button class="sort-pill"        data-sort="color">Color family</button>
         </div>
+        <div class="sort-pills" id="mine-filter-pills">
+          <button class="sort-pill" id="btn-filter-low" data-filter="low">⚠ Low stock</button>
+        </div>
         <div class="mine-actions">
+          <button class="action-btn" id="btn-new-mix">🧪 New mix</button>
           <button class="action-btn" id="btn-export">↓ Export</button>
           <label  class="action-btn" id="btn-import-label" title="Import collection">
             ↑ Import
@@ -86,12 +125,65 @@
           <button class="action-btn danger" id="btn-clear">✕ Clear all</button>
         </div>
       </div>
+
+      <div class="mix-panel" id="mix-panel" hidden>
+        <div class="mix-panel-inner">
+          <h3>Create a paint mix</h3>
+          <input type="text" id="mix-name" placeholder="Mix name (optional)" class="search-input" style="width:100%">
+          <div id="mix-ingredients"></div>
+          <button type="button" class="action-btn" id="btn-add-ingredient">+ Add color</button>
+          <div class="mix-preview">
+            <span class="color-circle" id="mix-preview-swatch"></span>
+            <span id="mix-preview-label">Pick at least 2 colors with a ratio to preview.</span>
+          </div>
+          <div class="mix-panel-actions">
+            <button class="action-btn" id="btn-save-mix">Save mix</button>
+            <button class="action-btn" id="btn-cancel-mix">Cancel</button>
+          </div>
+        </div>
+      </div>
+
       <div id="list-mine"></div>
       <div class="empty-state" id="empty-mine">
         <div class="empty-icon">🎨</div>
         <p>Your collection is empty.</p>
         <p class="empty-hint">Switch to <strong>All Colors</strong> and click <strong>+</strong> to add paints.</p>
       </div>
+    </section>
+
+    <section id="view-learn" class="view">
+      <div class="palette-intro">
+        <p>New to painting miniatures? Start here: what the paint ranges mean, a short list of essentials to buy first, and the core techniques worth learning.</p>
+      </div>
+
+      <section class="panel learn-section">
+        <div class="panel-header">
+          <h2>Starter Kit</h2>
+          <p>A curated "buy these first" list, independent of what you already own.</p>
+        </div>
+        <div class="learn-toolbar">
+          <span class="filter-label">Company</span>
+          <div class="sort-pills" id="starter-company-pills"></div>
+          <button class="action-btn" id="btn-starter-add-all">+ Add all to shopping list</button>
+        </div>
+        <div id="starter-kit-list"></div>
+      </section>
+
+      <section class="panel learn-section">
+        <div class="panel-header">
+          <h2>Paint-Type Glossary</h2>
+          <p>What each paint range is actually for.</p>
+        </div>
+        <div id="paint-type-glossary" class="learn-grid"></div>
+      </section>
+
+      <section class="panel learn-section">
+        <div class="panel-header">
+          <h2>Technique Glossary</h2>
+          <p>Core painting techniques, from beginner to advanced. Tag your paints (click a swatch) with a matching keyword to link them here.</p>
+        </div>
+        <div id="technique-glossary" class="learn-grid"></div>
+      </section>
     </section>
 
     <section id="view-palettes" class="view">
@@ -117,10 +209,91 @@
       </div>
     </section>
 
+    <section id="view-gradient" class="view">
+      <div class="palette-intro">
+        <p>Pick a <strong>shadow</strong>, <strong>base</strong>, and <strong>highlight</strong> color and get a step-by-step blending ramp, snapped to real purchasable paints. Steps you don't own are flagged and can be added straight to the Shopping List.</p>
+      </div>
+
+      <div class="gradient-builder panel">
+        <div class="gradient-pickers">
+          <label>Shadow<select id="grad-shadow"></select></label>
+          <label>Base<select id="grad-base"></select></label>
+          <label>Highlight<select id="grad-highlight"></select></label>
+          <label>Steps
+            <span class="grad-steps-row">
+              <input type="range" id="grad-steps" min="3" max="7" value="5">
+              <span id="grad-steps-label">5</span>
+            </span>
+          </label>
+        </div>
+        <div class="gradient-ramp" id="gradient-ramp"></div>
+        <div class="gradient-actions">
+          <input type="text" id="grad-recipe-name" class="search-input" placeholder="Recipe name (optional)">
+          <button class="action-btn" id="btn-save-ramp">Save recipe</button>
+          <button class="action-btn" id="btn-share-ramp">🖼 Share as image</button>
+        </div>
+      </div>
+
+      <div class="panel gradient-blend-finder">
+        <div class="panel-header">
+          <h2>Complete the gradient (owned colors only)</h2>
+          <p>Find an owned paint that naturally bridges two other owned paints — no shopping required.</p>
+        </div>
+        <div class="gradient-pickers">
+          <label>From (owned)<select id="blend-from"></select></label>
+          <label>To (owned)<select id="blend-to"></select></label>
+          <button class="action-btn" id="btn-find-blend">Find blend</button>
+        </div>
+        <div class="gradient-ramp" id="blend-result"></div>
+      </div>
+
+      <div class="panel gradient-saved">
+        <div class="panel-header">
+          <h2>Saved recipes</h2>
+        </div>
+        <div id="gradient-saved-list"></div>
+      </div>
+    </section>
+
+    <section id="view-projects" class="view">
+      <div class="palette-intro">
+        <p>Group owned colors by project or army so you can see what was used where. Colors keep their global ownership — deleting a project never unowns anything.</p>
+      </div>
+
+      <div id="projects-list-view">
+        <div class="mine-toolbar">
+          <input type="text" id="new-project-name" class="search-input" placeholder="New project name…">
+          <button class="action-btn" id="btn-new-project">+ New project</button>
+        </div>
+        <div id="projects-grid" class="palette-grid-inner"></div>
+        <p class="empty-msg" id="empty-projects" hidden>No projects yet. Create one above.</p>
+      </div>
+
+      <div id="project-detail-view" hidden>
+        <div class="mine-toolbar">
+          <button class="action-btn" id="btn-project-back">← Back to projects</button>
+          <span class="mine-sort-label" id="project-detail-name"></span>
+          <div class="mine-actions">
+            <button class="action-btn" id="btn-project-duplicate">Duplicate</button>
+            <button class="action-btn danger" id="btn-project-delete">✕ Delete project</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Add owned colors to this project</h2>
+            <p>Check any owned color to add it; uncheck to remove it. This doesn't change your global collection.</p>
+          </div>
+          <div id="project-color-checklist" class="project-checklist"></div>
+        </div>
+      </div>
+    </section>
+
     <section id="view-shopping" class="view">
       <div class="mine-toolbar" id="shopping-toolbar">
         <span class="mine-sort-label" id="shopping-count-label">0 items</span>
+        <span class="mine-sort-label" id="shopping-total-label"></span>
         <div class="mine-actions">
+          <button class="action-btn" id="btn-share-cart">🖼 Share as image</button>
           <button class="action-btn" id="btn-print-cart">Print</button>
           <button class="action-btn danger" id="btn-clear-cart">✕ Clear list</button>
         </div>
@@ -133,6 +306,22 @@
       </div>
     </section>
   </main>
+
+  <div class="modal-overlay" id="note-modal" hidden>
+    <div class="modal">
+      <h3 id="note-modal-title">Notes &amp; tags</h3>
+      <label class="modal-label">Note
+        <textarea id="note-modal-text" rows="3" placeholder="e.g. good for NMM gold, dries fast, thin it…"></textarea>
+      </label>
+      <label class="modal-label">Tags (comma separated)
+        <input type="text" id="note-modal-tags" placeholder="e.g. NMM, glaze, wet-blend">
+      </label>
+      <div class="modal-actions">
+        <button class="action-btn" id="btn-note-save">Save</button>
+        <button class="action-btn" id="btn-note-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>

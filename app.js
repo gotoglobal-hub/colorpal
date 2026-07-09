@@ -8,8 +8,18 @@ let searchQuery   = '';
 let mineSort      = 'company'; // 'company' | 'color'
 const THEME_KEY    = 'colors-of-mini-theme';
 const CART_KEY     = 'colors-of-mini-cart-v1';
+const LOW_KEY      = 'colors-of-mini-low-v1';
+const MIXES_KEY    = 'colors-of-mini-mixes-v1';
+const NOTES_KEY    = 'colors-of-mini-notes-v1';
+const PRICES_KEY   = 'colors-of-mini-prices-v1';
 const AVAILABLE_THEMES = ['dark', 'light'];
 let allSort       = 'default'; // 'default' | 'color'
+let mineFilterLow = false;
+let activeTag     = 'all';
+let noteModalColorId = null;
+let selectMode    = false;
+let selectedIds   = new Set();
+let hexMatchTarget = null;
 
 /* ── LocalStorage helpers ─────────────────────────────────── */
 function getOwned() {
@@ -32,6 +42,93 @@ function toggleCart(id) {
   saveCart(cart);
   return cart.has(id);
 }
+function getLow() {
+  try { return new Set(JSON.parse(localStorage.getItem(LOW_KEY) || '[]')); }
+  catch { return new Set(); }
+}
+function saveLow(set) {
+  localStorage.setItem(LOW_KEY, JSON.stringify([...set]));
+}
+function toggleLow(id) {
+  const low = getLow();
+  low.has(id) ? low.delete(id) : low.add(id);
+  saveLow(low);
+  const nowLow = low.has(id);
+  if (nowLow) {
+    const cart = getCart();
+    if (!cart.has(id)) { cart.add(id); saveCart(cart); }
+  }
+  return nowLow;
+}
+function getMixes() {
+  try { return JSON.parse(localStorage.getItem(MIXES_KEY) || '[]'); }
+  catch { return []; }
+}
+function saveMixes(mixes) {
+  localStorage.setItem(MIXES_KEY, JSON.stringify(mixes));
+}
+function getMixColors() {
+  return getMixes().map(m => ({
+    id: m.id, name: m.name, hex: m.hex,
+    company: 'Custom Mix', brand: 'Mix',
+    isMix: true, ingredients: m.ingredients,
+  }));
+}
+function mixHex(ingredients) {
+  const totalRatio = ingredients.reduce((sum, ing) => sum + ing.ratio, 0);
+  if (totalRatio <= 0) return null;
+  let r = 0, g = 0, b = 0;
+  ingredients.forEach(ing => {
+    const rgb = hexToRgb(ing.color.hex);
+    const w = ing.ratio / totalRatio;
+    r += rgb.r * w; g += rgb.g * w; b += rgb.b * w;
+  });
+  const toHex = v => Math.round(v).toString(16).padStart(2, '0');
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
+}
+function getNotes() {
+  try { return JSON.parse(localStorage.getItem(NOTES_KEY) || '{}'); }
+  catch { return {}; }
+}
+function saveNotes(notes) {
+  localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+}
+function getNote(id) {
+  return getNotes()[id] || { note: '', tags: [] };
+}
+function setNote(id, data) {
+  const notes = getNotes();
+  const hasContent = (data.note && data.note.trim()) || (data.tags && data.tags.length);
+  if (hasContent) {
+    notes[id] = { note: data.note.trim(), tags: data.tags };
+  } else {
+    delete notes[id];
+  }
+  saveNotes(notes);
+}
+function allUsedTags() {
+  const notes = getNotes();
+  const tags = new Set();
+  Object.values(notes).forEach(n => (n.tags || []).forEach(t => tags.add(t)));
+  return [...tags].sort();
+}
+function getPrices() {
+  try { return JSON.parse(localStorage.getItem(PRICES_KEY) || '{}'); }
+  catch { return {}; }
+}
+function savePrices(prices) {
+  localStorage.setItem(PRICES_KEY, JSON.stringify(prices));
+}
+function getPrice(id) {
+  const p = getPrices()[id];
+  return typeof p === 'number' ? p : null;
+}
+function setPrice(id, value) {
+  const prices = getPrices();
+  if (value === null || isNaN(value)) delete prices[id];
+  else prices[id] = value;
+  savePrices(prices);
+}
 function getSavedTheme() {
   const saved = localStorage.getItem(THEME_KEY);
   return AVAILABLE_THEMES.includes(saved) ? saved : 'dark';
@@ -50,6 +147,10 @@ function toggleOwned(id) {
   const owned = getOwned();
   owned.has(id) ? owned.delete(id) : owned.add(id);
   saveOwned(owned);
+  if (!owned.has(id)) {
+    const low = getLow();
+    if (low.delete(id)) saveLow(low);
+  }
   if (activeTab === 'mine') renderMine();
   if (activeTab === 'palettes') renderPalettes();
   return owned.has(id);
@@ -72,6 +173,46 @@ function hexToHsl(hex) {
     }
   }
   return { h: h * 360, s: s * 100, l: l * 100 };
+}
+
+function hslToHex(h, s, l) {
+  h = ((h % 360) + 360) % 360;
+  s = Math.max(0, Math.min(100, s)) / 100;
+  l = Math.max(0, Math.min(100, l)) / 100;
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+  const m = l - c / 2;
+  let r = 0, g = 0, b = 0;
+  if (h < 60)       { r = c; g = x; b = 0; }
+  else if (h < 120) { r = x; g = c; b = 0; }
+  else if (h < 180) { r = 0; g = c; b = x; }
+  else if (h < 240) { r = 0; g = x; b = c; }
+  else if (h < 300) { r = x; g = 0; b = c; }
+  else              { r = c; g = 0; b = x; }
+  const toHex = v => Math.round((v + m) * 255).toString(16).padStart(2, '0');
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
+}
+
+function interpolateHexRange(hexA, hexB, count) {
+  const a = hexToHsl(hexA), b = hexToHsl(hexB);
+  const out = [];
+  for (let i = 0; i < count; i++) {
+    const t = count === 1 ? 0 : i / (count - 1);
+    const h = a.h + (b.h - a.h) * t;
+    const s = a.s + (b.s - a.s) * t;
+    const l = a.l + (b.l - a.l) * t;
+    out.push(hslToHex(h, s, l));
+  }
+  return out;
+}
+
+function buildRampHexes(shadowHex, baseHex, highlightHex, steps) {
+  steps = Math.max(3, steps);
+  const half1 = Math.ceil((steps + 1) / 2);
+  const half2 = steps - half1 + 1;
+  const seg1 = interpolateHexRange(shadowHex, baseHex, half1);
+  const seg2 = interpolateHexRange(baseHex, highlightHex, half2);
+  return seg1.concat(seg2.slice(1));
 }
 
 // ~10 color families in display order
@@ -387,6 +528,147 @@ const PAINT_GUIDES = {
   ],
 };
 
+/* ── Learn: paint-type glossary ──────────────────────────── */
+const PAINT_TYPE_GLOSSARY = [
+  { range: 'Base', companies: ['Citadel'], description: 'Thick, flat-opaque paint made to cover bare plastic/resin in one or two coats.', whenToUse: 'Always your first coat of color, before any highlighting or shading.' },
+  { range: 'Layer', companies: ['Citadel'], description: 'Thinner and more translucent than Base paint, built for building up highlights.', whenToUse: 'Painted over a Base coat to add lighter tones and definition.' },
+  { range: 'Shade', companies: ['Citadel'], description: 'A thin, ink-like wash that flows into recesses and adds depth automatically.', whenToUse: 'Applied over a base coat to shade crevices in one step — the single biggest "make it look good fast" tool.' },
+  { range: 'Dry', companies: ['Citadel'], description: 'Thick, chalky paint made for drybrushing — catches only raised edges and texture.', whenToUse: 'Great for fur, rubble, fabric texture, or a fast highlight over a shaded model.' },
+  { range: 'Edge', companies: ['Citadel'], description: 'Opaque paint formulated to go on cleanly in a thin line along raised edges.', whenToUse: 'For crisp edge highlights on armor plates and blades.' },
+  { range: 'Glaze', companies: ['Citadel'], description: 'Very translucent paint that tints the color underneath rather than covering it.', whenToUse: 'Subtle color blending/toning over a finished area — an intermediate technique.' },
+  { range: 'Technical', companies: ['Citadel'], description: 'Special-effect paints — texture, rust, cracked earth, snow, blood and similar.', whenToUse: 'Basing and effects, usually applied last.' },
+  { range: 'Contrast', companies: ['Citadel'], description: 'One-coat paint that self-shades as it dries, combining a base color and a wash.', whenToUse: 'Fast painting: apply over a white or grey primer for a finished look in one coat.' },
+  { range: 'Game Color', companies: ['Vallejo'], description: "Vallejo's general-purpose wargaming range, roughly equivalent to Citadel Base/Layer.", whenToUse: 'General base coating and layering for tabletop miniatures.' },
+  { range: 'Model Color', companies: ['Vallejo'], description: 'Artist-grade acrylic aimed at scale modelers, with a huge, precise color range.', whenToUse: 'Fine detail work and historical/scale-model painting.' },
+  { range: 'True Metallic Metal', companies: ['Vallejo'], description: 'A metallic system with matched light/base/shade/airbrush tones per metal color.', whenToUse: 'Realistic non-painted metal (NMM alternative) — layering the light/base/shade set together.' },
+  { range: 'Speedpaint 2.0', companies: ['Army Painter'], description: "Army Painter's one-coat contrast-style paint — similar role to Citadel Contrast.", whenToUse: 'Fast painting over a light-colored primer, one coat to a finished result.' },
+  { range: 'Speedpaint Markers', companies: ['Army Painter'], description: 'Speedpaint formula in a felt-tip marker for very fast, mess-free application.', whenToUse: 'Same as Speedpaint 2.0, when speed matters more than fine control.' },
+  { range: 'Formula P3', companies: ['P3 Paints'], description: "Privateer Press's studio paint system, covering base and layer duties in one range.", whenToUse: 'General base coating and highlighting, similar workflow to Citadel Base+Layer.' },
+  { range: 'Acrylic', companies: ['Greenstuff World'], description: 'General-purpose hobby acrylic range covering a wide, saturated color spread.', whenToUse: 'Base coating, layering, and effects — check the individual paint\'s finish/opacity.' },
+  { range: 'Quick Gen', companies: ['AK Interactive'], description: 'A fast one-coat acrylic range in the same spirit as Contrast/Speedpaint.', whenToUse: 'Speed painting over primer for a finished result in a single coat.' },
+];
+
+function renderPaintTypeGlossary() {
+  const el = document.getElementById('paint-type-glossary');
+  el.innerHTML = PAINT_TYPE_GLOSSARY.map(g => `
+    <div class="learn-card">
+      <h3>${g.range} <span class="learn-difficulty beginner" style="margin-left:auto">${g.companies.join(', ')}</span></h3>
+      <p>${g.description}</p>
+      <p class="when-to-use"><strong>When to use it:</strong> ${g.whenToUse}</p>
+    </div>
+  `).join('');
+}
+
+/* ── Learn: technique glossary ───────────────────────────── */
+const TECHNIQUE_GLOSSARY = [
+  { name: 'Base Coating', difficulty: 'beginner', matchTags: ['base', 'basecoat', 'base coat'], description: 'Applying a solid, even first coat of color over bare primer.', whenToUse: 'The very first painting step on every model.' },
+  { name: 'Washing / Shading', difficulty: 'beginner', matchTags: ['wash', 'shade'], description: 'Flowing a thin, dark ink into recesses so shadows appear automatically.', whenToUse: 'Right after your base coat, to add instant depth.' },
+  { name: 'Drybrushing', difficulty: 'beginner', matchTags: ['drybrush'], description: 'Wiping almost all paint off a brush, then lightly stroking it over a model so only raised details pick up color.', whenToUse: 'Fast highlights on texture — fur, rubble, chainmail, rock.' },
+  { name: 'Layering', difficulty: 'intermediate', matchTags: ['layer', 'layering'], description: 'Building up progressively lighter thin coats to create smooth highlights.', whenToUse: 'The classic way to highlight armor, cloth, and skin with defined edges.' },
+  { name: 'Glazing', difficulty: 'intermediate', matchTags: ['glaze'], description: 'Applying very thin, translucent coats to subtly shift or blend a color.', whenToUse: 'Smoothing harsh transitions or tinting an area without hiding what\'s beneath.' },
+  { name: 'Edge Highlighting', difficulty: 'intermediate', matchTags: ['edge highlight', 'edge-highlight', 'edge'], description: 'A thin highlight line painted precisely along a raised edge or panel line.', whenToUse: 'Armor plates, blades, and mechanical edges for a crisp, "lit from above" look.' },
+  { name: 'Wet Blending', difficulty: 'advanced', matchTags: ['wet-blend', 'wet blend', 'wetblend'], description: 'Blending two or more wet paints directly on the model so they merge with no hard edge.', whenToUse: 'Smooth gradients on skin, cloth, or fantasy effects where no edge should show.' },
+  { name: 'Zenithal Priming', difficulty: 'intermediate', matchTags: ['zenithal'], description: 'Priming dark from below and spraying light from directly above, so the model has built-in shading before any paint goes on.', whenToUse: 'Before base coating — especially efficient when using Contrast/Speedpaint-style paints.' },
+  { name: 'NMM (Non-Metallic Metal)', difficulty: 'advanced', matchTags: ['nmm'], description: 'Painting metal using ordinary colors (blacks, whites, and a hue) instead of metallic paint, to fake sharp reflections.', whenToUse: 'Display-quality armor or weapons when a painted, stylized metal look is wanted.' },
+  { name: 'OSL (Object Source Lighting)', difficulty: 'advanced', matchTags: ['osl'], description: 'Painting a glow that realistically lights up the nearby model surface, as if a light source (a blade, a gem, fire) were really there.', whenToUse: 'Magic weapons, power sources, fire, and other in-universe light effects.' },
+];
+
+function renderTechniqueGlossary() {
+  const el = document.getElementById('technique-glossary');
+  const notes = getNotes();
+  el.innerHTML = TECHNIQUE_GLOSSARY.map(t => {
+    const linked = allColors.filter(c => {
+      const tags = (notes[c.id]?.tags || []).map(tag => tag.toLowerCase());
+      return t.matchTags.some(mt => tags.includes(mt));
+    });
+    const linkedHtml = linked.length
+      ? `<div class="learn-linked">
+           <div class="learn-linked-label">Your tagged paints (${linked.length})</div>
+           <div class="color-tags">${linked.map(c => `<span class="suggestion-chip"><span class="swatch" style="background:${c.hex}"></span>${c.name}</span>`).join('')}</div>
+         </div>`
+      : '';
+    return `
+      <div class="learn-card">
+        <h3>${t.name} <span class="learn-difficulty ${t.difficulty}">${t.difficulty}</span></h3>
+        <p>${t.description}</p>
+        <p class="when-to-use"><strong>When to use it:</strong> ${t.whenToUse}</p>
+        ${linkedHtml}
+      </div>
+    `;
+  }).join('');
+}
+
+/* ── Learn: starter kit ──────────────────────────────────── */
+const STARTER_KIT = [
+  { role: 'Black Base', ids: { 'Citadel': 'citadel-base-abaddon-black', 'Vallejo': 'vallejo-model-color-black', 'Army Painter': 'army-painter-sp2-grim-black' } },
+  { role: 'White Base', ids: { 'Citadel': 'citadel-base-ceramite-white', 'Vallejo': 'vallejo-model-color-white', 'Army Painter': 'army-painter-sp2-holy-white' } },
+  { role: 'All-Purpose Shade / Wash', ids: { 'Citadel': 'citadel-shade-nuln-oil', 'Vallejo': 'vallejo-game-color-smokey-ink' } },
+  { role: 'Red', ids: { 'Citadel': 'citadel-base-khorne-red', 'Vallejo': 'vallejo-game-color-scarlet-red', 'Army Painter': 'army-painter-sp2-blood-red' } },
+  { role: 'Blue', ids: { 'Citadel': 'citadel-base-macragge-blue', 'Vallejo': 'vallejo-game-color-ultramarine-blue', 'Army Painter': 'army-painter-sp2-beowulf-blue' } },
+  { role: 'Yellow', ids: { 'Citadel': 'citadel-base-averland-sunset', 'Vallejo': 'vallejo-game-color-sun-yellow', 'Army Painter': 'army-painter-sp2-zealot-yellow' } },
+  { role: 'Metallic Gold', ids: { 'Citadel': 'citadel-base-balthasar-gold', 'Vallejo': 'vallejo-true-metallic-metal-imperial-gold-base', 'Army Painter': 'army-painter-sp2-aztec-gold' } },
+  { role: 'Skin Tone', ids: { 'Citadel': 'citadel-layer-cadian-fleshtone', 'Vallejo': 'vallejo-game-color-pale-flesh', 'Army Painter': 'army-painter-sp2-peachy-flesh' } },
+];
+const STARTER_KIT_COMPANIES = ['Citadel', 'Vallejo', 'Army Painter'];
+let starterKitCompany = 'Citadel';
+
+function renderStarterKitPills() {
+  const el = document.getElementById('starter-company-pills');
+  el.innerHTML = STARTER_KIT_COMPANIES.map(co =>
+    `<button class="sort-pill${co === starterKitCompany ? ' active' : ''}" data-co="${co}">${co}</button>`
+  ).join('');
+  el.querySelectorAll('.sort-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      starterKitCompany = btn.dataset.co;
+      renderStarterKitPills();
+      renderStarterKit();
+    });
+  });
+}
+
+function starterKitColors() {
+  return STARTER_KIT
+    .map(entry => ({ role: entry.role, color: allColors.find(c => c.id === entry.ids[starterKitCompany]) }))
+    .filter(entry => entry.color);
+}
+
+function renderStarterKit() {
+  const el = document.getElementById('starter-kit-list');
+  const entries = starterKitColors();
+  const owned = getOwned();
+  el.innerHTML = entries.map(({ role, color }) => `
+    <div class="starter-role">
+      <div class="starter-role-label">${role}</div>
+      <div class="guide-chips">
+        <span class="guide-chip${owned.has(color.id) ? ' guide-chip-owned' : ''}" title="${color.company} · ${color.brand}">
+          <span class="swatch" style="background:${color.hex}"></span>
+          <span class="guide-paint-name">${color.name}</span>
+          <span class="guide-paint-meta">${color.company} · ${color.brand}</span>
+          ${owned.has(color.id) ? '<span class="guide-owned-badge">✓ Owned</span>' : ''}
+        </span>
+      </div>
+    </div>
+  `).join('');
+}
+
+document.getElementById('btn-starter-add-all').addEventListener('click', () => {
+  const entries = starterKitColors();
+  if (!entries.length) { showToast('No starter kit paints found for this company.', true); return; }
+  const cart = getCart();
+  entries.forEach(({ color }) => cart.add(color.id));
+  saveCart(cart);
+  updateBadges();
+  if (activeTab === 'shopping') renderShoppingList();
+  showToast(`Added ${entries.length} starter paints to your shopping list.`);
+});
+
+function renderLearn() {
+  renderPaintTypeGlossary();
+  renderTechniqueGlossary();
+  renderStarterKitPills();
+  renderStarterKit();
+}
+
 function getColorFamily(hex) {
   const { h, s, l } = hexToHsl(hex);
   // Lightness extremes — require low saturation for Black so very dark green/blue stay colored
@@ -437,33 +719,86 @@ const themeSelect        = document.getElementById('theme-select');
 
 /* ── Card builder ─────────────────────────────────────────── */
 const CART_SVG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>`;
+const LOW_SVG  = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
 
-function buildCard(color, owned) {
-  const isOwned   = owned.has(color.id);
+function buildCard(color, owned, opts = {}) {
+  const isMix     = !!color.isMix;
+  const isOwned   = isMix || owned.has(color.id);
   const inCart    = getCart().has(color.id);
+  const isLow     = !isMix && getLow().has(color.id);
   const coSlug    = color.company.replace(' ', '-');
   const card      = document.createElement('div');
-  card.className  = `color-card${isOwned ? ' owned' : ''}`;
+  const isSelected = selectedIds.has(color.id);
+  card.className  = `color-card${isOwned ? ' owned' : ''}${isLow ? ' low-stock' : ''}${isMix ? ' is-mix' : ''}${isSelected ? ' selected' : ''}`;
   card.dataset.id = color.id;
 
+  const substitute = !isOwned ? suggestSubstitute(color) : null;
+  const substituteHtml = substitute
+    ? `<div class="color-substitute" title="Closest color you already own">
+         <span class="swatch" style="background:${substitute.hex}"></span>
+         Have: ${substitute.name}
+       </div>`
+    : '';
+
+  const noteData = getNote(color.id);
+  const hasNote  = !!(noteData.note || (noteData.tags && noteData.tags.length));
+  const tagsHtml = noteData.tags && noteData.tags.length
+    ? `<div class="color-tags">${noteData.tags.map(t => `<span class="color-tag-chip">${t}</span>`).join('')}</div>`
+    : '';
+
+  const price = getPrice(color.id);
+  const priceHtml = opts.showPrice
+    ? `<div class="color-price"><span>$</span><input type="number" class="price-input" min="0" step="0.01" placeholder="0.00" value="${price !== null ? price : ''}"></div>`
+    : '';
+
+  const matchHtml = hexMatchTarget
+    ? `<div class="color-match">${Math.max(0, Math.round(100 - (colorDistance(color.hex, hexMatchTarget) / 441.7) * 100))}% match to ${hexMatchTarget}</div>`
+    : '';
+
   card.innerHTML = `
-    <div class="color-circle" style="background-color:${color.hex}"></div>
+    <div class="color-circle${hasNote ? ' has-note' : ''}" style="background-color:${color.hex}" title="Click to add a note or tags"></div>
     <div class="color-info">
       <div class="color-meta">
-        <span class="badge badge-co ${coSlug}">${color.company}</span>
+        <span class="badge badge-co ${coSlug}">${isMix ? '🧪 Mix' : color.company}</span>
         <span class="badge badge-brand">${color.brand}</span>
       </div>
       <div class="color-name" title="${color.name}">${color.name}</div>
+      ${substituteHtml}
+      ${tagsHtml}
+      ${priceHtml}
+      ${matchHtml}
     </div>
     <button class="cart-btn${inCart ? ' in-cart' : ''}"
             aria-label="${inCart ? 'Remove from shopping list' : 'Add to shopping list'}">
       ${CART_SVG}
     </button>
+    <button class="low-btn${isLow ? ' is-low' : ''}"${isOwned && !isMix ? '' : ' disabled'}
+            aria-label="${isLow ? 'Mark as fully stocked' : 'Mark as low stock'}">
+      ${LOW_SVG}
+    </button>
     <button class="toggle-btn${isOwned ? ' owned' : ''}"
-            aria-label="${isOwned ? 'Remove from collection' : 'Add to collection'}">
-      ${isOwned ? '✓' : '+'}
+            aria-label="${isMix ? 'Delete mix' : (isOwned ? 'Remove from collection' : 'Add to collection')}">
+      ${isMix ? '🗑' : (isOwned ? '✓' : '+')}
     </button>
   `;
+
+  card.querySelector('.color-circle').addEventListener('click', () => {
+    if (selectMode) return;
+    openNoteModal(color);
+  });
+
+  card.addEventListener('click', e => {
+    if (!selectMode || e.target.closest('button')) return;
+    toggleCardSelection(color.id, card);
+  });
+
+  if (opts.showPrice) {
+    card.querySelector('.price-input').addEventListener('input', e => {
+      const val = e.target.value === '' ? null : parseFloat(e.target.value);
+      setPrice(color.id, val);
+      updateShoppingTotal();
+    });
+  }
 
   card.querySelector('.cart-btn').addEventListener('click', () => {
     const nowInCart = toggleCart(color.id);
@@ -483,13 +818,66 @@ function buildCard(color, owned) {
     }
   });
 
+  card.querySelector('.low-btn').addEventListener('click', () => {
+    const nowLow = toggleLow(color.id);
+    card.classList.toggle('low-stock', nowLow);
+    const btn = card.querySelector('.low-btn');
+    btn.classList.toggle('is-low', nowLow);
+    btn.setAttribute('aria-label', nowLow ? 'Mark as fully stocked' : 'Mark as low stock');
+
+    const cartBtn   = card.querySelector('.cart-btn');
+    const inCartNow = getCart().has(color.id);
+    cartBtn.classList.toggle('in-cart', inCartNow);
+    cartBtn.setAttribute('aria-label', inCartNow ? 'Remove from shopping list' : 'Add to shopping list');
+    updateBadges();
+
+    if (activeTab === 'mine' && mineFilterLow && !nowLow) {
+      const grid = card.parentElement;
+      card.remove();
+      if (grid && grid.classList.contains('color-list') && grid.children.length === 0) {
+        grid.previousElementSibling?.remove();
+        grid.remove();
+      }
+      toggleMineEmpty();
+    }
+  });
+
   card.querySelector('.toggle-btn').addEventListener('click', () => {
+    if (isMix) {
+      const mixSnapshot  = getMixes().find(m => m.id === color.id);
+      const wasInCart    = getCart().has(color.id);
+      deleteMix(color.id);
+      updateBadges();
+      if (activeTab === 'mine') renderMine();
+      showToast(`Mix "${color.name}" deleted.`, {
+        actionLabel: 'Undo',
+        onAction: () => {
+          if (!mixSnapshot) return;
+          const mixes = getMixes();
+          mixes.push(mixSnapshot);
+          saveMixes(mixes);
+          if (wasInCart) { const cart = getCart(); cart.add(color.id); saveCart(cart); }
+          updateBadges();
+          if (activeTab === 'mine') renderMine();
+        },
+      });
+      return;
+    }
+
     const nowOwned = toggleOwned(color.id);
     card.classList.toggle('owned', nowOwned);
     const btn = card.querySelector('.toggle-btn');
     btn.classList.toggle('owned', nowOwned);
     btn.textContent = nowOwned ? '✓' : '+';
     btn.setAttribute('aria-label', nowOwned ? 'Remove from collection' : 'Add to collection');
+
+    const lowBtn = card.querySelector('.low-btn');
+    lowBtn.disabled = !nowOwned;
+    if (!nowOwned) {
+      card.classList.remove('low-stock');
+      lowBtn.classList.remove('is-low');
+      lowBtn.setAttribute('aria-label', 'Mark as low stock');
+    }
     updateBadges();
 
     if (activeTab === 'mine' && !nowOwned) {
@@ -504,6 +892,12 @@ function buildCard(color, owned) {
   });
 
   return card;
+}
+
+function deleteMix(id) {
+  saveMixes(getMixes().filter(m => m.id !== id));
+  const cart = getCart();
+  if (cart.delete(id)) saveCart(cart);
 }
 
 /* ── Group header builder ─────────────────────────────────── */
@@ -557,7 +951,8 @@ function filteredColors() {
   return allColors.filter(c => {
     if (activeCompany !== 'all' && c.company !== activeCompany) return false;
     if (activeBrand   !== 'all' && c.brand   !== activeBrand)   return false;
-    if (q) {
+    if (activeTag     !== 'all' && !(getNote(c.id).tags || []).includes(activeTag)) return false;
+    if (q && !hexMatchTarget) {
       const hit = c.name.toLowerCase().includes(q)
                || c.brand.toLowerCase().includes(q)
                || c.company.toLowerCase().includes(q);
@@ -569,11 +964,20 @@ function filteredColors() {
 
 function renderAll() {
   const owned  = getOwned();
-  const colors = filteredColors();
+  let colors   = filteredColors();
   listAll.innerHTML = '';
   emptySearch.hidden = colors.length > 0;
   resultCount.textContent = colors.length < allColors.length
     ? `${colors.length} of ${allColors.length} colors` : '';
+
+  if (hexMatchTarget) {
+    colors = [...colors].sort((a, b) => colorDistance(a.hex, hexMatchTarget) - colorDistance(b.hex, hexMatchTarget));
+    const grid = document.createElement('div');
+    grid.className = 'color-list';
+    colors.forEach(c => grid.appendChild(buildCard(c, owned)));
+    listAll.appendChild(grid);
+    return;
+  }
 
   if (allSort === 'color') {
     renderAllByColor(colors, owned);
@@ -638,10 +1042,36 @@ function findNearestColor(hex, colorList) {
   return { color: best, distance: minDist };
 }
 
+function parseColorInput(str) {
+  const s = str.trim();
+  let m = s.match(/^#([0-9a-f]{3})$/i);
+  if (m) {
+    const [r, g, b] = m[1].split('');
+    return `#${r}${r}${g}${g}${b}${b}`.toUpperCase();
+  }
+  m = s.match(/^#?([0-9a-f]{6})$/i);
+  if (m) return `#${m[1].toUpperCase()}`;
+  m = s.match(/^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/i);
+  if (m) {
+    const toHex = v => Math.min(255, parseInt(v, 10)).toString(16).padStart(2, '0');
+    return `#${toHex(m[1])}${toHex(m[2])}${toHex(m[3])}`.toUpperCase();
+  }
+  return null;
+}
+
 function findNearestOwnedColor(hex) {
   const ownedIds = getOwned();
-  const ownedColors = allColors.filter(c => ownedIds.has(c.id));
+  const ownedColors = allColors.filter(c => ownedIds.has(c.id)).concat(getMixColors());
   return ownedColors.length ? findNearestColor(hex, ownedColors) : null;
+}
+
+/* ── Substitution suggestions ─────────────────────────────── */
+const SUBSTITUTE_THRESHOLD = 80;
+function suggestSubstitute(color) {
+  const match = findNearestOwnedColor(color.hex);
+  if (!match || !match.color || match.color.id === color.id) return null;
+  if (match.distance >= SUBSTITUTE_THRESHOLD) return null;
+  return match.color;
 }
 
 function renderPalettes() {
@@ -765,7 +1195,13 @@ function renderPaletteAnalysis() {
 /* ── Render My Colors ─────────────────────────────────────── */
 function renderMine() {
   const owned  = getOwned();
-  const colors = allColors.filter(c => owned.has(c.id));
+  const low    = getLow();
+  let colors = allColors.filter(c => owned.has(c.id));
+  if (mineFilterLow) {
+    colors = colors.filter(c => low.has(c.id));
+  } else {
+    colors = colors.concat(getMixColors());
+  }
   listMine.innerHTML = '';
 
   if (colors.length === 0) {
@@ -823,20 +1259,23 @@ function renderMineByColor(colors, owned) {
 function toggleMineEmpty() {
   const hasCards = listMine.querySelector('.color-card') !== null;
   emptyMine.style.display = hasCards ? 'none' : 'block';
+  emptyMine.innerHTML = mineFilterLow
+    ? `<div class="empty-icon">⚠</div><p>No low-stock paints.</p><p class="empty-hint">Click the <strong>warning</strong> icon on an owned paint to flag it as running low.</p>`
+    : `<div class="empty-icon">🎨</div><p>Your collection is empty.</p><p class="empty-hint">Switch to <strong>All Colors</strong> and click <strong>+</strong> to add paints.</p>`;
   // toolbar always visible so import works on an empty collection
-  document.querySelector('.sort-pills').style.opacity = hasCards ? '1' : '0.4';
+  document.getElementById('mine-sort-pills').style.opacity = hasCards ? '1' : '0.4';
 }
 
 /* ── Render Shopping List ─────────────────────────────────── */
 function renderShoppingList() {
   const cart = getCart();
-  const colors = allColors.filter(c => cart.has(c.id));
+  const colors = allColors.filter(c => cart.has(c.id)).concat(getMixColors().filter(c => cart.has(c.id)));
   listShopping.innerHTML = '';
 
   const count = colors.length;
   shoppingCountLabel.textContent = count === 0 ? '0 items' : `${count} item${count !== 1 ? 's' : ''}`;
 
-  if (count === 0) { toggleShoppingEmpty(); return; }
+  if (count === 0) { toggleShoppingEmpty(); updateShoppingTotal(); return; }
 
   const groups = {};
   colors.forEach(c => {
@@ -859,11 +1298,25 @@ function renderShoppingList() {
       frag.appendChild(header);
       const grid = document.createElement('div');
       grid.className = 'color-list';
-      list.forEach(c => grid.appendChild(buildCard(c, owned)));
+      list.forEach(c => grid.appendChild(buildCard(c, owned, { showPrice: true })));
       frag.appendChild(grid);
     });
   listShopping.appendChild(frag);
   toggleShoppingEmpty();
+  updateShoppingTotal();
+}
+
+function updateShoppingTotal() {
+  const cart = getCart();
+  let total = 0, priced = 0, unpriced = 0;
+  cart.forEach(id => {
+    const price = getPrice(id);
+    if (price !== null) { total += price; priced++; }
+    else { unpriced++; }
+  });
+  const totalLabel = document.getElementById('shopping-total-label');
+  if (cart.size === 0) { totalLabel.textContent = ''; return; }
+  totalLabel.textContent = `$${total.toFixed(2)}` + (unpriced > 0 ? ` (${unpriced} without a price)` : '');
 }
 
 function toggleShoppingEmpty() {
@@ -873,12 +1326,13 @@ function toggleShoppingEmpty() {
 
 /* ── Count badges ─────────────────────────────────────────── */
 function updateBadges() {
-  const size     = getOwned().size;
+  const size     = getOwned().size + getMixes().length;
   const cartSize = getCart().size;
   countAll.textContent      = allColors.length;
   countMine.textContent     = size;
   countPalettes.textContent = PALETTE_TEMPLATES.length;
   countCart.textContent     = cartSize;
+  if (countProjects) countProjects.textContent = getProjects().length;
   countMine.classList.toggle('owned', size > 0);
   countCart.classList.toggle('has-items', cartSize > 0);
 }
@@ -893,9 +1347,13 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById(`view-${activeTab}`).classList.add('active');
     toolbarAll.hidden = activeTab !== 'all';
+    if (activeTab !== 'all' && selectMode) exitSelectMode();
     if (activeTab === 'mine') renderMine();
     if (activeTab === 'palettes') renderPalettes();
     if (activeTab === 'shopping') renderShoppingList();
+    if (activeTab === 'gradient') { initGradientPickers(); initBlendPickers(); blendResultEl.innerHTML = ''; }
+    if (activeTab === 'projects') renderProjects();
+    if (activeTab === 'learn') renderLearn();
   });
 });
 
@@ -911,19 +1369,35 @@ document.querySelectorAll('#all-sort-pills .sort-pill').forEach(btn => {
 });
 
 /* ── Mine sort pills ──────────────────────────────────────── */
-document.querySelectorAll('#mine-toolbar .sort-pill').forEach(btn => {
+document.querySelectorAll('#mine-sort-pills .sort-pill').forEach(btn => {
   btn.addEventListener('click', () => {
     if (btn.dataset.sort === mineSort) return;
-    document.querySelectorAll('#mine-toolbar .sort-pill').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#mine-sort-pills .sort-pill').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     mineSort = btn.dataset.sort;
     renderMine();
   });
 });
 
+/* ── Mine low-stock filter ────────────────────────────────── */
+document.getElementById('btn-filter-low').addEventListener('click', function () {
+  mineFilterLow = !mineFilterLow;
+  this.classList.toggle('active', mineFilterLow);
+  renderMine();
+});
+
 /* ── Search ───────────────────────────────────────────────── */
 searchInput.addEventListener('input', e => {
   searchQuery = e.target.value;
+  hexMatchTarget = parseColorInput(searchQuery);
+  renderAll();
+});
+
+const colorPicker = document.getElementById('color-picker');
+colorPicker.addEventListener('input', e => {
+  searchInput.value = e.target.value;
+  searchQuery = e.target.value;
+  hexMatchTarget = parseColorInput(searchQuery);
   renderAll();
 });
 
@@ -944,14 +1418,33 @@ if (themeSelect) {
 initTheme();
 
 /* ── Toast ────────────────────────────────────────────────── */
-function showToast(msg, isError = false) {
+function showToast(msg, opts = {}) {
+  if (typeof opts === 'boolean') opts = { isError: opts };
+  const { isError = false, actionLabel, onAction } = opts;
+
   document.getElementById('toast')?.remove();
   const t = document.createElement('div');
   t.id = 'toast';
   t.className = isError ? 'toast toast-error' : 'toast';
-  t.textContent = msg;
+
+  const msgSpan = document.createElement('span');
+  msgSpan.textContent = msg;
+  t.appendChild(msgSpan);
+
+  if (actionLabel && onAction) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'toast-action';
+    btn.textContent = actionLabel;
+    btn.addEventListener('click', () => {
+      onAction();
+      t.remove();
+    });
+    t.appendChild(btn);
+  }
+
   document.body.appendChild(t);
-  setTimeout(() => t.remove(), 3200);
+  setTimeout(() => { if (document.getElementById('toast') === t) t.remove(); }, actionLabel ? 6000 : 3200);
 }
 
 /* ── Export ───────────────────────────────────────────────── */
@@ -963,6 +1456,9 @@ document.getElementById('btn-export').addEventListener('click', () => {
     exported: new Date().toISOString(),
     count: owned.size,
     colors: [...owned],
+    low: [...getLow()],
+    mixes: getMixes(),
+    prices: getPrices(),
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   const url  = URL.createObjectURL(blob);
@@ -992,6 +1488,32 @@ document.getElementById('import-file').addEventListener('change', e => {
       ids.forEach(id => { if (typeof id === 'string') owned.add(id); });
       saveOwned(owned);
 
+      if (Array.isArray(raw.low)) {
+        const low = getLow();
+        raw.low.forEach(id => { if (typeof id === 'string' && owned.has(id)) low.add(id); });
+        saveLow(low);
+      }
+
+      if (Array.isArray(raw.mixes)) {
+        const mixes = getMixes();
+        const existingIds = new Set(mixes.map(m => m.id));
+        raw.mixes.forEach(m => {
+          if (m && typeof m.id === 'string' && typeof m.hex === 'string' && !existingIds.has(m.id)) {
+            mixes.push(m);
+            existingIds.add(m.id);
+          }
+        });
+        saveMixes(mixes);
+      }
+
+      if (raw.prices && typeof raw.prices === 'object') {
+        const prices = getPrices();
+        Object.entries(raw.prices).forEach(([id, val]) => {
+          if (typeof val === 'number') prices[id] = val;
+        });
+        savePrices(prices);
+      }
+
       const added = owned.size - before;
       updateBadges();
       if (activeTab === 'mine') renderMine();
@@ -1008,11 +1530,21 @@ document.getElementById('import-file').addEventListener('change', e => {
 document.getElementById('btn-clear').addEventListener('click', () => {
   const owned = getOwned();
   if (owned.size === 0) { showToast('Collection is already empty.', true); return; }
-  if (!confirm(`Remove all ${owned.size} colors from your collection?`)) return;
+  const ownedSnapshot = new Set(owned);
+  const lowSnapshot   = new Set(getLow());
   saveOwned(new Set());
+  saveLow(new Set());
   updateBadges();
   if (activeTab === 'mine') renderMine();
-  showToast('Collection cleared.');
+  showToast(`Collection cleared (${ownedSnapshot.size} colors).`, {
+    actionLabel: 'Undo',
+    onAction: () => {
+      saveOwned(ownedSnapshot);
+      saveLow(lowSnapshot);
+      updateBadges();
+      if (activeTab === 'mine') renderMine();
+    },
+  });
 });
 
 /* ── Shopping list actions ────────────────────────────────── */
@@ -1023,12 +1555,631 @@ document.getElementById('btn-print-cart').addEventListener('click', () => {
 document.getElementById('btn-clear-cart').addEventListener('click', () => {
   const cart = getCart();
   if (cart.size === 0) { showToast('Shopping list is already empty.', true); return; }
-  if (!confirm(`Remove all ${cart.size} color${cart.size !== 1 ? 's' : ''} from your shopping list?`)) return;
+  const cartSnapshot = new Set(cart);
   saveCart(new Set());
   updateBadges();
   if (activeTab === 'shopping') renderShoppingList();
-  showToast('Shopping list cleared.');
+  showToast(`Shopping list cleared (${cartSnapshot.size} items).`, {
+    actionLabel: 'Undo',
+    onAction: () => {
+      saveCart(cartSnapshot);
+      updateBadges();
+      if (activeTab === 'shopping') renderShoppingList();
+    },
+  });
 });
+
+/* ── Custom paint mixes ───────────────────────────────────── */
+const mixPanel        = document.getElementById('mix-panel');
+const mixIngredients  = document.getElementById('mix-ingredients');
+const mixNameInput    = document.getElementById('mix-name');
+const mixPreviewSwatch = document.getElementById('mix-preview-swatch');
+const mixPreviewLabel  = document.getElementById('mix-preview-label');
+const MAX_MIX_INGREDIENTS = 5;
+
+function buildMixIngredientOptions(selectedId) {
+  return allColors.map(c =>
+    `<option value="${c.id}"${c.id === selectedId ? ' selected' : ''}>${c.name} — ${c.company} ${c.brand}</option>`
+  ).join('');
+}
+
+function addMixIngredientRow(colorId) {
+  if (mixIngredients.children.length >= MAX_MIX_INGREDIENTS) return;
+  const row = document.createElement('div');
+  row.className = 'mix-ingredient-row';
+  row.innerHTML = `
+    <select class="mix-ingredient-color">${buildMixIngredientOptions(colorId)}</select>
+    <input type="number" class="mix-ingredient-ratio" min="0" max="100" step="5" value="50">
+    <span>%</span>
+    <button type="button" class="mix-ingredient-remove" aria-label="Remove color">✕</button>
+  `;
+  row.querySelector('.mix-ingredient-color').addEventListener('change', updateMixPreview);
+  row.querySelector('.mix-ingredient-ratio').addEventListener('input', updateMixPreview);
+  row.querySelector('.mix-ingredient-remove').addEventListener('click', () => {
+    row.remove();
+    updateMixPreview();
+  });
+  mixIngredients.appendChild(row);
+}
+
+function readMixIngredients() {
+  return [...mixIngredients.querySelectorAll('.mix-ingredient-row')].map(row => {
+    const colorId = row.querySelector('.mix-ingredient-color').value;
+    const ratio   = parseFloat(row.querySelector('.mix-ingredient-ratio').value) || 0;
+    const color   = allColors.find(c => c.id === colorId);
+    return color ? { color, ratio } : null;
+  }).filter(Boolean);
+}
+
+function updateMixPreview() {
+  const ingredients = readMixIngredients().filter(i => i.ratio > 0);
+  if (ingredients.length < 2) {
+    mixPreviewSwatch.style.background = 'transparent';
+    mixPreviewLabel.textContent = 'Pick at least 2 colors with a ratio to preview.';
+    return;
+  }
+  const hex = mixHex(ingredients);
+  mixPreviewSwatch.style.background = hex;
+  mixPreviewLabel.textContent = ingredients.map(i => `${i.color.name} (${i.ratio}%)`).join(' + ');
+}
+
+function openMixPanel() {
+  mixNameInput.value = '';
+  mixIngredients.innerHTML = '';
+  addMixIngredientRow();
+  addMixIngredientRow();
+  updateMixPreview();
+  mixPanel.hidden = false;
+}
+
+document.getElementById('btn-new-mix').addEventListener('click', openMixPanel);
+document.getElementById('btn-add-ingredient').addEventListener('click', () => addMixIngredientRow());
+document.getElementById('btn-cancel-mix').addEventListener('click', () => { mixPanel.hidden = true; });
+
+document.getElementById('btn-save-mix').addEventListener('click', () => {
+  const ingredients = readMixIngredients().filter(i => i.ratio > 0);
+  const distinctColors = new Set(ingredients.map(i => i.color.id));
+  if (ingredients.length < 2 || distinctColors.size < 2) {
+    showToast('Pick at least 2 different colors with a ratio above 0.', true);
+    return;
+  }
+  const hex  = mixHex(ingredients);
+  const name = mixNameInput.value.trim() || ingredients.map(i => i.color.name).join(' + ');
+  const mix = {
+    id: `mix-${Date.now()}`,
+    name,
+    hex,
+    ingredients: ingredients.map(i => ({ colorId: i.color.id, ratio: i.ratio })),
+  };
+  const mixes = getMixes();
+  mixes.push(mix);
+  saveMixes(mixes);
+
+  mixPanel.hidden = true;
+  updateBadges();
+  if (activeTab === 'mine') renderMine();
+  showToast(`Mix "${name}" saved.`);
+});
+
+/* ── Gradient / OSL recipe builder ───────────────────────── */
+const GRADIENTS_KEY = 'colors-of-mini-ramps-v1';
+function getGradients() {
+  try { return JSON.parse(localStorage.getItem(GRADIENTS_KEY) || '[]'); }
+  catch { return []; }
+}
+function saveGradients(list) {
+  localStorage.setItem(GRADIENTS_KEY, JSON.stringify(list));
+}
+
+const gradShadow    = document.getElementById('grad-shadow');
+const gradBase      = document.getElementById('grad-base');
+const gradHighlight = document.getElementById('grad-highlight');
+const gradSteps     = document.getElementById('grad-steps');
+const gradStepsLabel = document.getElementById('grad-steps-label');
+const gradientRampEl = document.getElementById('gradient-ramp');
+const blendFrom      = document.getElementById('blend-from');
+const blendTo        = document.getElementById('blend-to');
+const blendResultEl  = document.getElementById('blend-result');
+const gradientSavedList = document.getElementById('gradient-saved-list');
+
+function populateColorSelect(select, colorList, defaultIndex) {
+  select.innerHTML = colorList.map((c, i) =>
+    `<option value="${c.id}"${i === defaultIndex ? ' selected' : ''}>${c.name} — ${c.company}</option>`
+  ).join('');
+}
+
+function initGradientPickers() {
+  if (!allColors.length) return;
+  populateColorSelect(gradShadow, allColors, 0);
+  populateColorSelect(gradBase, allColors, Math.floor(allColors.length / 2));
+  populateColorSelect(gradHighlight, allColors, allColors.length - 1);
+  renderGradientRamp();
+  renderGradientSaved();
+}
+
+function buildGradientStepCard(hex) {
+  const nearest = findNearestColor(hex, allColors);
+  const paint   = nearest.color;
+  const owned   = getOwned().has(paint.id) || getMixColors().some(m => m.id === paint.id);
+  const inCart  = getCart().has(paint.id);
+  const el = document.createElement('div');
+  el.className = `gradient-step${owned ? '' : ' not-owned'}`;
+  el.innerHTML = `
+    <div class="color-circle" style="background:${hex}"></div>
+    <div class="gradient-step-name" title="${paint.name}">${paint.name}</div>
+    <div class="gradient-step-meta">${owned ? 'Owned' : 'Not owned'}</div>
+    ${owned ? '' : `<button type="button" class="gradient-step-addcart${inCart ? ' added' : ''}">${inCart ? '✓ On list' : '+ Shopping list'}</button>`}
+  `;
+  if (!owned) {
+    el.querySelector('.gradient-step-addcart').addEventListener('click', e => {
+      const nowInCart = toggleCart(paint.id);
+      e.target.classList.toggle('added', nowInCart);
+      e.target.textContent = nowInCart ? '✓ On list' : '+ Shopping list';
+      updateBadges();
+    });
+  }
+  return { el, paint };
+}
+
+function currentRampHexes() {
+  const shadow    = allColors.find(c => c.id === gradShadow.value);
+  const base      = allColors.find(c => c.id === gradBase.value);
+  const highlight = allColors.find(c => c.id === gradHighlight.value);
+  if (!shadow || !base || !highlight) return null;
+  const steps = parseInt(gradSteps.value, 10);
+  return buildRampHexes(shadow.hex, base.hex, highlight.hex, steps);
+}
+
+function renderGradientRamp() {
+  gradStepsLabel.textContent = gradSteps.value;
+  const hexes = currentRampHexes();
+  gradientRampEl.innerHTML = '';
+  if (!hexes) return;
+  hexes.forEach(hex => gradientRampEl.appendChild(buildGradientStepCard(hex).el));
+}
+
+[gradShadow, gradBase, gradHighlight, gradSteps].forEach(el => {
+  el.addEventListener('input', renderGradientRamp);
+  el.addEventListener('change', renderGradientRamp);
+});
+
+document.getElementById('btn-save-ramp').addEventListener('click', () => {
+  const hexes = currentRampHexes();
+  if (!hexes) { showToast('Pick shadow, base and highlight colors first.', true); return; }
+  const stepIds = hexes.map(hex => findNearestColor(hex, allColors).color.id);
+  const nameInput = document.getElementById('grad-recipe-name');
+  const name = nameInput.value.trim() || `${allColors.find(c => c.id === gradShadow.value).name} → ${allColors.find(c => c.id === gradHighlight.value).name}`;
+  const recipes = getGradients();
+  recipes.push({ id: `ramp-${Date.now()}`, name, steps: stepIds, createdAt: new Date().toISOString() });
+  saveGradients(recipes);
+  nameInput.value = '';
+  renderGradientSaved();
+  showToast(`Recipe "${name}" saved.`);
+});
+
+function renderGradientSaved() {
+  const recipes = getGradients();
+  gradientSavedList.innerHTML = '';
+  if (recipes.length === 0) {
+    gradientSavedList.innerHTML = '<p class="empty-msg">No saved recipes yet.</p>';
+    return;
+  }
+  recipes.forEach(recipe => {
+    const card = document.createElement('div');
+    card.className = 'gradient-recipe-card';
+    const swatches = recipe.steps
+      .map(id => allColors.find(c => c.id === id) || getMixColors().find(c => c.id === id))
+      .filter(Boolean)
+      .map(c => `<span class="swatch" style="background:${c.hex}" title="${c.name}"></span>`)
+      .join('');
+    card.innerHTML = `
+      <div class="gradient-recipe-swatches">${swatches}</div>
+      <div class="gradient-recipe-name">${recipe.name}</div>
+      <button class="action-btn danger" data-id="${recipe.id}">✕ Delete</button>
+    `;
+    card.querySelector('button').addEventListener('click', () => {
+      saveGradients(getGradients().filter(r => r.id !== recipe.id));
+      renderGradientSaved();
+    });
+    gradientSavedList.appendChild(card);
+  });
+}
+
+/* ── Complete-the-gradient (owned-only blend finder) ─────── */
+function ownedColorList() {
+  const owned = getOwned();
+  return allColors.filter(c => owned.has(c.id)).concat(getMixColors());
+}
+
+function initBlendPickers() {
+  const owned = ownedColorList();
+  populateColorSelect(blendFrom, owned, 0);
+  populateColorSelect(blendTo, owned, owned.length - 1);
+}
+
+document.getElementById('btn-find-blend').addEventListener('click', () => {
+  const owned = ownedColorList();
+  const from  = owned.find(c => c.id === blendFrom.value);
+  const to    = owned.find(c => c.id === blendTo.value);
+  blendResultEl.innerHTML = '';
+  if (!from || !to || owned.length < 2) {
+    blendResultEl.innerHTML = '<p class="empty-msg">Own at least two colors to find a blend.</p>';
+    return;
+  }
+  if (from.id === to.id) {
+    blendResultEl.innerHTML = '<p class="empty-msg">Pick two different owned colors.</p>';
+    return;
+  }
+  const midHex = interpolateHexRange(from.hex, to.hex, 3)[1];
+  const candidates = owned.filter(c => c.id !== from.id && c.id !== to.id);
+  const nearest = candidates.length ? findNearestColor(midHex, candidates) : null;
+
+  const frag = document.createDocumentFragment();
+  const fromCard = document.createElement('div');
+  fromCard.className = 'gradient-step';
+  fromCard.innerHTML = `<div class="color-circle" style="background:${from.hex}"></div><div class="gradient-step-name">${from.name}</div><div class="gradient-step-meta">Owned</div>`;
+  frag.appendChild(fromCard);
+
+  if (nearest && nearest.distance < 60) {
+    const midCard = document.createElement('div');
+    midCard.className = 'gradient-step';
+    midCard.innerHTML = `<div class="color-circle" style="background:${nearest.color.hex}"></div><div class="gradient-step-name">${nearest.color.name}</div><div class="gradient-step-meta">Owned — good bridge</div>`;
+    frag.appendChild(midCard);
+  } else {
+    const buy = findNearestColor(midHex, allColors);
+    const gapCard = document.createElement('div');
+    gapCard.className = 'gradient-step not-owned';
+    gapCard.innerHTML = `<div class="color-circle" style="background:${midHex}"></div><div class="gradient-step-name">${buy.color.name}</div><div class="gradient-step-meta">Nothing owned fits — consider buying</div>`;
+    frag.appendChild(gapCard);
+  }
+
+  const toCard = document.createElement('div');
+  toCard.className = 'gradient-step';
+  toCard.innerHTML = `<div class="color-circle" style="background:${to.hex}"></div><div class="gradient-step-name">${to.name}</div><div class="gradient-step-meta">Owned</div>`;
+  frag.appendChild(toCard);
+
+  blendResultEl.appendChild(frag);
+});
+
+/* ── Projects / Armies grouping ──────────────────────────── */
+const PROJECTS_KEY = 'colors-of-mini-projects-v1';
+let activeProjectId = null;
+
+function getProjects() {
+  try { return JSON.parse(localStorage.getItem(PROJECTS_KEY) || '[]'); }
+  catch { return []; }
+}
+function saveProjects(list) {
+  localStorage.setItem(PROJECTS_KEY, JSON.stringify(list));
+}
+
+const projectsListView   = document.getElementById('projects-list-view');
+const projectDetailView  = document.getElementById('project-detail-view');
+const projectsGrid       = document.getElementById('projects-grid');
+const emptyProjects      = document.getElementById('empty-projects');
+const projectDetailName  = document.getElementById('project-detail-name');
+const projectChecklist   = document.getElementById('project-color-checklist');
+const countProjects      = document.getElementById('count-projects');
+
+function renderProjects() {
+  activeProjectId = null;
+  projectsListView.hidden = false;
+  projectDetailView.hidden = true;
+
+  const projects = getProjects();
+  projectsGrid.innerHTML = '';
+  emptyProjects.hidden = projects.length > 0;
+
+  projects.forEach(project => {
+    const colors = allColors.filter(c => project.colorIds.includes(c.id)).concat(getMixColors().filter(c => project.colorIds.includes(c.id)));
+    const card = document.createElement('div');
+    card.className = 'project-card';
+    card.innerHTML = `
+      <h3>${project.name}</h3>
+      <div class="project-card-count">${colors.length} color${colors.length !== 1 ? 's' : ''}</div>
+      <div class="project-card-swatches">
+        ${colors.slice(0, 12).map(c => `<span class="swatch" style="background:${c.hex}" title="${c.name}"></span>`).join('')}
+      </div>
+    `;
+    card.addEventListener('click', () => openProject(project.id));
+    projectsGrid.appendChild(card);
+  });
+
+  updateBadges();
+}
+
+function openProject(id) {
+  activeProjectId = id;
+  projectsListView.hidden = true;
+  projectDetailView.hidden = false;
+  renderProjectDetail();
+}
+
+function renderProjectDetail() {
+  const project = getProjects().find(p => p.id === activeProjectId);
+  if (!project) { renderProjects(); return; }
+  projectDetailName.textContent = project.name;
+
+  const owned = getOwned();
+  const ownedColors = allColors.filter(c => owned.has(c.id)).concat(getMixColors());
+  projectChecklist.innerHTML = '';
+  if (ownedColors.length === 0) {
+    projectChecklist.innerHTML = '<p class="empty-msg">You don\'t own any colors yet — add some in All Colors first.</p>';
+    return;
+  }
+  ownedColors.forEach(c => {
+    const inProject = project.colorIds.includes(c.id);
+    const item = document.createElement('label');
+    item.className = 'project-checklist-item';
+    item.innerHTML = `
+      <input type="checkbox" ${inProject ? 'checked' : ''}>
+      <span class="swatch" style="background:${c.hex}"></span>
+      <span class="name">${c.name}</span>
+    `;
+    item.querySelector('input').addEventListener('change', e => {
+      const projects = getProjects();
+      const p = projects.find(pr => pr.id === activeProjectId);
+      if (!p) return;
+      if (e.target.checked) {
+        if (!p.colorIds.includes(c.id)) p.colorIds.push(c.id);
+      } else {
+        p.colorIds = p.colorIds.filter(id => id !== c.id);
+      }
+      saveProjects(projects);
+    });
+    projectChecklist.appendChild(item);
+  });
+}
+
+document.getElementById('btn-new-project').addEventListener('click', () => {
+  const input = document.getElementById('new-project-name');
+  const name = input.value.trim();
+  if (!name) { showToast('Enter a project name.', true); return; }
+  const projects = getProjects();
+  projects.push({ id: `project-${Date.now()}`, name, colorIds: [], createdAt: new Date().toISOString() });
+  saveProjects(projects);
+  input.value = '';
+  renderProjects();
+  showToast(`Project "${name}" created.`);
+});
+
+document.getElementById('btn-project-back').addEventListener('click', renderProjects);
+
+document.getElementById('btn-project-delete').addEventListener('click', () => {
+  const project = getProjects().find(p => p.id === activeProjectId);
+  if (!project) return;
+  saveProjects(getProjects().filter(p => p.id !== activeProjectId));
+  renderProjects();
+  showToast(`Project "${project.name}" deleted.`, {
+    actionLabel: 'Undo',
+    onAction: () => {
+      const projects = getProjects();
+      projects.push(project);
+      saveProjects(projects);
+      renderProjects();
+    },
+  });
+});
+
+document.getElementById('btn-project-duplicate').addEventListener('click', () => {
+  const project = getProjects().find(p => p.id === activeProjectId);
+  if (!project) return;
+  const projects = getProjects();
+  const copy = { id: `project-${Date.now()}`, name: `${project.name} (copy)`, colorIds: [...project.colorIds], createdAt: new Date().toISOString() };
+  projects.push(copy);
+  saveProjects(projects);
+  openProject(copy.id);
+  showToast(`Duplicated as "${copy.name}".`);
+});
+
+/* ── Notes & tags modal ───────────────────────────────────── */
+const noteModal      = document.getElementById('note-modal');
+const noteModalTitle = document.getElementById('note-modal-title');
+const noteModalText  = document.getElementById('note-modal-text');
+const noteModalTags  = document.getElementById('note-modal-tags');
+const tagFilterRow   = document.getElementById('tag-filter-row');
+const tagFilterPills = document.getElementById('tag-filter-pills');
+
+function openNoteModal(color) {
+  noteModalColorId = color.id;
+  noteModalTitle.textContent = `Notes & tags — ${color.name}`;
+  const data = getNote(color.id);
+  noteModalText.value = data.note || '';
+  noteModalTags.value = (data.tags || []).join(', ');
+  noteModal.hidden = false;
+}
+function closeNoteModal() { noteModal.hidden = true; noteModalColorId = null; }
+
+document.getElementById('btn-note-cancel').addEventListener('click', closeNoteModal);
+noteModal.addEventListener('click', e => { if (e.target === noteModal) closeNoteModal(); });
+
+document.getElementById('btn-note-save').addEventListener('click', () => {
+  if (!noteModalColorId) return;
+  const tags = noteModalTags.value.split(',').map(t => t.trim()).filter(Boolean);
+  setNote(noteModalColorId, { note: noteModalText.value, tags });
+  closeNoteModal();
+  renderTagFilterPills();
+  if (activeTab === 'all') renderAll();
+  if (activeTab === 'mine') renderMine();
+  if (activeTab === 'shopping') renderShoppingList();
+  showToast('Note saved.');
+});
+
+function renderTagFilterPills() {
+  const tags = allUsedTags();
+  if (tags.length === 0) {
+    tagFilterRow.hidden = true;
+    activeTag = 'all';
+    return;
+  }
+  tagFilterRow.hidden = false;
+  tagFilterPills.innerHTML = `<button class="sort-pill${activeTag === 'all' ? ' active' : ''}" data-tag="all">All</button>` +
+    tags.map(t => `<button class="sort-pill${activeTag === t ? ' active' : ''}" data-tag="${t}">${t}</button>`).join('');
+  tagFilterPills.querySelectorAll('.sort-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeTag = btn.dataset.tag;
+      renderTagFilterPills();
+      renderAll();
+    });
+  });
+}
+
+/* ── Share as image ───────────────────────────────────────── */
+function shareAsImage(title, items) {
+  if (!items || items.length === 0) { showToast('Nothing to share yet.', true); return; }
+  const width = 520;
+  const rowH = 54;
+  const paddingTop = 70;
+  const height = paddingTop + items.length * rowH + 40;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#14142a';
+  ctx.fillRect(0, 0, width, height);
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 22px sans-serif';
+  ctx.fillText(title, 24, 40);
+  ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+  ctx.beginPath(); ctx.moveTo(24, 54); ctx.lineTo(width - 24, 54); ctx.stroke();
+
+  items.forEach((item, i) => {
+    const y = paddingTop + i * rowH;
+    ctx.fillStyle = item.hex;
+    ctx.beginPath();
+    ctx.arc(44, y + 22, 18, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+    ctx.stroke();
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '600 15px sans-serif';
+    ctx.fillText(item.name, 76, y + 18);
+
+    if (item.brand) {
+      ctx.fillStyle = 'rgba(255,255,255,0.55)';
+      ctx.font = '12px sans-serif';
+      ctx.fillText(item.brand, 76, y + 36);
+    }
+  });
+
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.font = '11px sans-serif';
+  ctx.fillText('Colors of Mini', 24, height - 16);
+
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = Object.assign(document.createElement('a'), {
+      href: url,
+      download: `${title.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}.png`,
+    });
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+}
+
+document.getElementById('btn-share-cart').addEventListener('click', () => {
+  const cart = getCart();
+  const items = allColors.filter(c => cart.has(c.id)).concat(getMixColors().filter(c => cart.has(c.id)))
+    .map(c => ({ hex: c.hex, name: c.name, brand: `${c.company} · ${c.brand}` }));
+  shareAsImage('Shopping List', items);
+});
+
+document.getElementById('btn-share-ramp').addEventListener('click', () => {
+  const hexes = currentRampHexes();
+  if (!hexes) { showToast('Pick shadow, base and highlight colors first.', true); return; }
+  const items = hexes.map(hex => {
+    const nearest = findNearestColor(hex, allColors).color;
+    return { hex, name: nearest.name, brand: `${nearest.company} · ${nearest.brand}` };
+  });
+  shareAsImage('Gradient Recipe', items);
+});
+
+/* ── Bulk / multi-select actions ─────────────────────────── */
+const selectionBar   = document.getElementById('selection-bar');
+const selectionCount = document.getElementById('selection-count');
+const btnSelectMode  = document.getElementById('btn-select-mode');
+
+function toggleCardSelection(id, card) {
+  if (selectedIds.has(id)) { selectedIds.delete(id); card.classList.remove('selected'); }
+  else { selectedIds.add(id); card.classList.add('selected'); }
+  updateSelectionBar();
+}
+
+function updateSelectionBar() {
+  selectionBar.hidden = selectedIds.size === 0;
+  selectionCount.textContent = `${selectedIds.size} selected`;
+}
+
+function exitSelectMode() {
+  selectMode = false;
+  selectedIds.clear();
+  btnSelectMode.classList.remove('active');
+  btnSelectMode.textContent = '☑ Select';
+  listAll.classList.remove('select-mode');
+  updateSelectionBar();
+}
+
+btnSelectMode.addEventListener('click', () => {
+  selectMode = !selectMode;
+  btnSelectMode.classList.toggle('active', selectMode);
+  btnSelectMode.textContent = selectMode ? '✕ Cancel select' : '☑ Select';
+  listAll.classList.toggle('select-mode', selectMode);
+  if (!selectMode) { selectedIds.clear(); updateSelectionBar(); }
+});
+
+document.getElementById('btn-select-add-owned').addEventListener('click', () => {
+  const owned = getOwned();
+  selectedIds.forEach(id => owned.add(id));
+  saveOwned(owned);
+  updateBadges();
+  showToast(`Added ${selectedIds.size} color${selectedIds.size !== 1 ? 's' : ''} to your collection.`);
+  selectedIds.clear();
+  updateSelectionBar();
+  renderAll();
+});
+
+document.getElementById('btn-select-add-cart').addEventListener('click', () => {
+  const cart = getCart();
+  selectedIds.forEach(id => cart.add(id));
+  saveCart(cart);
+  updateBadges();
+  showToast(`Added ${selectedIds.size} color${selectedIds.size !== 1 ? 's' : ''} to your shopping list.`);
+  selectedIds.clear();
+  updateSelectionBar();
+  renderAll();
+});
+
+document.getElementById('btn-select-clear').addEventListener('click', () => {
+  selectedIds.clear();
+  updateSelectionBar();
+  renderAll();
+});
+
+/* ── Onboarding checklist ─────────────────────────────────── */
+const ONBOARDING_KEY = 'colors-of-mini-onboarding-dismissed';
+const onboardingBanner = document.getElementById('onboarding-banner');
+
+function showOnboarding() { onboardingBanner.hidden = false; }
+function hideOnboarding() { onboardingBanner.hidden = true; }
+
+document.getElementById('btn-close-onboarding').addEventListener('click', () => {
+  localStorage.setItem(ONBOARDING_KEY, '1');
+  hideOnboarding();
+});
+
+document.getElementById('btn-show-onboarding').addEventListener('click', showOnboarding);
+
+document.querySelectorAll('#onboarding-checklist li').forEach(li => {
+  li.addEventListener('click', () => {
+    document.querySelector(`.tab-btn[data-tab="${li.dataset.tab}"]`)?.click();
+  });
+});
+
+if (!localStorage.getItem(ONBOARDING_KEY)) showOnboarding();
 
 /* ── Init ─────────────────────────────────────────────────── */
 fetch('colors.json')
@@ -1041,6 +2192,8 @@ fetch('colors.json')
     renderAll();
     updateBadges();
     toggleMineEmpty();
+    renderGradientSaved();
+    renderTagFilterPills();
   })
   .catch(err => {
     listAll.innerHTML = `
