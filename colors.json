@@ -553,9 +553,9 @@
     "hex": "#C3CACE"
   },
   {
-    "id": "citadel-layer-runelord-brass",
+    "id": "citadel-base-runelord-brass",
     "company": "Citadel",
-    "brand": "Layer",
+    "brand": "Base",
     "name": "Runelord Brass",
     "hex": "#B6A89A"
   },
@@ -1610,10 +1610,10 @@
     "hex": "#007845"
   },
   {
-    "id": "citadel-contrast-karandas-green",
+    "id": "citadel-contrast-karandras-green",
     "company": "Citadel",
     "brand": "Contrast",
-    "name": "Karandas Green",
+    "name": "Karandras Green",
     "hex": "#003E1E"
   },
   {
@@ -7012,5 +7012,292 @@
     "brand": "Quick Gen",
     "name": "Desert Sand",
     "hex": "#C8A878"
+  },
+  {
+    "id": "citadel-base-corax-white",
+    "company": "Citadel",
+    "brand": "Base",
+    "name": "Corax White",
+    "hex": "#E6E7E2"
+  },
+  {
+    "id": "citadel-base-grey-seer",
+    "company": "Citadel",
+    "brand": "Base",
+    "name": "Grey Seer",
+    "hex": "#9B9C94"
+  },
+  {
+    "id": "citadel-base-gal-vorbak-red",
+    "company": "Citadel",
+    "brand": "Base",
+    "name": "Gal Vorbak Red",
+    "hex": "#4A1828"
+  },
+  {
+    "id": "citadel-base-barak-nar-burgundy",
+    "company": "Citadel",
+    "brand": "Base",
+    "name": "Barak-Nar Burgundy",
+    "hex": "#46232C"
+  },
+  {
+    "id": "citadel-base-phoenician-purple",
+    "company": "Citadel",
+    "brand": "Base",
+    "name": "Phoenician Purple",
+    "hex": "#3D1840"
+  },
+  {
+    "id": "citadel-base-night-lords-blue",
+    "company": "Citadel",
+    "brand": "Base",
+    "name": "Night Lords Blue",
+    "hex": "#1B3A4B"
+  },
+  {
+    "id": "citadel-base-lupercal-green",
+    "company": "Citadel",
+    "brand": "Base",
+    "name": "Lupercal Green",
+    "hex": "#0E3A3A"
+  },
+  {
+    "id": "citadel-base-death-korps-drab",
+    "company": "Citadel",
+    "brand": "Base",
+    "name": "Death Korps Drab",
+    "hex": "#4A4A38"
+  },
+  {
+    "id": "citadel-base-nocturne-green",
+    "company": "Citadel",
+    "brand": "Base",
+    "name": "Nocturne Green",
+    "hex": "#1A3A2A"
+  },
+  {
+    "id": "citadel-base-wraithbone",
+    "company": "Citadel",
+    "brand": "Base",
+    "name": "Wraithbone",
+    "hex": "#D9CFB0"
+  },
+  {
+    "id": "citadel-base-morghast-bone",
+    "company": "Citadel",
+    "brand": "Base",
+    "name": "Morghast Bone",
+    "hex": "#C8BE94"
+  },
+  {
+    "id": "citadel-base-ionrach-skin",
+    "company": "Citadel",
+    "brand": "Base",
+    "name": "Ionrach Skin",
+    "hex": "#D8B48E"
+  },
+  {
+    "id": "citadel-base-catachan-flesh",
+    "company": "Citadel",
+    "brand": "Base",
+    "name": "Catachan Flesh",
+    "hex": "#4A3328"
+  },
+  {
+    "id": "citadel-base-corvus-black",
+    "company": "Citadel",
+    "brand": "Base",
+    "name": "Corvus Black",
+    "hex": "#26282C"
+  },
+  {
+    "id": "citadel-base-grey-knights-steel",
+    "company": "Citadel",
+    "brand": "Base",
+    "name": "Grey Knights Steel",
+    "hex": "#9A9DA0"
+  },
+  {
+    "id": "citadel-base-iron-hands-steel",
+    "company": "Citadel",
+    "brand": "Base",
+    "name": "Iron Hands Steel",
+    "hex": "#8E9295"
+  },
+  {
+    "id": "citadel-base-iron-warriors",
+    "company": "Citadel",
+    "brand": "Base",
+    "name": "Iron Warriors",
+    "hex": "#5A5A5C"
+  },
+  {
+    "id": "citadel-base-orruk-flesh",
+    "company": "Citadel",
+    "brand": "Base",
+    "name": "Orruk Flesh",
+    "hex": "#4A7A4A"
+  },
+  {
+    "id": "citadel-base-hobgrot-hide",
+    "company": "Citadel",
+    "brand": "Base",
+    "name": "Hobgrot Hide",
+    "hex": "#9A8A4A"
+  },
+  {
+    "id": "citadel-base-thondia-brown",
+    "company": "Citadel",
+    "brand": "Base",
+    "name": "Thondia Brown",
+    "hex": "#5A4030"
+  },
+  {
+    "id": "citadel-layer-dorn-yellow",
+    "company": "Citadel",
+    "brand": "Layer",
+    "name": "Dorn Yellow",
+    "hex": "#F2D44A"
+  },
+  {
+    "id": "citadel-layer-phalanx-yellow",
+    "company": "Citadel",
+    "brand": "Layer",
+    "name": "Phalanx Yellow",
+    "hex": "#F4D83A"
+  },
+  {
+    "id": "citadel-layer-lugganath-orange",
+    "company": "Citadel",
+    "brand": "Layer",
+    "name": "Lugganath Orange",
+    "hex": "#F08A4A"
+  },
+  {
+    "id": "citadel-layer-word-bearers-red",
+    "company": "Citadel",
+    "brand": "Layer",
+    "name": "Word Bearers Red",
+    "hex": "#6A1418"
+  },
+  {
+    "id": "citadel-layer-fulgrim-pink",
+    "company": "Citadel",
+    "brand": "Layer",
+    "name": "Fulgrim Pink",
+    "hex": "#E78FB0"
+  },
+  {
+    "id": "citadel-layer-dechala-lilac",
+    "company": "Citadel",
+    "brand": "Layer",
+    "name": "Dechala Lilac",
+    "hex": "#9A86C0"
+  },
+  {
+    "id": "citadel-layer-kakophoni-purple",
+    "company": "Citadel",
+    "brand": "Layer",
+    "name": "Kakophoni Purple",
+    "hex": "#8A5EA8"
+  },
+  {
+    "id": "citadel-layer-blue-horror",
+    "company": "Citadel",
+    "brand": "Layer",
+    "name": "Blue Horror",
+    "hex": "#7AA0D8"
+  },
+  {
+    "id": "citadel-layer-baharroth-blue",
+    "company": "Citadel",
+    "brand": "Layer",
+    "name": "Baharroth Blue",
+    "hex": "#44B6C6"
+  },
+  {
+    "id": "citadel-layer-gauss-blaster-green",
+    "company": "Citadel",
+    "brand": "Layer",
+    "name": "Gauss Blaster Green",
+    "hex": "#9FD6B8"
+  },
+  {
+    "id": "citadel-layer-sons-of-horus-green",
+    "company": "Citadel",
+    "brand": "Layer",
+    "name": "Sons of Horus Green",
+    "hex": "#2A6A5A"
+  },
+  {
+    "id": "citadel-layer-vulkan-green",
+    "company": "Citadel",
+    "brand": "Layer",
+    "name": "Vulkan Green",
+    "hex": "#2A5A3A"
+  },
+  {
+    "id": "citadel-layer-krieg-khaki",
+    "company": "Citadel",
+    "brand": "Layer",
+    "name": "Krieg Khaki",
+    "hex": "#B6A874"
+  },
+  {
+    "id": "citadel-layer-deepkin-flesh",
+    "company": "Citadel",
+    "brand": "Layer",
+    "name": "Deepkin Flesh",
+    "hex": "#C99B7E"
+  },
+  {
+    "id": "citadel-layer-knight-questor-flesh",
+    "company": "Citadel",
+    "brand": "Layer",
+    "name": "Knight-Questor Flesh",
+    "hex": "#D8A078"
+  },
+  {
+    "id": "citadel-layer-bloodreaver-flesh",
+    "company": "Citadel",
+    "brand": "Layer",
+    "name": "Bloodreaver Flesh",
+    "hex": "#B86A4A"
+  },
+  {
+    "id": "citadel-layer-castellax-bronze",
+    "company": "Citadel",
+    "brand": "Layer",
+    "name": "Castellax Bronze",
+    "hex": "#8A6A4A"
+  },
+  {
+    "id": "citadel-layer-canoptek-alloy",
+    "company": "Citadel",
+    "brand": "Layer",
+    "name": "Canoptek Alloy",
+    "hex": "#7A8A6A"
+  },
+  {
+    "id": "citadel-contrast-baal-red",
+    "company": "Citadel",
+    "brand": "Contrast",
+    "name": "Baal Red",
+    "hex": "#A01418"
+  },
+  {
+    "id": "citadel-contrast-frostheart",
+    "company": "Citadel",
+    "brand": "Contrast",
+    "name": "Frostheart",
+    "hex": "#5A9AC0"
+  },
+  {
+    "id": "citadel-contrast-asurmen-blue",
+    "company": "Citadel",
+    "brand": "Contrast",
+    "name": "Asurmen Blue",
+    "hex": "#1A4A9A"
   }
 ]
