@@ -21,6 +21,16 @@ Each file here is a self-contained plan for one new feature: goal, why it matter
 | 15 | [Starter-Kit List](15-starter-kit.md) | A curated "buy these first" list independent of current ownership. |
 | 16 | [Technique Glossary](16-technique-glossary.md) | Explain drybrush/wash/wet-blend/etc., linked to a painter's own tags. |
 | 17 | [Onboarding Checklist](17-onboarding-checklist.md) | First-visit guided tour across the app's tabs, dismissible. |
+| 18 | [Project-Based Palettes](18-project-based-palettes.md) | Group specific paints into named per-project palettes. |
+| 19 | [Color Theory Helper](19-color-theory-helper.md) | Suggest complementary/analogous/triadic owned colors for a selected paint. |
+| 20 | [Community Palettes](20-community-palettes.md) | Publish and browse a public gallery of user palettes. |
+| 21 | [Shopping List / Wishlist](21-shopping-list.md) | Dedicated view for paints a user intends to buy. |
+| 22 | [Import & Export](22-import-export.md) | Back up and restore collection/project data as JSON/CSV. |
+| 23 | [Collection Stats Dashboard](23-collection-stats-dashboard.md) | Brand/family breakdown, total value, and range completion. |
+| 24 | [Paint Freshness / Dry-Out Reminders](24-paint-freshness-tracker.md) | Warn when an opened paint pot is likely drying out. |
+| 25 | [Colorblind-Friendly Mode](25-colorblind-friendly-mode.md) | Pattern overlays and CVD simulation for swatches. |
+| 26 | ["Surprise Me" Palette Generator](26-surprise-me-palette-generator.md) | One-click random/harmony palette generator, saveable as a Project. |
+| 27 | [Cross-Brand Equivalents Lookup](27-cross-brand-equivalents.md) | Find the closest match for a paint in other brands, owned or not. |
 
 Missions 14–16 share a single new **Learn** tab (paint-type glossary, starter kit, and technique glossary each get a section within it) rather than three separate tabs.
 

@@ -15,6 +15,7 @@ const PRICES_KEY   = 'colors-of-mini-prices-v1';
 const AVAILABLE_THEMES = ['dark', 'light'];
 let allSort       = 'default'; // 'default' | 'color'
 let mineFilterLow = false;
+let mineFilterStale = false;
 let activeTag     = 'all';
 let noteModalColorId = null;
 let selectMode    = false;
@@ -60,6 +61,41 @@ function toggleLow(id) {
   }
   return nowLow;
 }
+const OPENED_KEY = 'colors-of-mini-opened-v1';
+const DRY_OUT_THRESHOLD_DAYS = 540;
+function getOpenedDates() {
+  try { return JSON.parse(localStorage.getItem(OPENED_KEY) || '{}'); }
+  catch { return {}; }
+}
+function saveOpenedDates(data) {
+  localStorage.setItem(OPENED_KEY, JSON.stringify(data));
+}
+function setOpenedDate(id, dateStr) {
+  const data = getOpenedDates();
+  if (dateStr) data[id] = { openedDate: dateStr, snoozedUntil: null };
+  else delete data[id];
+  saveOpenedDates(data);
+}
+function snoozeFreshness(id, days = 60) {
+  const data = getOpenedDates();
+  if (!data[id]) return;
+  const until = new Date();
+  until.setDate(until.getDate() + days);
+  data[id].snoozedUntil = until.toISOString().slice(0, 10);
+  saveOpenedDates(data);
+}
+function daysSince(dateStr) {
+  const then = new Date(dateStr);
+  const now = new Date();
+  return Math.floor((now - then) / (1000 * 60 * 60 * 24));
+}
+function isDryingOut(id) {
+  const entry = getOpenedDates()[id];
+  if (!entry || !entry.openedDate) return false;
+  if (entry.snoozedUntil && new Date(entry.snoozedUntil) > new Date()) return false;
+  return daysSince(entry.openedDate) > DRY_OUT_THRESHOLD_DAYS;
+}
+
 function getMixes() {
   try { return JSON.parse(localStorage.getItem(MIXES_KEY) || '[]'); }
   catch { return []; }
@@ -129,6 +165,60 @@ function setPrice(id, value) {
   else prices[id] = value;
   savePrices(prices);
 }
+/* ── Colorblind-friendly mode ─────────────────────────────── */
+const A11Y_KEY = 'colors-of-mini-a11y-v1';
+function getA11ySettings() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(A11Y_KEY) || '{}');
+    return { patternMode: !!saved.patternMode, simulate: saved.simulate || 'none' };
+  } catch { return { patternMode: false, simulate: 'none' }; }
+}
+function saveA11ySettings(settings) {
+  localStorage.setItem(A11Y_KEY, JSON.stringify(settings));
+}
+
+const PATTERN_BG = [
+  'none',
+  'repeating-linear-gradient(45deg, rgba(255,255,255,0.4) 0 3px, transparent 3px 6px)',
+  'repeating-linear-gradient(-45deg, rgba(0,0,0,0.32) 0 3px, transparent 3px 6px)',
+  'repeating-linear-gradient(90deg, rgba(255,255,255,0.35) 0 2px, transparent 2px 6px)',
+  'repeating-linear-gradient(0deg, rgba(0,0,0,0.3) 0 2px, transparent 2px 6px)',
+  'radial-gradient(rgba(255,255,255,0.45) 22%, transparent 23%) 0 0/7px 7px',
+  'radial-gradient(rgba(0,0,0,0.35) 22%, transparent 23%) 0 0/9px 9px',
+];
+
+function applyColorblindPatterns() {
+  if (!document.documentElement.classList.contains('pattern-mode')) return;
+  document.querySelectorAll('.color-circle, .swatch, .palette-swatch, .group-swatch').forEach(el => {
+    const bg = el.style.backgroundColor;
+    if (!bg) return;
+    let hash = 0;
+    for (let i = 0; i < bg.length; i++) hash = (hash * 31 + bg.charCodeAt(i)) >>> 0;
+    el.style.setProperty('--swatch-pattern', PATTERN_BG[hash % PATTERN_BG.length]);
+  });
+}
+
+let patternApplyScheduled = false;
+function schedulePatternApply() {
+  if (!document.documentElement.classList.contains('pattern-mode') || patternApplyScheduled) return;
+  patternApplyScheduled = true;
+  requestAnimationFrame(() => { patternApplyScheduled = false; applyColorblindPatterns(); });
+}
+new MutationObserver(schedulePatternApply).observe(document.body, { childList: true, subtree: true });
+
+function applyA11ySettings(settings) {
+  document.documentElement.classList.toggle('pattern-mode', settings.patternMode);
+  document.documentElement.dataset.simulate = settings.simulate;
+  const toggle = document.getElementById('a11y-pattern-toggle');
+  const select = document.getElementById('a11y-simulate-select');
+  if (toggle) toggle.checked = settings.patternMode;
+  if (select) select.value = settings.simulate;
+  if (settings.patternMode) applyColorblindPatterns();
+}
+function initA11y() {
+  applyA11ySettings(getA11ySettings());
+}
+
 function getSavedTheme() {
   const saved = localStorage.getItem(THEME_KEY);
   return AVAILABLE_THEMES.includes(saved) ? saved : 'dark';
@@ -150,6 +240,7 @@ function toggleOwned(id) {
   if (!owned.has(id)) {
     const low = getLow();
     if (low.delete(id)) saveLow(low);
+    setOpenedDate(id, null);
   }
   if (activeTab === 'mine') renderMine();
   if (activeTab === 'palettes') renderPalettes();
@@ -669,6 +760,112 @@ function renderLearn() {
   renderStarterKit();
 }
 
+/* ── Collection stats dashboard ──────────────────────────── */
+function computeStats() {
+  const owned = getOwned();
+  const ownedColors = allColors.filter(c => owned.has(c.id));
+  const mixCount = getMixes().length;
+
+  const byBrand = {};
+  ownedColors.forEach(c => {
+    const key = `${c.company} · ${c.brand}`;
+    byBrand[key] = (byBrand[key] || 0) + 1;
+  });
+
+  const byFamily = {};
+  ownedColors.forEach(c => {
+    const f = getColorFamily(c.hex);
+    byFamily[f] = (byFamily[f] || 0) + 1;
+  });
+
+  const totalInCatalog = allColors.length;
+  const completionPct = totalInCatalog ? Math.round((ownedColors.length / totalInCatalog) * 100) : 0;
+
+  let totalValue = 0, pricedCount = 0;
+  ownedColors.forEach(c => {
+    const p = getPrice(c.id);
+    if (p !== null) { totalValue += p; pricedCount++; }
+  });
+
+  const tagCounts = {};
+  Object.values(getNotes()).forEach(n => (n.tags || []).forEach(t => { tagCounts[t] = (tagCounts[t] || 0) + 1; }));
+  const topTags = Object.entries(tagCounts).sort(([, a], [, b]) => b - a).slice(0, 8);
+
+  return {
+    ownedCount: ownedColors.length,
+    mixCount,
+    totalInCatalog,
+    completionPct,
+    byBrand: Object.entries(byBrand).sort(([, a], [, b]) => b - a),
+    byFamily: FAMILIES.map(f => [f.label, byFamily[f.name] || 0]).filter(([, n]) => n > 0),
+    totalValue,
+    pricedCount,
+    hasPriceData: pricedCount > 0,
+    topTags,
+  };
+}
+
+function buildStatBar(label, count, max) {
+  const pct = max > 0 ? Math.round((count / max) * 100) : 0;
+  const row = document.createElement('div');
+  row.className = 'stat-bar-row';
+  row.innerHTML = `
+    <span class="stat-bar-label" title="${label}">${label}</span>
+    <span class="stat-bar-track"><span class="stat-bar-fill" style="width:${pct}%"></span></span>
+    <span class="stat-bar-count">${count}</span>
+  `;
+  return row;
+}
+
+function renderStats() {
+  const stats = computeStats();
+  const tilesEl = document.getElementById('stats-tiles');
+  const tiles = [
+    { label: 'Owned Colors', value: stats.ownedCount },
+    { label: 'Custom Mixes', value: stats.mixCount },
+    { label: 'Collection Completion', value: `${stats.completionPct}%`, sub: `${stats.ownedCount} of ${stats.totalInCatalog}` },
+  ];
+  if (stats.hasPriceData) {
+    tiles.push({ label: 'Estimated Value', value: `$${stats.totalValue.toFixed(2)}`, sub: `${stats.pricedCount} priced` });
+  }
+  tilesEl.innerHTML = tiles.map(t => `
+    <div class="stat-tile">
+      <div class="stat-tile-value">${t.value}</div>
+      <div class="stat-tile-label">${t.label}</div>
+      ${t.sub ? `<div class="stat-tile-sub">${t.sub}</div>` : ''}
+    </div>
+  `).join('');
+
+  const brandEl = document.getElementById('stats-brand-breakdown');
+  brandEl.innerHTML = '';
+  if (stats.byBrand.length === 0) {
+    brandEl.innerHTML = '<p class="empty-msg-small">No owned colors yet.</p>';
+  } else {
+    const max = Math.max(...stats.byBrand.map(([, n]) => n));
+    stats.byBrand.forEach(([label, count]) => brandEl.appendChild(buildStatBar(label, count, max)));
+  }
+
+  const familyEl = document.getElementById('stats-family-breakdown');
+  familyEl.innerHTML = '';
+  if (stats.byFamily.length === 0) {
+    familyEl.innerHTML = '<p class="empty-msg-small">No owned colors yet.</p>';
+  } else {
+    const max = Math.max(...stats.byFamily.map(([, n]) => n));
+    stats.byFamily.forEach(([label, count]) => familyEl.appendChild(buildStatBar(label, count, max)));
+  }
+
+  const tagsPanel = document.getElementById('stats-tags-panel');
+  const tagsEl = document.getElementById('stats-top-tags');
+  if (stats.topTags.length === 0) {
+    tagsPanel.hidden = true;
+  } else {
+    tagsPanel.hidden = false;
+    tagsEl.innerHTML = stats.topTags.map(([tag, count]) =>
+      `<span class="suggestion-chip">${tag} <strong>${count}</strong></span>`
+    ).join('');
+  }
+}
+
 function getColorFamily(hex) {
   const { h, s, l } = hexToHsl(hex);
   // Lightness extremes — require low saturation for Black so very dark green/blue stay colored
@@ -716,6 +913,10 @@ const shoppingCountLabel = document.getElementById('shopping-count-label');
 const toolbarAll         = document.getElementById('toolbar-all');
 const searchInput        = document.getElementById('search');
 const themeSelect        = document.getElementById('theme-select');
+const noteModalHarmony   = document.getElementById('note-modal-harmony');
+const harmonyComplementary = document.getElementById('harmony-complementary');
+const harmonyAnalogous   = document.getElementById('harmony-analogous');
+const harmonyTriadic     = document.getElementById('harmony-triadic');
 
 const filterToggleBtn = document.getElementById('btn-toggle-filters');
 const filterPanel     = document.getElementById('filter-panel');
@@ -736,10 +937,11 @@ function buildCard(color, owned, opts = {}) {
   const isOwned   = isMix || owned.has(color.id);
   const inCart    = getCart().has(color.id);
   const isLow     = !isMix && getLow().has(color.id);
+  const isStale   = !isMix && isOwned && isDryingOut(color.id);
   const coSlug    = color.company.replace(' ', '-');
   const card      = document.createElement('div');
   const isSelected = selectedIds.has(color.id);
-  card.className  = `color-card${isOwned ? ' owned' : ''}${isLow ? ' low-stock' : ''}${isMix ? ' is-mix' : ''}${isSelected ? ' selected' : ''}`;
+  card.className  = `color-card${isOwned ? ' owned' : ''}${isLow ? ' low-stock' : ''}${isStale ? ' stale' : ''}${isMix ? ' is-mix' : ''}${isSelected ? ' selected' : ''}`;
   card.dataset.id = color.id;
 
   const substitute = !isOwned ? suggestSubstitute(color) : null;
@@ -765,6 +967,15 @@ function buildCard(color, owned, opts = {}) {
     ? `<div class="color-match">${Math.max(0, Math.round(100 - (colorDistance(color.hex, hexMatchTarget) / 441.7) * 100))}% match to ${hexMatchTarget}</div>`
     : '';
 
+  const openedEntry = getOpenedDates()[color.id];
+  const freshnessHtml = opts.showFreshness && isOwned && !isMix
+    ? `<div class="color-freshness${isStale ? ' is-stale' : ''}">
+         ${isStale ? '<span class="freshness-warning">⏳ May be drying out</span>' : ''}
+         <label>Opened <input type="date" class="opened-date-input" value="${openedEntry?.openedDate || ''}"></label>
+         ${isStale ? '<button type="button" class="freshness-snooze-btn">Snooze</button>' : ''}
+       </div>`
+    : '';
+
   card.innerHTML = `
     <div class="color-circle${hasNote ? ' has-note' : ''}" style="background-color:${color.hex}" title="Click to add a note or tags"></div>
     <div class="color-info">
@@ -777,6 +988,7 @@ function buildCard(color, owned, opts = {}) {
       ${tagsHtml}
       ${priceHtml}
       ${matchHtml}
+      ${freshnessHtml}
     </div>
     <button class="cart-btn${inCart ? ' in-cart' : ''}"
             aria-label="${inCart ? 'Remove from shopping list' : 'Add to shopping list'}">
@@ -807,6 +1019,17 @@ function buildCard(color, owned, opts = {}) {
       const val = e.target.value === '' ? null : parseFloat(e.target.value);
       setPrice(color.id, val);
       updateShoppingTotal();
+    });
+  }
+
+  if (opts.showFreshness && isOwned && !isMix) {
+    card.querySelector('.opened-date-input').addEventListener('change', e => {
+      setOpenedDate(color.id, e.target.value || null);
+      renderMine();
+    });
+    card.querySelector('.freshness-snooze-btn')?.addEventListener('click', () => {
+      snoozeFreshness(color.id);
+      renderMine();
     });
   }
 
@@ -1209,6 +1432,8 @@ function renderMine() {
   let colors = allColors.filter(c => owned.has(c.id));
   if (mineFilterLow) {
     colors = colors.filter(c => low.has(c.id));
+  } else if (mineFilterStale) {
+    colors = colors.filter(c => isDryingOut(c.id));
   } else {
     colors = colors.concat(getMixColors());
   }
@@ -1231,7 +1456,7 @@ function renderMineByCompany(colors, owned) {
   // Keep natural JSON order (already grouped by company/brand)
   const grid = document.createElement('div');
   grid.className = 'color-list';
-  colors.forEach(c => grid.appendChild(buildCard(c, owned)));
+  colors.forEach(c => grid.appendChild(buildCard(c, owned, { showFreshness: true })));
   listMine.appendChild(grid);
 }
 
@@ -1259,7 +1484,7 @@ function renderMineByColor(colors, owned) {
 
     const grid = document.createElement('div');
     grid.className = 'color-list';
-    arr.forEach(c => grid.appendChild(buildCard(c, owned)));
+    arr.forEach(c => grid.appendChild(buildCard(c, owned, { showFreshness: true })));
     frag.appendChild(grid);
   });
 
@@ -1271,6 +1496,8 @@ function toggleMineEmpty() {
   emptyMine.style.display = hasCards ? 'none' : 'block';
   emptyMine.innerHTML = mineFilterLow
     ? `<div class="empty-icon">⚠</div><p>No low-stock paints.</p><p class="empty-hint">Click the <strong>warning</strong> icon on an owned paint to flag it as running low.</p>`
+    : mineFilterStale
+    ? `<div class="empty-icon">⏳</div><p>No paints are drying out.</p><p class="empty-hint">Set an <strong>opened date</strong> on an owned paint to track its freshness.</p>`
     : `<div class="empty-icon">🎨</div><p>Your collection is empty.</p><p class="empty-hint">Switch to <strong>All Colors</strong> and click <strong>+</strong> to add paints.</p>`;
   // toolbar always visible so import works on an empty collection
   document.getElementById('mine-sort-pills').style.opacity = hasCards ? '1' : '0.4';
@@ -1364,6 +1591,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     if (activeTab === 'gradient') { initGradientPickers(); initBlendPickers(); blendResultEl.innerHTML = ''; }
     if (activeTab === 'projects') renderProjects();
     if (activeTab === 'learn') renderLearn();
+    if (activeTab === 'stats') renderStats();
   });
 });
 
@@ -1389,10 +1617,17 @@ document.querySelectorAll('#mine-sort-pills .sort-pill').forEach(btn => {
   });
 });
 
-/* ── Mine low-stock filter ────────────────────────────────── */
+/* ── Mine low-stock / freshness filters ───────────────────── */
 document.getElementById('btn-filter-low').addEventListener('click', function () {
   mineFilterLow = !mineFilterLow;
+  if (mineFilterLow) { mineFilterStale = false; document.getElementById('btn-filter-stale').classList.remove('active'); }
   this.classList.toggle('active', mineFilterLow);
+  renderMine();
+});
+document.getElementById('btn-filter-stale').addEventListener('click', function () {
+  mineFilterStale = !mineFilterStale;
+  if (mineFilterStale) { mineFilterLow = false; document.getElementById('btn-filter-low').classList.remove('active'); }
+  this.classList.toggle('active', mineFilterStale);
   renderMine();
 });
 
@@ -1426,6 +1661,20 @@ if (themeSelect) {
   themeSelect.addEventListener('change', e => applyTheme(e.target.value));
 }
 initTheme();
+
+document.getElementById('a11y-pattern-toggle').addEventListener('change', e => {
+  const settings = getA11ySettings();
+  settings.patternMode = e.target.checked;
+  saveA11ySettings(settings);
+  applyA11ySettings(settings);
+});
+document.getElementById('a11y-simulate-select').addEventListener('change', e => {
+  const settings = getA11ySettings();
+  settings.simulate = e.target.value;
+  saveA11ySettings(settings);
+  applyA11ySettings(settings);
+});
+initA11y();
 
 /* ── Toast ────────────────────────────────────────────────── */
 function showToast(msg, opts = {}) {
@@ -1469,6 +1718,7 @@ document.getElementById('btn-export').addEventListener('click', () => {
     low: [...getLow()],
     mixes: getMixes(),
     prices: getPrices(),
+    opened: getOpenedDates(),
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   const url  = URL.createObjectURL(blob);
@@ -1522,6 +1772,16 @@ document.getElementById('import-file').addEventListener('change', e => {
           if (typeof val === 'number') prices[id] = val;
         });
         savePrices(prices);
+      }
+
+      if (raw.opened && typeof raw.opened === 'object') {
+        const opened = getOpenedDates();
+        Object.entries(raw.opened).forEach(([id, entry]) => {
+          if (owned.has(id) && entry && typeof entry.openedDate === 'string') {
+            opened[id] = { openedDate: entry.openedDate, snoozedUntil: entry.snoozedUntil || null };
+          }
+        });
+        saveOpenedDates(opened);
       }
 
       const added = owned.size - before;
@@ -1869,7 +2129,11 @@ const projectsGrid       = document.getElementById('projects-grid');
 const emptyProjects      = document.getElementById('empty-projects');
 const projectDetailName  = document.getElementById('project-detail-name');
 const projectChecklist   = document.getElementById('project-color-checklist');
+const btnProjectPublish  = document.getElementById('btn-project-publish');
+const communityGrid      = document.getElementById('community-grid');
+const emptyCommunity     = document.getElementById('empty-community');
 const countProjects      = document.getElementById('count-projects');
+const countCommunity     = document.getElementById('count-community');
 
 function renderProjects() {
   activeProjectId = null;
@@ -1953,6 +2217,85 @@ document.getElementById('btn-new-project').addEventListener('click', () => {
   showToast(`Project "${name}" created.`);
 });
 
+/* ── "Surprise Me" random palette generator ──────────────── */
+let lastSurpriseColors = [];
+
+function generatePalette({ count = 5, ownedOnly = false, mode = 'random' } = {}) {
+  const pool = ownedOnly ? ownedColorList() : allColors.concat(getMixColors());
+  if (pool.length === 0) return [];
+  count = Math.min(count, pool.length);
+
+  if (mode === 'harmony') {
+    const seed = pool[Math.floor(Math.random() * pool.length)];
+    const { h, s, l } = hexToHsl(seed.hex);
+    const hueOffsets = [0, 180, -30, 30, -120, 120, 60, -60, 150, -150];
+    const result = [];
+    const usedIds = new Set();
+    for (const offset of hueOffsets) {
+      if (result.length >= count) break;
+      const match = findNearestColor(hslToHex(h + offset, s, l), pool);
+      if (match.color && !usedIds.has(match.color.id)) {
+        usedIds.add(match.color.id);
+        result.push(match.color);
+      }
+    }
+    const shuffledRest = [...pool].sort(() => Math.random() - 0.5);
+    for (const c of shuffledRest) {
+      if (result.length >= count) break;
+      if (!usedIds.has(c.id)) { usedIds.add(c.id); result.push(c); }
+    }
+    return result;
+  }
+
+  return [...pool].sort(() => Math.random() - 0.5).slice(0, count);
+}
+
+function renderSurpriseResult(colors) {
+  lastSurpriseColors = colors;
+  const el = document.getElementById('surprise-result');
+  if (!colors.length) {
+    el.innerHTML = '<p class="empty-msg-small">Not enough colors to generate a palette. Try turning "Owned only" off, or own more paints first.</p>';
+    return;
+  }
+  el.innerHTML = `
+    <div class="palette-sample surprise-sample">
+      ${colors.map(c => `<span class="palette-swatch" title="${c.name}" style="background:${c.hex}"></span>`).join('')}
+    </div>
+    <div class="suggestion-colors">
+      ${colors.map(c => `<span class="suggestion-chip"><span class="swatch" style="background:${c.hex}"></span>${c.name}</span>`).join('')}
+    </div>
+    <div class="surprise-save-row">
+      <input type="text" id="surprise-project-name" class="search-input" placeholder="Project name…">
+      <button class="action-btn" id="btn-surprise-save">Save as Project</button>
+      <button class="action-btn" id="btn-surprise-regenerate">↻ Regenerate</button>
+    </div>
+  `;
+  document.getElementById('btn-surprise-save').addEventListener('click', () => {
+    const nameInput = document.getElementById('surprise-project-name');
+    const name = nameInput.value.trim() || `Surprise Palette ${new Date().toLocaleDateString()}`;
+    const projects = getProjects();
+    projects.push({ id: `project-${Date.now()}`, name, colorIds: lastSurpriseColors.map(c => c.id), createdAt: new Date().toISOString() });
+    saveProjects(projects);
+    updateBadges();
+    showToast(`Saved as project "${name}".`);
+  });
+  document.getElementById('btn-surprise-regenerate').addEventListener('click', runSurpriseGenerate);
+}
+
+function runSurpriseGenerate() {
+  const count = Math.max(3, Math.min(8, parseInt(document.getElementById('surprise-count').value, 10) || 5));
+  const ownedOnly = document.getElementById('surprise-owned-only').checked;
+  const mode = document.getElementById('surprise-mode').value;
+  if (ownedOnly && ownedColorList().length === 0) {
+    showToast('You need to own at least one color first.', true);
+    renderSurpriseResult([]);
+    return;
+  }
+  renderSurpriseResult(generatePalette({ count, ownedOnly, mode }));
+}
+
+document.getElementById('btn-surprise-generate').addEventListener('click', runSurpriseGenerate);
+
 document.getElementById('btn-project-back').addEventListener('click', renderProjects);
 
 document.getElementById('btn-project-delete').addEventListener('click', () => {
@@ -1990,12 +2333,125 @@ const noteModalTags  = document.getElementById('note-modal-tags');
 const tagFilterRow   = document.getElementById('tag-filter-row');
 const tagFilterPills = document.getElementById('tag-filter-pills');
 
+function getHarmonyColors(hex) {
+  const { h, s, l } = hexToHsl(hex);
+  return {
+    complementary: [hslToHex(h + 180, s, l)],
+    analogous: [hslToHex(h - 30, s, l), hslToHex(h + 30, s, l)],
+    triadic: [hslToHex(h - 120, s, l), hslToHex(h + 120, s, l)],
+  };
+}
+
+function renderHarmonySuggestions(color) {
+  const ownedColors = ownedColorList();
+  if (ownedColors.length < 2) {
+    noteModalHarmony.hidden = true;
+    return;
+  }
+  noteModalHarmony.hidden = false;
+
+  const harmonies = getHarmonyColors(color.hex);
+
+  const renderChips = (targetEl, hexes) => {
+    targetEl.innerHTML = '';
+    const uniqueMatches = new Set();
+    hexes.forEach(hex => {
+      const match = findNearestColor(hex, ownedColors);
+      if (match.color.id === color.id || uniqueMatches.has(match.color.id)) return;
+      uniqueMatches.add(match.color.id);
+
+      const chip = document.createElement('span');
+      chip.className = 'suggestion-chip';
+      chip.innerHTML = `<span class="swatch" style="background:${match.color.hex}"></span>${match.color.name}`;
+      chip.title = `${match.color.company} · ${match.color.brand}`;
+      targetEl.appendChild(chip);
+    });
+    if (targetEl.children.length === 0) {
+      targetEl.innerHTML = `<span class="empty-msg-small">No close matches in your collection.</span>`;
+    }
+  };
+
+  renderChips(harmonyComplementary, harmonies.complementary);
+  renderChips(harmonyAnalogous, harmonies.analogous);
+  renderChips(harmonyTriadic, harmonies.triadic);
+}
+
+/* ── Cross-brand equivalents lookup ───────────────────────── */
+function crossBrandEquivalents(color) {
+  const companies = [...new Set(allColors.filter(c => c.company !== color.company).map(c => c.company))];
+  return companies
+    .map(company => {
+      const candidates = allColors.filter(c => c.company === company);
+      const match = findNearestColor(color.hex, candidates);
+      return match.color ? { company, color: match.color, distance: match.distance } : null;
+    })
+    .filter(Boolean)
+    .sort((a, b) => a.distance - b.distance);
+}
+function equivalentConfidence(distance) {
+  if (distance < 30) return { label: 'very close', cls: 'high' };
+  if (distance < 70) return { label: 'similar', cls: 'mid' };
+  return { label: 'loose match', cls: 'low' };
+}
+let equivalentsBrandFilter = 'all';
+function renderEquivalents(color) {
+  equivalentsBrandFilter = 'all';
+  const panel = document.getElementById('note-modal-equivalents');
+  const pillsEl = document.getElementById('equivalents-brand-pills');
+  const listEl = document.getElementById('equivalents-list');
+  const matches = crossBrandEquivalents(color);
+
+  if (matches.length === 0) { panel.hidden = true; return; }
+  panel.hidden = false;
+  const companies = [...new Set(matches.map(m => m.company))];
+
+  const renderList = () => {
+    const filtered = equivalentsBrandFilter === 'all' ? matches : matches.filter(m => m.company === equivalentsBrandFilter);
+    listEl.innerHTML = filtered.map(m => {
+      const inCart = getCart().has(m.color.id);
+      const conf = equivalentConfidence(m.distance);
+      return `
+        <div class="equivalent-row" data-id="${m.color.id}">
+          <span class="swatch" style="background:${m.color.hex}"></span>
+          <span class="equivalent-name" title="${m.color.company} · ${m.color.brand}">${m.color.name}</span>
+          <span class="equivalent-meta">${m.company}</span>
+          <span class="equivalent-confidence conf-${conf.cls}">${conf.label}</span>
+          <button class="equivalent-cart-btn${inCart ? ' in-cart' : ''}" aria-label="${inCart ? 'Remove from shopping list' : 'Add to shopping list'}">${CART_SVG}</button>
+        </div>`;
+    }).join('');
+    listEl.querySelectorAll('.equivalent-cart-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.closest('.equivalent-row').dataset.id;
+        const nowInCart = toggleCart(id);
+        btn.classList.toggle('in-cart', nowInCart);
+        btn.setAttribute('aria-label', nowInCart ? 'Remove from shopping list' : 'Add to shopping list');
+        updateBadges();
+        if (activeTab === 'shopping') renderShoppingList();
+      });
+    });
+  };
+
+  pillsEl.innerHTML = `<button class="sort-pill active" data-co="all">All</button>` +
+    companies.map(co => `<button class="sort-pill" data-co="${co}">${co}</button>`).join('');
+  pillsEl.querySelectorAll('.sort-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      equivalentsBrandFilter = btn.dataset.co;
+      pillsEl.querySelectorAll('.sort-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderList();
+    });
+  });
+  renderList();
+}
+
 function openNoteModal(color) {
   noteModalColorId = color.id;
   noteModalTitle.textContent = `Notes & tags — ${color.name}`;
   const data = getNote(color.id);
   noteModalText.value = data.note || '';
   noteModalTags.value = (data.tags || []).join(', ');
+  renderHarmonySuggestions(color);
+  renderEquivalents(color);
   noteModal.hidden = false;
 }
 function closeNoteModal() { noteModal.hidden = true; noteModalColorId = null; }

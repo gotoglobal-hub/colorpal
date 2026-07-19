@@ -16,6 +16,15 @@
       </div>
       <div class="theme-control">
         <button class="action-btn" id="btn-show-onboarding">? Getting started</button>
+        <label class="a11y-toggle-label" for="a11y-pattern-toggle">
+          <input type="checkbox" id="a11y-pattern-toggle"> Colorblind patterns
+        </label>
+        <select id="a11y-simulate-select" aria-label="Simulate color vision deficiency">
+          <option value="none">No simulation</option>
+          <option value="protanopia">Simulate: Protanopia</option>
+          <option value="deuteranopia">Simulate: Deuteranopia</option>
+          <option value="tritanopia">Simulate: Tritanopia</option>
+        </select>
         <label for="theme-select">Theme</label>
         <select id="theme-select" aria-label="Select theme">
           <option value="dark" selected>Dark</option>
@@ -25,12 +34,29 @@
     </div>
   </header>
 
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <filter id="cvd-protanopia">
+        <feColorMatrix type="matrix" values="0.567,0.433,0,0,0  0.558,0.442,0,0,0  0,0.242,0.758,0,0  0,0,0,1,0" />
+      </filter>
+      <filter id="cvd-deuteranopia">
+        <feColorMatrix type="matrix" values="0.625,0.375,0,0,0  0.7,0.3,0,0,0  0,0.3,0.7,0,0  0,0,0,1,0" />
+      </filter>
+      <filter id="cvd-tritanopia">
+        <feColorMatrix type="matrix" values="0.95,0.05,0,0,0  0,0.433,0.567,0,0  0,0.475,0.525,0,0  0,0,0,1,0" />
+      </filter>
+    </defs>
+  </svg>
+
   <nav class="tab-nav">
     <button class="tab-btn active" data-tab="all">
       All Colors <span class="tab-badge" id="count-all">0</span>
     </button>
     <button class="tab-btn" data-tab="mine">
       My Colors <span class="tab-badge owned" id="count-mine">0</span>
+    </button>
+    <button class="tab-btn" data-tab="stats">
+      Stats
     </button>
     <button class="tab-btn" data-tab="learn">
       Learn
@@ -43,6 +69,9 @@
     </button>
     <button class="tab-btn" data-tab="projects">
       Projects <span class="tab-badge" id="count-projects">0</span>
+    </button>
+    <button class="tab-btn" data-tab="community">
+      Community <span class="tab-badge" id="count-community">0</span>
     </button>
     <button class="tab-btn" data-tab="shopping">
       Shopping List <span class="tab-badge" id="count-cart">0</span>
@@ -117,6 +146,7 @@
         </div>
         <div class="sort-pills" id="mine-filter-pills">
           <button class="sort-pill" id="btn-filter-low" data-filter="low">⚠ Low stock</button>
+          <button class="sort-pill" id="btn-filter-stale" data-filter="stale">⏳ Drying out</button>
         </div>
         <div class="mine-actions">
           <button class="action-btn" id="btn-new-mix">🧪 New mix</button>
@@ -152,6 +182,36 @@
         <p>Your collection is empty.</p>
         <p class="empty-hint">Switch to <strong>All Colors</strong> and click <strong>+</strong> to add paints.</p>
       </div>
+    </section>
+
+    <section id="view-stats" class="view">
+      <div class="palette-intro">
+        <p>A snapshot of your collection — breakdown by brand and color family, estimated value, and your most-used tags.</p>
+      </div>
+
+      <div class="stats-tiles" id="stats-tiles"></div>
+
+      <div class="palette-feedback">
+        <section class="panel">
+          <div class="panel-header">
+            <h2>By brand</h2>
+          </div>
+          <div id="stats-brand-breakdown"></div>
+        </section>
+        <section class="panel">
+          <div class="panel-header">
+            <h2>By color family</h2>
+          </div>
+          <div id="stats-family-breakdown"></div>
+        </section>
+      </div>
+
+      <section class="panel" id="stats-tags-panel" hidden>
+        <div class="panel-header">
+          <h2>Top tags</h2>
+        </div>
+        <div id="stats-top-tags"></div>
+      </section>
     </section>
 
     <section id="view-learn" class="view">
@@ -193,6 +253,25 @@
       <div class="palette-intro">
         <p>Explore curated miniature palettes and get tailored suggestions from your collection. Palettes are organised by <strong>Color Theory</strong>, <strong>Genre</strong>, <strong>Character Role</strong> (based on <a href="https://thearmypainter.com/blogs/explore/how-to-pick-a-colour-scheme" target="_blank" rel="noopener" style="color:var(--accent)">The Army Painter's colour guide</a>), and <strong>Army Painter Showcase</strong>. If a palette is missing paint, this tab will recommend colors to complete it.</p>
       </div>
+      <div class="panel surprise-panel">
+        <div class="panel-header">
+          <h2>🎲 Surprise Me</h2>
+          <p>Generate a random starter palette instantly — from your whole collection or just what you own.</p>
+        </div>
+        <div class="surprise-controls">
+          <label>Colors <input type="number" id="surprise-count" min="3" max="8" value="5"></label>
+          <label class="surprise-checkbox"><input type="checkbox" id="surprise-owned-only"> Owned only</label>
+          <label>Mode
+            <select id="surprise-mode">
+              <option value="random">Random</option>
+              <option value="harmony">Harmony-based</option>
+            </select>
+          </label>
+          <button class="action-btn" id="btn-surprise-generate">🎲 Surprise me</button>
+        </div>
+        <div id="surprise-result"></div>
+      </div>
+
       <div class="palette-grid" id="palette-list"></div>
       <div class="palette-feedback">
         <section class="panel">
@@ -277,6 +356,7 @@
           <button class="action-btn" id="btn-project-back">← Back to projects</button>
           <span class="mine-sort-label" id="project-detail-name"></span>
           <div class="mine-actions">
+            <button class="action-btn" id="btn-project-publish">↑ Publish</button>
             <button class="action-btn" id="btn-project-duplicate">Duplicate</button>
             <button class="action-btn danger" id="btn-project-delete">✕ Delete project</button>
           </div>
@@ -322,6 +402,30 @@
       <div class="modal-actions">
         <button class="action-btn" id="btn-note-save">Save</button>
         <button class="action-btn" id="btn-note-cancel">Cancel</button>
+      </div>
+
+      <div id="note-modal-harmony">
+        <h4>Color Harmony</h4>
+        <p class="empty-msg-small">Suggestions from your owned colors based on the selected paint.</p>
+        <div class="harmony-row">
+          <div class="harmony-label">Complementary</div>
+          <div class="harmony-chips" id="harmony-complementary"></div>
+        </div>
+        <div class="harmony-row">
+          <div class="harmony-label">Analogous</div>
+          <div class="harmony-chips" id="harmony-analogous"></div>
+        </div>
+        <div class="harmony-row">
+          <div class="harmony-label">Triadic</div>
+          <div class="harmony-chips" id="harmony-triadic"></div>
+        </div>
+      </div>
+
+      <div id="note-modal-equivalents">
+        <h4>Cross-Brand Equivalents</h4>
+        <p class="empty-msg-small">Closest match for this color in each other brand, owned or not.</p>
+        <div class="sort-pills" id="equivalents-brand-pills"></div>
+        <div id="equivalents-list"></div>
       </div>
     </div>
   </div>
