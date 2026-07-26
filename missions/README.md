@@ -31,6 +31,7 @@ Each file here is a self-contained plan for one new feature: goal, why it matter
 | 25 | [Colorblind-Friendly Mode](25-colorblind-friendly-mode.md) | Pattern overlays and CVD simulation for swatches. |
 | 26 | ["Surprise Me" Palette Generator](26-surprise-me-palette-generator.md) | One-click random/harmony palette generator, saveable as a Project. |
 | 27 | [Cross-Brand Equivalents Lookup](27-cross-brand-equivalents.md) | Find the closest match for a paint in other brands, owned or not. |
+| 28 | [Interactive Color Wheel](28-interactive-color-wheel.md) | Visual hue wheel plotting owned paints, with harmony targets and gap-spotting. |
 
 Missions 14–16 share a single new **Learn** tab (paint-type glossary, starter kit, and technique glossary each get a section within it) rather than three separate tabs.
 

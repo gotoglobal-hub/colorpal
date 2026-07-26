@@ -64,6 +64,9 @@
     <button class="tab-btn" data-tab="palettes">
       Palettes <span class="tab-badge" id="count-palettes">0</span>
     </button>
+    <button class="tab-btn" data-tab="wheel">
+      Color Wheel
+    </button>
     <button class="tab-btn" data-tab="gradient">
       Gradient Builder
     </button>
@@ -288,6 +291,40 @@
           </div>
           <div id="missing-list"></div>
         </section>
+      </div>
+    </section>
+
+    <section id="view-wheel" class="view">
+      <div class="palette-intro">
+        <p>A visual hue wheel of your collection — position on the ring is hue, distance from center is saturation. Pick a base color and a harmony type to see which owned paints already fit, and where the gaps are.</p>
+      </div>
+      <div class="panel wheel-panel">
+        <div class="wheel-controls">
+          <label>Base color<select id="wheel-seed-select"></select></label>
+          <label>Harmony
+            <select id="wheel-harmony-mode">
+              <option value="complementary">Complementary</option>
+              <option value="split-complementary">Split Complementary</option>
+              <option value="analogous">Analogous</option>
+              <option value="triadic">Triadic</option>
+              <option value="tetradic">Tetradic</option>
+            </select>
+          </label>
+        </div>
+        <div class="wheel-layout">
+          <div class="color-wheel" id="color-wheel">
+            <div class="wheel-dots" id="wheel-dots"></div>
+          </div>
+          <div class="wheel-side">
+            <div class="wheel-legend">
+              <span class="wheel-legend-item"><span class="wheel-legend-dot seed"></span> Selected</span>
+              <span class="wheel-legend-item"><span class="wheel-legend-dot match"></span> Owned match</span>
+              <span class="wheel-legend-item"><span class="wheel-legend-dot target"></span> Harmony target</span>
+            </div>
+            <p class="empty-msg-small" id="wheel-empty" hidden>Own at least one color to plot the wheel.</p>
+            <div id="wheel-matches"></div>
+          </div>
+        </div>
       </div>
     </section>
 

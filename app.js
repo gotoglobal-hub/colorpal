@@ -1592,6 +1592,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     if (activeTab === 'projects') renderProjects();
     if (activeTab === 'learn') renderLearn();
     if (activeTab === 'stats') renderStats();
+    if (activeTab === 'wheel') { populateWheelSeedSelect(); renderColorWheel(); }
   });
 });
 
@@ -2054,6 +2055,101 @@ function renderGradientSaved() {
     gradientSavedList.appendChild(card);
   });
 }
+
+/* ── Interactive color wheel ──────────────────────────────── */
+const WHEEL_SIZE = 300;
+const WHEEL_RADIUS = WHEEL_SIZE / 2;
+const WHEEL_ANGLE_TOLERANCE = 18;
+
+function wheelPosition(hueDeg, satPct) {
+  const r = Math.max(satPct, 6) / 100 * WHEEL_RADIUS * 0.9;
+  const rad = hueDeg * Math.PI / 180;
+  return {
+    x: WHEEL_RADIUS + r * Math.sin(rad),
+    y: WHEEL_RADIUS - r * Math.cos(rad),
+  };
+}
+
+function angleDiff(a, b) {
+  const d = Math.abs(a - b) % 360;
+  return d > 180 ? 360 - d : d;
+}
+
+function harmonyTargetAngles(mode) {
+  switch (mode) {
+    case 'complementary':       return [180];
+    case 'split-complementary': return [150, 210];
+    case 'analogous':           return [-30, 30];
+    case 'triadic':              return [120, 240];
+    case 'tetradic':             return [90, 180, 270];
+    default:                     return [];
+  }
+}
+
+function populateWheelSeedSelect() {
+  const select = document.getElementById('wheel-seed-select');
+  const owned = ownedColorList();
+  populateColorSelect(select, owned.length ? owned : allColors, 0);
+}
+
+function renderColorWheel() {
+  const select   = document.getElementById('wheel-seed-select');
+  const modeSel  = document.getElementById('wheel-harmony-mode');
+  const dotsEl   = document.getElementById('wheel-dots');
+  const emptyEl  = document.getElementById('wheel-empty');
+  const owned    = ownedColorList();
+
+  dotsEl.innerHTML = '';
+  emptyEl.hidden = owned.length > 0;
+  if (owned.length === 0) { document.getElementById('wheel-matches').innerHTML = ''; return; }
+
+  const seed = owned.find(c => c.id === select.value) || owned[0];
+  const seedHsl = hexToHsl(seed.hex);
+  const mode = modeSel.value;
+  const targetAngles = harmonyTargetAngles(mode).map(offset => ((seedHsl.h + offset) % 360 + 360) % 360);
+
+  owned.forEach(c => {
+    const { h, s } = hexToHsl(c.hex);
+    const { x, y } = wheelPosition(h, s);
+    const isSeed  = c.id === seed.id;
+    const isMatch = !isSeed && targetAngles.some(a => angleDiff(h, a) <= WHEEL_ANGLE_TOLERANCE);
+    const dot = document.createElement('div');
+    dot.className = `wheel-dot${isSeed ? ' is-seed' : ''}${isMatch ? ' is-match' : ''}`;
+    dot.style.left = `${x}px`;
+    dot.style.top = `${y}px`;
+    dot.style.background = c.hex;
+    dot.title = c.name;
+    dot.addEventListener('click', () => { select.value = c.id; renderColorWheel(); });
+    dotsEl.appendChild(dot);
+  });
+
+  targetAngles.forEach(angle => {
+    const { x, y } = wheelPosition(angle, Math.max(seedHsl.s, 40));
+    const marker = document.createElement('div');
+    marker.className = 'wheel-target';
+    marker.style.left = `${x}px`;
+    marker.style.top = `${y}px`;
+    dotsEl.appendChild(marker);
+  });
+
+  renderWheelMatches(seedHsl, targetAngles, owned);
+}
+
+function renderWheelMatches(seedHsl, targetAngles, owned) {
+  const el = document.getElementById('wheel-matches');
+  if (targetAngles.length === 0) { el.innerHTML = ''; return; }
+  el.innerHTML = targetAngles.map(angle => {
+    const hex = hslToHex(angle, Math.max(seedHsl.s, 50), seedHsl.l);
+    const match = findNearestColor(hex, owned);
+    const matchHtml = match.color && match.distance < 80
+      ? `<span class="suggestion-chip"><span class="swatch" style="background:${match.color.hex}"></span>${match.color.name}</span>`
+      : `<span class="empty-msg-small">Nothing owned this direction</span>`;
+    return `<div class="wheel-match-row"><span class="swatch" style="background:${hex}"></span>${matchHtml}</div>`;
+  }).join('');
+}
+
+document.getElementById('wheel-seed-select').addEventListener('change', renderColorWheel);
+document.getElementById('wheel-harmony-mode').addEventListener('change', renderColorWheel);
 
 /* ── Complete-the-gradient (owned-only blend finder) ─────── */
 function ownedColorList() {
