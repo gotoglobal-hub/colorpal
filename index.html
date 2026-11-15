@@ -1,472 +1,3473 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Colors of Mini</title>
-  <link rel="stylesheet" href="style.css">
+  <title>JinxO! Pro | ג'ינקס-או - מהדורה ישראלית משודרגת</title>
+  <style>
+    :root {
+      --bg-yellow: #f9d616;
+      --bg-yellow-soft: #fff8cc;
+      --brand-pink: #e51b83;
+      --brand-pink-dark: #b81267;
+      --brand-green: #009c5b;
+      --brand-green-dark: #007543;
+      --brand-blue: #1877c9;
+      --brand-blue-light: #e6f3ff;
+      --brand-BlueBoard: #1b80d4;
+      --brand-purple: #6b21a8;
+      --brand-orange: #f47920;
+      --card-surface: #ffffff;
+      --ink-dark: #1d1d1b;
+      --ink-muted: #575756;
+      --border-heavy: 3px solid #1d1d1b;
+      --shadow-pop: 0 4px 0 #1d1d1b;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-block-size: 100dvh;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-yellow);
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(229, 27, 131, 0.1) 0, rgba(229, 27, 131, 0.1) 24px, transparent 25px),
+        radial-gradient(circle at 88% 80%, rgba(0, 156, 91, 0.12) 0, rgba(0, 156, 91, 0.12) 32px, transparent 33px);
+      color: var(--ink-dark);
+      display: flex;
+      flex-direction: column;
+      line-height: 1.45;
+    }
+
+    /* Confetti Canvas */
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      inline-size: 100%;
+      block-size: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* Header */
+    .site-header {
+      background-color: var(--card-surface);
+      border-block-end: var(--border-heavy);
+      padding-block: 0.65rem;
+      padding-inline: 1rem;
+      position: sticky;
+      inset-block-start: 0;
+      z-index: 20;
+    }
+
+    .header-inner {
+      max-inline-size: 1260px;
+      margin-inline: auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: safe center;
+      gap: 0.65rem;
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: clamp(1.3rem, 2.5vw, 1.85rem);
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .brand-jinx {
+      color: var(--brand-pink);
+      text-shadow: 2px 2px 0 #1d1d1b;
+    }
+
+    .brand-o {
+      color: var(--brand-green);
+      text-shadow: 2px 2px 0 #1d1d1b;
+    }
+
+    .brand-badge {
+      font-size: 0.76rem;
+      background-color: var(--bg-yellow);
+      color: var(--ink-dark);
+      padding-block: 0.12rem;
+      padding-inline: 0.5rem;
+      border-radius: 999px;
+      border: 2px solid #1d1d1b;
+      font-weight: 800;
+    }
+
+    .header-actions {
+      margin-inline-start: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: safe center;
+    }
+
+    /* Sub-toolbar for quick tools (Timer, Room, Audio, TV, Bots, Judge) */
+    .quick-bar {
+      background-color: var(--bg-yellow-soft);
+      border-block-end: 2.5px solid #1d1d1b;
+      padding-block: 0.5rem;
+      padding-inline: 1rem;
+    }
+
+    .quick-bar-inner {
+      max-inline-size: 1260px;
+      margin-inline: auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+    }
+
+    .quick-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    /* Buttons */
+    .btn {
+      appearance: none;
+      border: 2.5px solid #1d1d1b;
+      border-radius: 10px;
+      background-color: var(--card-surface);
+      color: var(--ink-dark);
+      font-family: inherit;
+      font-size: 0.86rem;
+      font-weight: 700;
+      padding-block: 0.4rem;
+      padding-inline: 0.75rem;
+      cursor: pointer;
+      box-shadow: 0 3px 0 #1d1d1b;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      background-color: #f4f4f4;
+    }
+
+    .btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #1d1d1b;
+    }
+
+    .btn:focus-visible {
+      outline: 3px solid var(--brand-blue);
+      outline-offset: 2px;
+    }
+
+    .btn-sm {
+      font-size: 0.78rem;
+      padding-block: 0.28rem;
+      padding-inline: 0.55rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 0 #1d1d1b;
+    }
+
+    .btn-pink {
+      background-color: var(--brand-pink);
+      color: #ffffff;
+    }
+    .btn-pink:hover {
+      background-color: var(--brand-pink-dark);
+    }
+
+    .btn-green {
+      background-color: var(--brand-green);
+      color: #ffffff;
+    }
+    .btn-green:hover {
+      background-color: var(--brand-green-dark);
+    }
+
+    .btn-yellow {
+      background-color: var(--bg-yellow);
+      color: var(--ink-dark);
+    }
+    .btn-yellow:hover {
+      background-color: #eac60e;
+    }
+
+    .btn-blue {
+      background-color: var(--brand-blue);
+      color: #ffffff;
+    }
+    .btn-blue:hover {
+      background-color: #125d9e;
+    }
+
+    .btn-purple {
+      background-color: var(--brand-purple);
+      color: #ffffff;
+    }
+    .btn-purple:hover {
+      background-color: #581c87;
+    }
+
+    .btn-orange {
+      background-color: var(--brand-orange);
+      color: #ffffff;
+    }
+    .btn-orange:hover {
+      background-color: #d96412;
+    }
+
+    /* Room Pill & Timer Widget */
+    .room-widget {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background-color: #ffffff;
+      border: 2px solid #1d1d1b;
+      border-radius: 10px;
+      padding-block: 0.2rem;
+      padding-inline: 0.55rem;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .room-code-badge {
+      background-color: var(--ink-dark);
+      color: var(--bg-yellow);
+      padding-block: 0.1rem;
+      padding-inline: 0.45rem;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+    }
+
+    .timer-widget {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background-color: #ffffff;
+      border: 2px solid #1d1d1b;
+      border-radius: 10px;
+      padding-block: 0.2rem;
+      padding-inline: 0.55rem;
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    .timer-display {
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 1.05rem;
+      font-weight: 900;
+      min-inline-size: 4.2ch;
+      text-align: center;
+      color: var(--ink-dark);
+    }
+
+    .timer-widget.urgent {
+      background-color: #fee2e2;
+      border-color: #dc2626;
+      animation: pulse-urgent 0.8s infinite alternate;
+    }
+
+    .timer-widget.urgent .timer-display {
+      color: #dc2626;
+    }
+
+    @keyframes pulse-urgent {
+      from { transform: scale(1); }
+      to { transform: scale(1.03); }
+    }
+
+    /* Main Workspace Layout */
+    .workspace {
+      inline-size: 100%;
+      max-inline-size: 1260px;
+      margin-inline: auto;
+      padding-block: 1.15rem;
+      padding-inline: 1rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      flex: 1;
+    }
+
+    @media (min-width: 940px) {
+      .workspace {
+        grid-template-columns: 390px 1fr;
+        align-items: start;
+      }
+    }
+
+    /* TV / Host Mode overrides */
+    body.tv-mode .workspace {
+      grid-template-columns: 1fr;
+      max-inline-size: 1100px;
+    }
+
+    body.tv-mode .board-container {
+      display: none;
+    }
+
+    body.tv-mode .panel-card {
+      padding: 1.75rem;
+    }
+
+    body.tv-mode .topic-text {
+      font-size: clamp(1.5rem, 3.5vw, 2.35rem);
+    }
+
+    body.tv-mode .round-topic-slot {
+      font-size: 1.25rem;
+      padding: 0.7rem 1rem;
+    }
+
+    .tv-banner {
+      display: none;
+      background-color: var(--ink-dark);
+      color: var(--bg-yellow);
+      padding: 0.75rem 1.25rem;
+      border-radius: 14px;
+      margin-block-end: 1rem;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-weight: 800;
+    }
+
+    body.tv-mode .tv-banner {
+      display: flex;
+    }
+
+    /* Card Section (Topic Deck) */
+    .panel-card {
+      background-color: var(--card-surface);
+      border: var(--border-heavy);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-pop);
+      padding: 1rem;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: safe center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-block-end: 0.65rem;
+      flex-wrap: wrap;
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 1.12rem;
+      font-weight: 800;
+    }
+
+    .deck-meta-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--ink-muted);
+      background-color: #f6f6f6;
+      border: 1.5px solid #1d1d1b;
+      border-radius: 8px;
+      padding: 0.3rem 0.55rem;
+      margin-block-end: 0.65rem;
+    }
+
+    .category-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.32rem;
+      margin-block-end: 0.8rem;
+    }
+
+    .cat-pill {
+      appearance: none;
+      border: 2px solid #1d1d1b;
+      background-color: #f7f7f7;
+      color: var(--ink-dark);
+      border-radius: 999px;
+      padding-block: 0.2rem;
+      padding-inline: 0.6rem;
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .cat-pill[aria-pressed="true"] {
+      background-color: var(--ink-dark);
+      color: var(--bg-yellow);
+    }
+
+    /* Physical JinxO Topic Card Replica */
+    .topic-card-stage {
+      margin-block-end: 0.9rem;
+    }
+
+    .jinxo-topic-card {
+      border: var(--border-heavy);
+      border-radius: 14px;
+      overflow: clip;
+      box-shadow: 0 4px 0 #1d1d1b;
+      background-color: #ffffff;
+      transition: transform 0.2s ease;
+    }
+
+    .jinxo-topic-card.flipping {
+      transform: scale(0.96) rotate(-1deg);
+    }
+
+    .topic-half {
+      inline-size: 100%;
+      border: 0;
+      padding-block: 0.95rem;
+      padding-inline: 0.9rem;
+      font-family: inherit;
+      text-align: center;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.32rem;
+      transition: filter 0.15s ease;
+    }
+
+    .topic-half:hover {
+      filter: brightness(0.96);
+    }
+
+    .topic-half:focus-visible {
+      outline: 3px solid #1d1d1b;
+      outline-offset: -4px;
+    }
+
+    .topic-half-a {
+      background-color: #ffde2e;
+      color: var(--ink-dark);
+      border-block-end: 2.5px dashed #1d1d1b;
+    }
+
+    .topic-half-b {
+      background-color: var(--brand-pink);
+      color: #ffffff;
+    }
+
+    .topic-side-tag {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding-block: 0.1rem;
+      padding-inline: 0.5rem;
+      border-radius: 999px;
+      background-color: rgba(0, 0, 0, 0.14);
+    }
+
+    .topic-text {
+      font-size: 1.06rem;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    .round-topics-box {
+      background-color: var(--bg-yellow-soft);
+      border: 2px solid #1d1d1b;
+      border-radius: 12px;
+      padding: 0.75rem;
+    }
+
+    .round-topics-title {
+      margin: 0 0 0.5rem 0;
+      font-size: 0.85rem;
+      font-weight: 800;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .round-topics-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .round-topic-slot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.45rem;
+      background-color: #ffffff;
+      border: 1.5px solid #1d1d1b;
+      border-radius: 8px;
+      padding-block: 0.35rem;
+      padding-inline: 0.55rem;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .round-topic-slot.empty {
+      color: var(--ink-muted);
+      border-style: dashed;
+      font-weight: 500;
+    }
+
+    .slot-badge {
+      background-color: var(--brand-blue);
+      color: #ffffff;
+      border-radius: 6px;
+      padding-block: 0.1rem;
+      padding-inline: 0.4rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .slot-badge[data-topic-num="1"] { background-color: #d97706; }
+    .slot-badge[data-topic-num="2"] { background-color: var(--brand-pink); }
+    .slot-badge[data-topic-num="3"] { background-color: var(--brand-blue); }
+
+    .slot-count-pill {
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 0.08rem 0.38rem;
+      border-radius: 999px;
+      border: 1.5px solid #1d1d1b;
+      background-color: #f3f4f6;
+      color: var(--ink-dark);
+      flex-shrink: 0;
+    }
+
+    .slot-count-pill.complete {
+      background-color: #dcfce7;
+      border-color: var(--brand-green);
+      color: var(--brand-green-dark);
+    }
+
+    .slot-remove {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--brand-pink-dark);
+      font-weight: 900;
+      cursor: pointer;
+      padding-inline: 0.2rem;
+      font-size: 0.92rem;
+    }
+
+    /* JinxO Player Board Replica */
+    .board-container {
+      background-color: var(--brand-BlueBoard);
+      border: 4px solid #1d1d1b;
+      border-radius: 22px;
+      box-shadow: 0 6px 0 #1d1d1b;
+      padding: 1rem;
+      color: #ffffff;
+    }
+
+    .board-top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: safe center;
+      justify-content: space-between;
+      gap: 0.65rem;
+      margin-block-end: 0.75rem;
+    }
+
+    .board-controls-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      background-color: rgba(0, 0, 0, 0.18);
+      border: 2px solid #1d1d1b;
+      border-radius: 12px;
+      padding: 0.45rem 0.65rem;
+      margin-block-end: 0.85rem;
+    }
+
+    .round-tabs {
+      display: flex;
+      gap: 0.35rem;
+      background-color: rgba(0, 0, 0, 0.22);
+      padding: 0.25rem;
+      border-radius: 12px;
+      border: 2px solid #1d1d1b;
+    }
+
+    .round-tab {
+      appearance: none;
+      border: 2px solid transparent;
+      background: transparent;
+      color: #ffffff;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding-block: 0.3rem;
+      padding-inline: 0.7rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .round-tab[aria-selected="true"] {
+      background-color: var(--bg-yellow);
+      color: var(--ink-dark);
+      border-color: #1d1d1b;
+    }
+
+    .done-banner {
+      background-color: var(--brand-green);
+      color: #ffffff;
+      border: 2.5px solid #1d1d1b;
+      border-radius: 12px;
+      padding-block: 0.55rem;
+      padding-inline: 0.9rem;
+      margin-block-end: 0.85rem;
+      font-weight: 800;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      box-shadow: 0 3px 0 #1d1d1b;
+    }
+
+    .done-banner[hidden] {
+      display: none;
+    }
+
+    /* Board Grid + Score Panel Layout */
+    .board-main-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    @media (min-width: 660px) {
+      .board-main-layout {
+        grid-template-columns: 1fr 158px;
+        align-items: stretch;
+      }
+    }
+
+    /* 3x3 Grid + Bonus Badges */
+    .grid-with-bonuses {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+      grid-template-rows: repeat(3, minmax(126px, 1fr)) auto;
+      gap: 0.6rem;
+      align-items: stretch;
+      position: relative;
+    }
+
+    /* Secret / Privacy Blur Mode */
+    .grid-with-bonuses.secret-blur .cell-input {
+      filter: blur(9px);
+      user-select: none;
+      transition: filter 0.15s ease;
+    }
+
+    .grid-with-bonuses.secret-blur .cell-input:focus {
+      filter: blur(0);
+    }
+
+    .answer-cell {
+      background-color: #fffdf7;
+      border: 3px solid #1d1d1b;
+      border-radius: 14px;
+      padding: 0.45rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      color: var(--ink-dark);
+      box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.06);
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .answer-cell[data-state="circle"] {
+      background-color: #effdf5;
+      border-color: var(--brand-green);
+    }
+
+    .answer-cell[data-state="jinx"] {
+      background-color: #fff6db;
+      border-color: var(--brand-pink);
+    }
+
+    .answer-cell[data-state="cross"] {
+      background-color: #f8f1f1;
+      opacity: 0.88;
+    }
+
+    .cell-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.25rem;
+      margin-block-end: 0.2rem;
+      z-index: 2;
+    }
+
+    .cell-num {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--ink-muted);
+      background-color: #ececec;
+      border-radius: 6px;
+      padding-inline: 0.32rem;
+      padding-block: 0.05rem;
+    }
+
+    /* Topic Tag Selector Button per Cell */
+    .cell-topic-tag {
+      appearance: none;
+      border: 1.5px solid #1d1d1b;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding-block: 0.05rem;
+      padding-inline: 0.35rem;
+      cursor: pointer;
+      background-color: #f3f4f6;
+      color: var(--ink-muted);
+    }
+
+    .cell-topic-tag[data-topic="1"] {
+      background-color: #fef08a;
+      color: #1d1d1b;
+    }
+    .cell-topic-tag[data-topic="2"] {
+      background-color: #fbcfe8;
+      color: #831843;
+    }
+    .cell-topic-tag[data-topic="3"] {
+      background-color: #bfdbfe;
+      color: #1e3a8a;
+    }
+
+    .jinx-star-btn {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      padding: 0.05rem;
+      cursor: pointer;
+      font-size: 1.3rem;
+      line-height: 1;
+      color: #b5b5b5;
+      transition: transform 0.15s ease, color 0.15s ease;
+    }
+
+    .jinx-star-btn:hover {
+      transform: scale(1.15);
+    }
+
+    .answer-cell[data-state="jinx"] .jinx-star-btn {
+      color: var(--brand-pink);
+      transform: scale(1.18);
+    }
+
+    .cell-input-wrap {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Form fields automatically fit contents (Modern Web Guidance compliant) */
+    .cell-input {
+      field-sizing: content;
+      height: auto;
+      width: 100%;
+      min-block-size: 2.2lh;
+      max-block-size: 4.5lh;
+      border: 0;
+      background: transparent;
+      text-align: center;
+      font-family: inherit;
+      font-size: 1.02rem;
+      font-weight: 800;
+      color: var(--ink-dark);
+      resize: none;
+      padding: 0.18rem;
+      line-height: 1.25;
+      z-index: 2;
+    }
+
+    .cell-input:focus {
+      outline: 2px dashed var(--brand-blue);
+      border-radius: 6px;
+    }
+
+    .cell-input::placeholder {
+      color: #b0b0b0;
+      font-weight: 600;
+      font-size: 0.82rem;
+    }
+
+    /* Visual Circle / Cross Overlay inside Cell */
+    .cell-mark-visual {
+      position: absolute;
+      inset: 2px;
+      pointer-events: none;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .answer-cell[data-state="circle"] .cell-mark-visual::before,
+    .answer-cell[data-state="jinx"] .cell-mark-visual::before {
+      content: "";
+      inline-size: 92%;
+      block-size: 82%;
+      border: 3.5px solid var(--brand-green);
+      border-radius: 50%;
+      opacity: 0.65;
+    }
+
+    .answer-cell[data-state="jinx"] .cell-mark-visual::before {
+      border-color: var(--brand-pink);
+    }
+
+    .answer-cell[data-state="cross"] .cell-mark-visual::before {
+      content: "✕";
+      font-size: 3.2rem;
+      font-weight: 900;
+      color: rgba(217, 48, 37, 0.28);
+      line-height: 1;
+    }
+
+    .cell-warning {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #b3261e;
+      text-align: center;
+      min-block-size: 0.9rem;
+      z-index: 2;
+    }
+
+    .cell-bot-match {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: var(--brand-purple);
+      text-align: center;
+      z-index: 2;
+    }
+
+    /* State Toggle Bar inside each Answer Box */
+    .cell-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.22rem;
+      margin-block-start: 0.2rem;
+      z-index: 2;
+    }
+
+    .mark-btn {
+      appearance: none;
+      border: 1.5px solid #1d1d1b;
+      border-radius: 6px;
+      background-color: #f2f2f2;
+      color: var(--ink-dark);
+      font-family: inherit;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding-block: 0.18rem;
+      padding-inline: 0.12rem;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .mark-btn:hover {
+      background-color: #e4e4e4;
+    }
+
+    .answer-cell[data-state="circle"] .mark-btn[data-mark="circle"] {
+      background-color: var(--brand-green);
+      color: #ffffff;
+    }
+
+    .answer-cell[data-state="jinx"] .mark-btn[data-mark="jinx"] {
+      background-color: var(--brand-pink);
+      color: #ffffff;
+    }
+
+    .answer-cell[data-state="cross"] .mark-btn[data-mark="cross"] {
+      background-color: #d93025;
+      color: #ffffff;
+    }
+
+    /* Row & Column Bonus Point Badges */
+    .bonus-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.25);
+      border: 2.5px solid #1d1d1b;
+      border-radius: 12px;
+      padding: 0.35rem;
+      min-inline-size: 42px;
+      min-block-size: 42px;
+      font-weight: 900;
+      color: #ffffff;
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+    .bonus-circle {
+      inline-size: 28px;
+      block-size: 28px;
+      border-radius: 50%;
+      background-color: var(--brand-orange);
+      border: 2px solid #1d1d1b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: #ffffff;
+    }
+
+    .bonus-badge.achieved {
+      background-color: var(--bg-yellow);
+      color: var(--ink-dark);
+      transform: scale(1.05);
+    }
+
+    .bonus-badge.achieved .bonus-circle {
+      background-color: var(--brand-green);
+    }
+
+    /* Score Column on Side of Board */
+    .score-sidebar {
+      background-color: rgba(0, 0, 0, 0.2);
+      border: 2.5px solid #1d1d1b;
+      border-radius: 14px;
+      padding: 0.65rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      justify-content: space-between;
+    }
+
+    .score-box {
+      background-color: #ffffff;
+      color: var(--ink-dark);
+      border: 2px solid #1d1d1b;
+      border-radius: 10px;
+      padding-block: 0.3rem;
+      padding-inline: 0.45rem;
+      text-align: center;
+    }
+
+    .score-box-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--ink-muted);
+      display: block;
+    }
+
+    .score-box-value {
+      font-size: 1.15rem;
+      font-weight: 900;
+      display: block;
+    }
+
+    .score-box.final-total {
+      background-color: var(--bg-yellow);
+      border-width: 2.5px;
+    }
+
+    .score-box.final-total .score-box-value {
+      font-size: 1.4rem;
+      color: var(--brand-pink-dark);
+    }
+
+    /* Bots Results Panel under Board */
+    .bots-results-panel {
+      margin-block-start: 1rem;
+      background-color: #ffffff;
+      color: var(--ink-dark);
+      border: 3px solid #1d1d1b;
+      border-radius: 16px;
+      padding: 0.9rem;
+      box-shadow: 0 4px 0 #1d1d1b;
+    }
+
+    .bots-results-panel[hidden] {
+      display: none;
+    }
+
+    .bots-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 0.65rem;
+      margin-block-start: 0.65rem;
+    }
+
+    .bot-card {
+      border: 2px solid #1d1d1b;
+      border-radius: 12px;
+      padding: 0.6rem;
+      background-color: var(--bg-yellow-soft);
+    }
+
+    .bot-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 900;
+      font-size: 0.9rem;
+      margin-block-end: 0.4rem;
+      border-block-end: 1.5px dashed #1d1d1b;
+      padding-block-end: 0.25rem;
+    }
+
+    .bot-answers-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.28rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .bot-answer-chip {
+      font-size: 0.75rem;
+      font-weight: 700;
+      background-color: #ffffff;
+      border: 1.5px solid #1d1d1b;
+      border-radius: 6px;
+      padding: 0.12rem 0.4rem;
+    }
+
+    .bot-answer-chip.matched-jinx {
+      background-color: #fbcfe8;
+      border-color: var(--brand-pink);
+      color: #831843;
+    }
+
+    .bot-answer-chip.matched-circle {
+      background-color: #dcfce7;
+      border-color: var(--brand-green);
+      color: #065f46;
+    }
+
+    /* Footer */
+    .site-footer {
+      text-align: center;
+      padding-block: 1rem;
+      padding-inline: 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* Native Modal Dialogs (Modern Web Guidance compliant) */
+    dialog:modal {
+      overscroll-behavior: contain;
+      max-inline-size: min(740px, 94dvw);
+      inline-size: 100%;
+      max-block-size: 88dvh;
+      border: 4px solid #1d1d1b;
+      border-radius: 18px;
+      padding: 0;
+      box-shadow: 0 10px 0 #1d1d1b;
+      background-color: #ffffff;
+      color: var(--ink-dark);
+    }
+
+    dialog::backdrop {
+      overflow: hidden;
+      overscroll-behavior: contain;
+      background-color: rgba(29, 29, 27, 0.6);
+      backdrop-filter: blur(3px);
+    }
+
+    .modal-inner {
+      display: flex;
+      flex-direction: column;
+      max-block-size: 86dvh;
+    }
+
+    .modal-header {
+      background-color: var(--bg-yellow);
+      border-block-end: 3px solid #1d1d1b;
+      padding-block: 0.8rem;
+      padding-inline: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 900;
+    }
+
+    .modal-body {
+      padding: 1.1rem;
+      overflow-y: auto;
+      scrollbar-gutter: stable;
+      overscroll-behavior: contain;
+    }
+
+    /* Responsive Data Table for Multi-Player Scoreboard (Modern Web Guidance compliant) */
+    .table-wrapper {
+      overflow: auto;
+      max-inline-size: 100%;
+      max-block-size: min(460px, 75vh);
+      container-type: inline-size;
+      border: 2.5px solid #1d1d1b;
+      border-radius: 12px;
+      background-color: #ffffff;
+    }
+
+    .scoreboard-table {
+      inline-size: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.92rem;
+      --label-2: "סיבוב 1";
+      --label-3: "סיבוב 2";
+      --label-4: "סיבוב 3";
+      --label-5: "סה״כ";
+      --label-6: "פעולות";
+    }
+
+    .scoreboard-table caption {
+      padding: 0.6rem;
+      font-weight: 900;
+      background-color: var(--bg-yellow-soft);
+      border-block-end: 2px solid #1d1d1b;
+      text-align: start;
+    }
+
+    .scoreboard-table thead {
+      position: sticky;
+      inset-block-start: 0;
+      z-index: 1;
+      background-color: var(--ink-dark);
+      color: var(--bg-yellow);
+    }
+
+    .scoreboard-table th,
+    .scoreboard-table td {
+      padding: 0.55rem 0.65rem;
+      border-block-end: 1.5px solid #e5e7eb;
+      text-align: center;
+    }
+
+    .scoreboard-table tbody th {
+      position: sticky;
+      inset-inline-start: 0;
+      background-color: #fffef9;
+      text-align: start;
+      font-weight: 900;
+      border-inline-end: 1.5px solid #e5e7eb;
+    }
+
+    .scoreboard-table tbody tr.leader-row th,
+    .scoreboard-table tbody tr.leader-row td {
+      background-color: #fef9c3;
+    }
+
+    .score-num-input {
+      inline-size: 62px;
+      border: 2px solid #1d1d1b;
+      border-radius: 8px;
+      padding: 0.25rem;
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    @container (width < 560px) {
+      .scoreboard-table,
+      .scoreboard-table thead,
+      .scoreboard-table tbody,
+      .scoreboard-table tr,
+      .scoreboard-table th,
+      .scoreboard-table td {
+        display: block;
+      }
+
+      .scoreboard-table thead {
+        display: none;
+      }
+
+      .scoreboard-table tr {
+        margin-block-end: 1rem;
+        border: 2px solid #1d1d1b;
+        border-radius: 10px;
+        overflow: clip;
+      }
+
+      .scoreboard-table tbody th {
+        position: sticky;
+        inset-block-start: 0;
+        z-index: 2;
+        background-color: var(--bg-yellow);
+        border-block-end: 2px solid #1d1d1b;
+      }
+
+      .scoreboard-table td {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-align: end;
+      }
+
+      .scoreboard-table td:nth-child(2)::before { content: var(--label-2) ": "; font-weight: 800; }
+      .scoreboard-table td:nth-child(3)::before { content: var(--label-3) ": "; font-weight: 800; }
+      .scoreboard-table td:nth-child(4)::before { content: var(--label-4) ": "; font-weight: 800; }
+      .scoreboard-table td:nth-child(5)::before { content: var(--label-5) ": "; font-weight: 800; }
+      .scoreboard-table td:nth-child(6)::before { content: var(--label-6) ": "; font-weight: 800; }
+    }
+
+    /* Question Bank & Other Modal Controls */
+    .bank-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-block-end: 0.9rem;
+    }
+
+    .search-input {
+      flex: 1 1 180px;
+      border: 2px solid #1d1d1b;
+      border-radius: 10px;
+      padding-block: 0.45rem;
+      padding-inline: 0.7rem;
+      font-family: inherit;
+      font-size: 0.92rem;
+    }
+
+    .bank-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 0.65rem;
+    }
+
+    .bank-card-item {
+      border: 2px solid #1d1d1b;
+      border-radius: 10px;
+      padding: 0.65rem;
+      background-color: #fffef9;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.45rem;
+    }
+
+    .bank-topic-line {
+      font-size: 0.86rem;
+      font-weight: 700;
+      padding: 0.32rem 0.5rem;
+      border-radius: 6px;
+    }
+
+    .bank-topic-a { background-color: #fff099; }
+    .bank-topic-b { background-color: #ffd6eb; }
+
+    .rules-grid {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .rule-step {
+      background-color: var(--bg-yellow-soft);
+      border: 2px solid #1d1d1b;
+      border-radius: 12px;
+      padding: 0.8rem;
+    }
+
+    .rule-step h3 {
+      margin: 0 0 0.35rem 0;
+      font-size: 1rem;
+    }
+
+    .rule-step p, .rule-step ul {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    /* Judge / Dispute Modal Widgets */
+    .judge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 0.9rem;
+    }
+
+    .judge-box {
+      border: 2.5px solid #1d1d1b;
+      border-radius: 14px;
+      padding: 0.9rem;
+      background-color: #fffef9;
+    }
+
+    .judge-result-banner {
+      margin-block-start: 0.65rem;
+      padding: 0.6rem;
+      border-radius: 10px;
+      border: 2px solid #1d1d1b;
+      font-weight: 800;
+      text-align: center;
+      background-color: var(--bg-yellow-soft);
+    }
+
+    /* Share Preview Canvas Wrap */
+    .share-canvas-wrap {
+      display: flex;
+      justify-content: center;
+      margin-block: 0.75rem;
+    }
+
+    #share-preview-canvas {
+      max-inline-size: 100%;
+      block-size: auto;
+      border: 3px solid #1d1d1b;
+      border-radius: 14px;
+      box-shadow: 0 4px 0 #1d1d1b;
+    }
+
+    /* Print Stylesheet (@media print) */
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      .site-header,
+      .quick-bar,
+      .category-bar,
+      .deck-meta-bar,
+      .topic-card-stage,
+      .board-controls-bar,
+      .cell-actions,
+      .slot-remove,
+      .site-footer,
+      #confetti-canvas {
+        display: none !important;
+      }
+      .workspace {
+        display: block !important;
+        padding: 0 !important;
+      }
+      .panel-card,
+      .board-container {
+        box-shadow: none !important;
+        border: 2px solid #000000 !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+        margin-block-end: 1rem !important;
+        page-break-inside: avoid;
+      }
+      .answer-cell {
+        border: 2px solid #000000 !important;
+        min-block-size: 95px !important;
+      }
+    }
+  </style>
 </head>
 <body>
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
   <header class="site-header">
     <div class="header-inner">
-      <div>
-        <h1 class="site-title">Colors of Mini</h1>
-        <p class="site-sub">Track your miniature paint collection</p>
-      </div>
-      <div class="theme-control">
-        <button class="action-btn" id="btn-show-onboarding">? Getting started</button>
-        <label class="a11y-toggle-label" for="a11y-pattern-toggle">
-          <input type="checkbox" id="a11y-pattern-toggle"> Colorblind patterns
-        </label>
-        <select id="a11y-simulate-select" aria-label="Simulate color vision deficiency">
-          <option value="none">No simulation</option>
-          <option value="protanopia">Simulate: Protanopia</option>
-          <option value="deuteranopia">Simulate: Deuteranopia</option>
-          <option value="tritanopia">Simulate: Tritanopia</option>
-        </select>
-        <label for="theme-select">Theme</label>
-        <select id="theme-select" aria-label="Select theme">
-          <option value="dark" selected>Dark</option>
-          <option value="light">Light</option>
-        </select>
-      </div>
+      <h1 class="brand-title">
+        <span class="brand-jinx">Jinx</span><span class="brand-o">O!</span>
+        <span>ג'ינקס-או</span>
+        <span class="brand-badge">PRO 🇮🇱</span>
+      </h1>
+
+      <nav class="header-actions" aria-label="פעולות משחק">
+        <button type="button" class="btn btn-yellow" id="open-rules-btn">📖 חוקים</button>
+        <button type="button" class="btn" id="open-bank-btn">🗂️ מאגר (<span id="total-questions-count">280</span>)</button>
+        <button type="button" class="btn btn-blue" id="open-scoreboard-btn">🏆 טבלת שחקנים</button>
+        <button type="button" class="btn btn-purple" id="open-bots-btn">🤖 משחק מול בוטים</button>
+        <button type="button" class="btn btn-orange" id="open-judge-btn">⚖️ שופט ג'ינקס</button>
+        <button type="button" class="btn btn-green" id="open-share-btn">📤 שיתוף וסיכום</button>
+        <button type="button" class="btn" id="print-sheet-btn" title="הדפסת דף ג'ינקס-או">🖨️ הדפסה</button>
+        <button type="button" class="btn btn-pink" id="reset-game-btn">🔄 משחק חדש</button>
+      </nav>
     </div>
   </header>
 
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <defs>
-      <filter id="cvd-protanopia">
-        <feColorMatrix type="matrix" values="0.567,0.433,0,0,0  0.558,0.442,0,0,0  0,0.242,0.758,0,0  0,0,0,1,0" />
-      </filter>
-      <filter id="cvd-deuteranopia">
-        <feColorMatrix type="matrix" values="0.625,0.375,0,0,0  0.7,0.3,0,0,0  0,0.3,0.7,0,0  0,0,0,1,0" />
-      </filter>
-      <filter id="cvd-tritanopia">
-        <feColorMatrix type="matrix" values="0.95,0.05,0,0,0  0,0.433,0.567,0,0  0,0.475,0.525,0,0  0,0,0,1,0" />
-      </filter>
-    </defs>
-  </svg>
+  <!-- Sub-toolbar: Room Sync, Sand Timer, Sound Effects, TV Mode -->
+  <div class="quick-bar" role="region" aria-label="כלי משחק מהירים">
+    <div class="quick-bar-inner">
+      <div class="quick-group">
+        <div class="room-widget" title="קוד חדר מסנכרן את סדר הקלפים בין כל הטלפונים בשולחן">
+          <span>🔑 חדר:</span>
+          <span class="room-code-badge" id="room-code-display">חופשי</span>
+          <button type="button" class="btn btn-sm btn-yellow" id="open-room-btn">סנכרון חדר</button>
+        </div>
 
-  <nav class="tab-nav">
-    <button class="tab-btn active" data-tab="all">
-      All Colors <span class="tab-badge" id="count-all">0</span>
-    </button>
-    <button class="tab-btn" data-tab="mine">
-      My Colors <span class="tab-badge owned" id="count-mine">0</span>
-    </button>
-    <button class="tab-btn" data-tab="stats">
-      Stats
-    </button>
-    <button class="tab-btn" data-tab="learn">
-      Learn
-    </button>
-    <button class="tab-btn" data-tab="palettes">
-      Palettes <span class="tab-badge" id="count-palettes">0</span>
-    </button>
-    <button class="tab-btn" data-tab="wheel">
-      Color Wheel
-    </button>
-    <button class="tab-btn" data-tab="gradient">
-      Gradient Builder
-    </button>
-    <button class="tab-btn" data-tab="projects">
-      Projects <span class="tab-badge" id="count-projects">0</span>
-    </button>
-    <button class="tab-btn" data-tab="community">
-      Community <span class="tab-badge" id="count-community">0</span>
-    </button>
-    <button class="tab-btn" data-tab="shopping">
-      Shopping List <span class="tab-badge" id="count-cart">0</span>
-    </button>
-  </nav>
-
-  <div class="toolbar" id="toolbar-all">
-    <input class="search-input" id="search" type="search" placeholder="Search by name, brand, or hex (#1a3d7c)…" autocomplete="off">
-    <button class="action-btn filter-toggle-btn" id="btn-toggle-filters" type="button" aria-expanded="false" aria-controls="filter-panel">⚙ Filters</button>
-    <span class="result-count" id="result-count"></span>
-    <button class="action-btn" id="btn-select-mode">☑ Select</button>
-    <div class="filter-panel" id="filter-panel">
-      <input type="color" id="color-picker" value="#7c6af7" title="Pick a color to find the closest paints">
-      <div class="company-pills">
-        <button class="pill active" data-company="all">All</button>
-        <button class="pill citadel"      data-company="Citadel">Citadel</button>
-        <button class="pill vallejo"      data-company="Vallejo">Vallejo</button>
-        <button class="pill army-painter"     data-company="Army Painter">Army Painter</button>
-        <button class="pill ak-interactive"   data-company="AK Interactive">AK Interactive</button>
-        <button class="pill p3-paints"        data-company="P3 Paints">P3 Paints</button>
-        <button class="pill greenstuff-world" data-company="Greenstuff World">Greenstuff World</button>
-      </div>
-      <div class="brand-row" id="brand-row" hidden>
-        <span class="filter-label">Brand</span>
-        <div class="company-pills" id="brand-pills"></div>
-      </div>
-      <div class="all-sort-row" id="all-sort-row">
-        <span class="filter-label">Sort</span>
-        <div class="sort-pills" id="all-sort-pills">
-          <button class="sort-pill active" data-allsort="default">Default</button>
-          <button class="sort-pill" data-allsort="color">Color family</button>
+        <div class="timer-widget" id="timer-widget">
+          <span>⏳</span>
+          <span class="timer-display" id="timer-display">01:30</span>
+          <button type="button" class="btn btn-sm btn-green" id="timer-toggle-btn">הפעל</button>
+          <button type="button" class="btn btn-sm" id="timer-reset-btn" title="אפס טיימר">↺</button>
+          <select id="timer-duration-select" class="btn btn-sm" aria-label="זמן טיימר">
+            <option value="60">60 שנ׳</option>
+            <option value="90" selected>90 שנ׳</option>
+            <option value="120">120 שנ׳</option>
+          </select>
         </div>
       </div>
-      <div class="all-sort-row" id="tag-filter-row" hidden>
-        <span class="filter-label">Tag</span>
-        <div class="sort-pills" id="tag-filter-pills"></div>
+
+      <div class="quick-group">
+        <button type="button" class="btn btn-sm" id="sound-toggle-btn" aria-pressed="true">🔊 סאונד: פעיל</button>
+        <button type="button" class="btn btn-sm" id="tv-mode-btn" aria-pressed="false">📺 מצב מסך מרכזי (TV)</button>
+        <button type="button" class="btn btn-sm" id="clear-round-btn">🧹 נקה סיבוב</button>
       </div>
     </div>
   </div>
 
-  <div class="selection-bar" id="selection-bar" hidden>
-    <span id="selection-count">0 selected</span>
-    <button class="action-btn" id="btn-select-add-owned">Add to collection</button>
-    <button class="action-btn" id="btn-select-add-cart">Add to shopping list</button>
-    <button class="action-btn" id="btn-select-clear">Clear selection</button>
-  </div>
+  <main class="workspace">
+    <!-- Topic Cards Deck Panel -->
+    <aside class="panel-card" aria-labelledby="deck-heading">
+      <div class="tv-banner">
+        <span>📺 מצב מסך מרכזי (TV Host) פעיל — כל השחקנים כותבים בטלפונים שלהם!</span>
+        <button type="button" class="btn btn-sm btn-yellow" id="exit-tv-btn">חזרה ללוח אישי ✕</button>
+      </div>
 
-  <div class="onboarding-banner" id="onboarding-banner" hidden>
-    <button class="onboarding-close" id="btn-close-onboarding" aria-label="Close">✕</button>
-    <h3>Getting started</h3>
-    <ol class="onboarding-checklist" id="onboarding-checklist">
-      <li data-tab="all">Mark paints you already own in <strong>All Colors</strong></li>
-      <li data-tab="learn">Check the <strong>Learn</strong> tab for a starter kit if you're just beginning</li>
-      <li data-tab="palettes">Browse <strong>Palettes</strong> for ready-made color scheme ideas</li>
-      <li data-tab="gradient">Try the <strong>Gradient Builder</strong> for a blending ramp</li>
-      <li data-tab="shopping">Build a <strong>Shopping List</strong> for what's missing</li>
-    </ol>
-  </div>
-
-  <main>
-    <section id="view-all" class="view active">
-      <div id="list-all"></div>
-      <p class="empty-msg" id="empty-search" hidden>No colors match your search.</p>
-    </section>
-
-    <section id="view-mine" class="view">
-      <div class="mine-toolbar" id="mine-toolbar">
-        <span class="mine-sort-label">Sort by</span>
-        <div class="sort-pills" id="mine-sort-pills">
-          <button class="sort-pill active" data-sort="company">Company</button>
-          <button class="sort-pill"        data-sort="color">Color family</button>
-        </div>
-        <div class="sort-pills" id="mine-filter-pills">
-          <button class="sort-pill" id="btn-filter-low" data-filter="low">⚠ Low stock</button>
-          <button class="sort-pill" id="btn-filter-stale" data-filter="stale">⏳ Drying out</button>
-        </div>
-        <div class="mine-actions">
-          <button class="action-btn" id="btn-new-mix">🧪 New mix</button>
-          <button class="action-btn" id="btn-export">↓ Export</button>
-          <label  class="action-btn" id="btn-import-label" title="Import collection">
-            ↑ Import
-            <input type="file" id="import-file" accept=".json" hidden>
-          </label>
-          <button class="action-btn danger" id="btn-clear">✕ Clear all</button>
+      <div class="panel-header">
+        <h2 class="panel-title" id="deck-heading">🎴 כרטיסי נושא</h2>
+        <div style="display: flex; gap: 0.35rem;">
+          <button type="button" class="btn btn-sm" id="prev-card-btn" title="כרטיס קודם">◀</button>
+          <button type="button" class="btn btn-green" id="draw-card-btn">שלוף כרטיס 🎲</button>
         </div>
       </div>
 
-      <div class="mix-panel" id="mix-panel" hidden>
-        <div class="mix-panel-inner">
-          <h3>Create a paint mix</h3>
-          <input type="text" id="mix-name" placeholder="Mix name (optional)" class="search-input" style="width:100%">
-          <div id="mix-ingredients"></div>
-          <button type="button" class="action-btn" id="btn-add-ingredient">+ Add color</button>
-          <div class="mix-preview">
-            <span class="color-circle" id="mix-preview-swatch"></span>
-            <span id="mix-preview-label">Pick at least 2 colors with a ratio to preview.</span>
-          </div>
-          <div class="mix-panel-actions">
-            <button class="action-btn" id="btn-save-mix">Save mix</button>
-            <button class="action-btn" id="btn-cancel-mix">Cancel</button>
+      <div class="deck-meta-bar">
+        <span id="deck-step-indicator">כרטיס #1 בחפיסה</span>
+        <span>
+          נצפו: <strong id="seen-cards-count">0</strong>
+          <button type="button" class="slot-remove" id="reset-seen-btn" title="אפס היסטוריית כרטיסים שנצפו">↺</button>
+        </span>
+      </div>
+
+      <div class="category-bar" role="group" aria-label="סינון קטגוריית שאלות">
+        <button type="button" class="cat-pill" data-cat="all" aria-pressed="true">הכל</button>
+        <button type="button" class="cat-pill" data-cat="israel" aria-pressed="false">ישראלי אסלי</button>
+        <button type="button" class="cat-pill" data-cat="food" aria-pressed="false">אוכל ישראלי</button>
+        <button type="button" class="cat-pill" data-cat="holidays" aria-pressed="false">חגים</button>
+        <button type="button" class="cat-pill" data-cat="culture" aria-pressed="false">תרבות ומוזיקה</button>
+        <button type="button" class="cat-pill" data-cat="kids" aria-pressed="false">👨‍👩‍👧‍👦 ילדים ומשפחה</button>
+        <button type="button" class="cat-pill" data-cat="party" aria-pressed="false">🌶️ מסיבה ולילה</button>
+        <button type="button" class="cat-pill" data-cat="original" aria-pressed="false">המקורי מתורגם</button>
+      </div>
+
+      <div class="topic-card-stage">
+        <div class="jinxo-topic-card" id="topic-card-box" aria-live="polite">
+          <button type="button" class="topic-half topic-half-a" id="pick-topic-a" title="לחצו לבחירת נושא א׳ לסיבוב">
+            <span class="topic-side-tag">נושא א׳ (לחצו לבחירה לסיבוב)</span>
+            <span class="topic-text" id="card-topic-a-text">טוען כרטיס...</span>
+          </button>
+          <button type="button" class="topic-half topic-half-b" id="pick-topic-b" title="לחצו לבחירת נושא ב׳ לסיבוב">
+            <span class="topic-side-tag">נושא ב׳ (לחצו לבחירה לסיבוב)</span>
+            <span class="topic-text" id="card-topic-b-text">טוען כרטיס...</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="round-topics-box">
+        <div class="round-topics-title">
+          <span>3 הנושאים לסיבוב (לחצו למילוי מהיר):</span>
+          <div style="display: flex; gap: 0.35rem; align-items: center;">
+            <button type="button" class="btn btn-sm btn-yellow" id="auto-pick-3-btn" title="הגרל 3 נושאים אוטומטית לסיבוב">⚡ הגרל 3</button>
+            <span id="topics-counter-badge">0 / 3</span>
           </div>
         </div>
+        <ol class="round-topics-list" id="round-topics-list">
+          <!-- Populated dynamically -->
+        </ol>
+      </div>
+    </aside>
+
+    <!-- Player JinxO Board & Score Sheet -->
+    <section class="board-container" aria-labelledby="board-heading">
+      <div class="board-top-bar">
+        <h2 class="panel-title" id="board-heading">✏️ לוח ה-JinxO שלי (3 תשובות לכל נושא = 9 סה״כ)</h2>
+
+        <div class="round-tabs" role="tablist" aria-label="בחירת סיבוב">
+          <button type="button" class="round-tab" role="tab" data-round="0" aria-selected="true">סיבוב 1</button>
+          <button type="button" class="round-tab" role="tab" data-round="1" aria-selected="false">סיבוב 2</button>
+          <button type="button" class="round-tab" role="tab" data-round="2" aria-selected="false">סיבוב 3</button>
+        </div>
       </div>
 
-      <div id="list-mine"></div>
-      <div class="empty-state" id="empty-mine">
-        <div class="empty-icon">🎨</div>
-        <p>Your collection is empty.</p>
-        <p class="empty-hint">Switch to <strong>All Colors</strong> and click <strong>+</strong> to add paints.</p>
-      </div>
-    </section>
-
-    <section id="view-stats" class="view">
-      <div class="palette-intro">
-        <p>A snapshot of your collection — breakdown by brand and color family, estimated value, and your most-used tags.</p>
+      <!-- Privacy / Secret Toggle & Auto-Bot Match Bar -->
+      <div class="board-controls-bar">
+        <div style="display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center;">
+          <button type="button" class="btn btn-sm" id="secret-mode-btn" aria-pressed="false">🙈 הסתר תשובות מהשכנים</button>
+          <button type="button" class="btn btn-sm btn-yellow" id="auto-tag-topics-btn" title="חלק את המשבצות לנושאים 1, 2, 3">🏷️ תייג שורות לנושאים 1-2-3</button>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center;">
+          <button type="button" class="btn btn-sm btn-purple" id="simulate-bots-round-btn">🤖 השווה תשובות מול בוטים!</button>
+        </div>
       </div>
 
-      <div class="stats-tiles" id="stats-tiles"></div>
+      <div class="done-banner" id="done-banner" hidden>
+        <span>🎉 כל 9 התשובות בלוח סומנו! הכריזו בקול: <strong>״סיימתי!״ (I'm done!)</strong> לסיום הסיבוב!</span>
+        <button type="button" class="btn btn-sm btn-yellow" id="celebrate-again-btn">🎊 קונפטי!</button>
+      </div>
 
-      <div class="palette-feedback">
-        <section class="panel">
-          <div class="panel-header">
-            <h2>By brand</h2>
+      <div class="board-main-layout">
+        <!-- 3x3 Answer Grid + Row & Column Bonus Points -->
+        <div class="grid-with-bonuses" id="jinxo-grid">
+          <!-- Generated dynamically -->
+        </div>
+
+        <!-- Score Boxes on the side -->
+        <div class="score-sidebar" aria-label="טבלת ניקוד">
+          <div class="score-box">
+            <span class="score-box-label">⭕ הקפות (×1)</span>
+            <span class="score-box-value" id="score-circles">0</span>
           </div>
-          <div id="stats-brand-breakdown"></div>
-        </section>
-        <section class="panel">
-          <div class="panel-header">
-            <h2>By color family</h2>
+          <div class="score-box">
+            <span class="score-box-label">⭐ ג'ינקס! (×2)</span>
+            <span class="score-box-value" id="score-stars">0</span>
           </div>
-          <div id="stats-family-breakdown"></div>
-        </section>
-      </div>
-
-      <section class="panel" id="stats-tags-panel" hidden>
-        <div class="panel-header">
-          <h2>Top tags</h2>
-        </div>
-        <div id="stats-top-tags"></div>
-      </section>
-    </section>
-
-    <section id="view-learn" class="view">
-      <div class="palette-intro">
-        <p>New to painting miniatures? Start here: what the paint ranges mean, a short list of essentials to buy first, and the core techniques worth learning.</p>
-      </div>
-
-      <section class="panel learn-section">
-        <div class="panel-header">
-          <h2>Starter Kit</h2>
-          <p>A curated "buy these first" list, independent of what you already own.</p>
-        </div>
-        <div class="learn-toolbar">
-          <span class="filter-label">Company</span>
-          <div class="sort-pills" id="starter-company-pills"></div>
-          <button class="action-btn" id="btn-starter-add-all">+ Add all to shopping list</button>
-        </div>
-        <div id="starter-kit-list"></div>
-      </section>
-
-      <section class="panel learn-section">
-        <div class="panel-header">
-          <h2>Paint-Type Glossary</h2>
-          <p>What each paint range is actually for.</p>
-        </div>
-        <div id="paint-type-glossary" class="learn-grid"></div>
-      </section>
-
-      <section class="panel learn-section">
-        <div class="panel-header">
-          <h2>Technique Glossary</h2>
-          <p>Core painting techniques, from beginner to advanced. Tag your paints (click a swatch) with a matching keyword to link them here.</p>
-        </div>
-        <div id="technique-glossary" class="learn-grid"></div>
-      </section>
-    </section>
-
-    <section id="view-palettes" class="view">
-      <div class="palette-intro">
-        <p>Explore curated miniature palettes and get tailored suggestions from your collection. Palettes are organised by <strong>Color Theory</strong>, <strong>Genre</strong>, <strong>Character Role</strong> (based on <a href="https://thearmypainter.com/blogs/explore/how-to-pick-a-colour-scheme" target="_blank" rel="noopener" style="color:var(--accent)">The Army Painter's colour guide</a>), and <strong>Army Painter Showcase</strong>. If a palette is missing paint, this tab will recommend colors to complete it.</p>
-      </div>
-      <div class="panel surprise-panel">
-        <div class="panel-header">
-          <h2>🎲 Surprise Me</h2>
-          <p>Generate a random starter palette instantly — from your whole collection or just what you own.</p>
-        </div>
-        <div class="surprise-controls">
-          <label>Colors <input type="number" id="surprise-count" min="3" max="8" value="5"></label>
-          <label class="surprise-checkbox"><input type="checkbox" id="surprise-owned-only"> Owned only</label>
-          <label>Mode
-            <select id="surprise-mode">
-              <option value="random">Random</option>
-              <option value="harmony">Harmony-based</option>
-            </select>
-          </label>
-          <button class="action-btn" id="btn-surprise-generate">🎲 Surprise me</button>
-        </div>
-        <div id="surprise-result"></div>
-      </div>
-
-      <div class="palette-grid" id="palette-list"></div>
-      <div class="palette-feedback">
-        <section class="panel">
-          <div class="panel-header">
-            <h2>Your palette suggestions</h2>
-            <p>Based on the colors you own, the app recommends core paint palettes and matching colors to fill gaps.</p>
+          <div class="score-box">
+            <span class="score-box-label">➕ בונוס שורות/טורים</span>
+            <span class="score-box-value" id="score-bonus">0</span>
           </div>
-          <div id="palette-analysis"></div>
-        </section>
-        <section class="panel">
-          <div class="panel-header">
-            <h2>Missing color recommendations</h2>
-            <p>Colors you don't own yet are matched with nearest available paints from the collection.</p>
+          <div class="score-box">
+            <span class="score-box-label">סיבוב 1</span>
+            <span class="score-box-value" id="score-r1">0</span>
           </div>
-          <div id="missing-list"></div>
-        </section>
-      </div>
-    </section>
-
-    <section id="view-wheel" class="view">
-      <div class="palette-intro">
-        <p>A visual hue wheel of your collection — position on the ring is hue, distance from center is saturation. Pick a base color and a harmony type to see which owned paints already fit, and where the gaps are.</p>
-      </div>
-      <div class="panel wheel-panel">
-        <div class="wheel-controls">
-          <label>Base color<select id="wheel-seed-select"></select></label>
-          <label>Harmony
-            <select id="wheel-harmony-mode">
-              <option value="complementary">Complementary</option>
-              <option value="split-complementary">Split Complementary</option>
-              <option value="analogous">Analogous</option>
-              <option value="triadic">Triadic</option>
-              <option value="tetradic">Tetradic</option>
-            </select>
-          </label>
-        </div>
-        <div class="wheel-layout">
-          <div class="color-wheel" id="color-wheel">
-            <div class="wheel-dots" id="wheel-dots"></div>
+          <div class="score-box">
+            <span class="score-box-label">סיבוב 2</span>
+            <span class="score-box-value" id="score-r2">0</span>
           </div>
-          <div class="wheel-side">
-            <div class="wheel-legend">
-              <span class="wheel-legend-item"><span class="wheel-legend-dot seed"></span> Selected</span>
-              <span class="wheel-legend-item"><span class="wheel-legend-dot match"></span> Owned match</span>
-              <span class="wheel-legend-item"><span class="wheel-legend-dot target"></span> Harmony target</span>
-            </div>
-            <p class="empty-msg-small" id="wheel-empty" hidden>Own at least one color to plot the wheel.</p>
-            <div id="wheel-matches"></div>
+          <div class="score-box">
+            <span class="score-box-label">סיבוב 3</span>
+            <span class="score-box-value" id="score-r3">0</span>
+          </div>
+          <div class="score-box final-total">
+            <span class="score-box-label">סה״כ ניקוד (Σ)</span>
+            <span class="score-box-value" id="score-final">0</span>
           </div>
         </div>
       </div>
-    </section>
 
-    <section id="view-gradient" class="view">
-      <div class="palette-intro">
-        <p>Pick a <strong>shadow</strong>, <strong>base</strong>, and <strong>highlight</strong> color and get a step-by-step blending ramp, snapped to real purchasable paints. Steps you don't own are flagged and can be added straight to the Shopping List.</p>
-      </div>
-
-      <div class="gradient-builder panel">
-        <div class="gradient-pickers">
-          <label>Shadow<select id="grad-shadow"></select></label>
-          <label>Base<select id="grad-base"></select></label>
-          <label>Highlight<select id="grad-highlight"></select></label>
-          <label>Steps
-            <span class="grad-steps-row">
-              <input type="range" id="grad-steps" min="3" max="7" value="5">
-              <span id="grad-steps-label">5</span>
-            </span>
-          </label>
+      <!-- AI Bots Round Comparison Output -->
+      <div class="bots-results-panel" id="bots-results-panel" hidden>
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+          <h3 style="margin: 0; font-size: 1rem;">🤖 מה הבוטים כתבו בסיבוב הזה? (התאמות סומנו אוטומטית בלוח שלך!)</h3>
+          <button type="button" class="btn btn-sm" id="close-bots-results-btn">סגור ✕</button>
         </div>
-        <div class="gradient-ramp" id="gradient-ramp"></div>
-        <div class="gradient-actions">
-          <input type="text" id="grad-recipe-name" class="search-input" placeholder="Recipe name (optional)">
-          <button class="action-btn" id="btn-save-ramp">Save recipe</button>
-          <button class="action-btn" id="btn-share-ramp">🖼 Share as image</button>
-        </div>
-      </div>
-
-      <div class="panel gradient-blend-finder">
-        <div class="panel-header">
-          <h2>Complete the gradient (owned colors only)</h2>
-          <p>Find an owned paint that naturally bridges two other owned paints — no shopping required.</p>
-        </div>
-        <div class="gradient-pickers">
-          <label>From (owned)<select id="blend-from"></select></label>
-          <label>To (owned)<select id="blend-to"></select></label>
-          <button class="action-btn" id="btn-find-blend">Find blend</button>
-        </div>
-        <div class="gradient-ramp" id="blend-result"></div>
-      </div>
-
-      <div class="panel gradient-saved">
-        <div class="panel-header">
-          <h2>Saved recipes</h2>
-        </div>
-        <div id="gradient-saved-list"></div>
-      </div>
-    </section>
-
-    <section id="view-projects" class="view">
-      <div class="palette-intro">
-        <p>Group owned colors by project or army so you can see what was used where. Colors keep their global ownership — deleting a project never unowns anything.</p>
-      </div>
-
-      <div id="projects-list-view">
-        <div class="mine-toolbar">
-          <input type="text" id="new-project-name" class="search-input" placeholder="New project name…">
-          <button class="action-btn" id="btn-new-project">+ New project</button>
-        </div>
-        <div id="projects-grid" class="palette-grid-inner"></div>
-        <p class="empty-msg" id="empty-projects" hidden>No projects yet. Create one above.</p>
-      </div>
-
-      <div id="project-detail-view" hidden>
-        <div class="mine-toolbar">
-          <button class="action-btn" id="btn-project-back">← Back to projects</button>
-          <span class="mine-sort-label" id="project-detail-name"></span>
-          <div class="mine-actions">
-            <button class="action-btn" id="btn-project-publish">↑ Publish</button>
-            <button class="action-btn" id="btn-project-duplicate">Duplicate</button>
-            <button class="action-btn danger" id="btn-project-delete">✕ Delete project</button>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="panel-header">
-            <h2>Add owned colors to this project</h2>
-            <p>Check any owned color to add it; uncheck to remove it. This doesn't change your global collection.</p>
-          </div>
-          <div id="project-color-checklist" class="project-checklist"></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="view-shopping" class="view">
-      <div class="mine-toolbar" id="shopping-toolbar">
-        <span class="mine-sort-label" id="shopping-count-label">0 items</span>
-        <span class="mine-sort-label" id="shopping-total-label"></span>
-        <div class="mine-actions">
-          <button class="action-btn" id="btn-share-cart">🖼 Share as image</button>
-          <button class="action-btn" id="btn-print-cart">Print</button>
-          <button class="action-btn danger" id="btn-clear-cart">✕ Clear list</button>
-        </div>
-      </div>
-      <div id="list-shopping"></div>
-      <div class="empty-state" id="empty-shopping">
-        <div class="empty-icon">🛒</div>
-        <p>Your shopping list is empty.</p>
-        <p class="empty-hint">Click the <strong>cart</strong> button on any color to add it to your list.</p>
+        <div class="bots-grid" id="bots-results-grid"></div>
       </div>
     </section>
   </main>
 
-  <div class="modal-overlay" id="note-modal" hidden>
-    <div class="modal">
-      <h3 id="note-modal-title">Notes &amp; tags</h3>
-      <label class="modal-label">Note
-        <textarea id="note-modal-text" rows="3" placeholder="e.g. good for NMM gold, dries fast, thin it…"></textarea>
-      </label>
-      <label class="modal-label">Tags (comma separated)
-        <input type="text" id="note-modal-tags" placeholder="e.g. NMM, glaze, wet-blend">
-      </label>
-      <div class="modal-actions">
-        <button class="action-btn" id="btn-note-save">Save</button>
-        <button class="action-btn" id="btn-note-cancel">Cancel</button>
-      </div>
+  <footer class="site-footer">
+    מבוסס על משחק הקופסה JinxO / Dito! מאת Martin Ang (Tabletoys Games) • מהדורת PRO בעברית 🇮🇱
+  </footer>
 
-      <div id="note-modal-harmony">
-        <h4>Color Harmony</h4>
-        <p class="empty-msg-small">Suggestions from your owned colors based on the selected paint.</p>
-        <div class="harmony-row">
-          <div class="harmony-label">Complementary</div>
-          <div class="harmony-chips" id="harmony-complementary"></div>
-        </div>
-        <div class="harmony-row">
-          <div class="harmony-label">Analogous</div>
-          <div class="harmony-chips" id="harmony-analogous"></div>
-        </div>
-        <div class="harmony-row">
-          <div class="harmony-label">Triadic</div>
-          <div class="harmony-chips" id="harmony-triadic"></div>
-        </div>
+  <!-- 1. Room Sync Modal Dialog -->
+  <dialog id="room-dialog" closedby="any" aria-labelledby="room-dialog-title">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <h2 class="modal-title" id="room-dialog-title">🔑 סנכרון חדר משותף (ללא שרת!)</h2>
+        <form method="dialog">
+          <button type="submit" class="btn" autofocus>סגור ✕</button>
+        </form>
       </div>
-
-      <div id="note-modal-equivalents">
-        <h4>Cross-Brand Equivalents</h4>
-        <p class="empty-msg-small">Closest match for this color in each other brand, owned or not.</p>
-        <div class="sort-pills" id="equivalents-brand-pills"></div>
-        <div id="equivalents-list"></div>
+      <div class="modal-body">
+        <p style="margin-block-start: 0;">הזינו את אותו <strong>קוד חדר בן 4 תווים</strong> בכל הטלפונים בשולחן. החפיסה תתערבב בסדר זהה לכולם, ולחיצה על ״הגרל 3״ תבחר את אותם 3 נושאים בדיוק לכל השחקנים!</p>
+        <form id="room-sync-form" class="bank-controls">
+          <input type="text" id="room-code-input" class="search-input" maxlength="8" placeholder="למשל: JX42" aria-label="קוד חדר">
+          <button type="submit" class="btn btn-green">התחבר לחדר 🔗</button>
+          <button type="button" class="btn btn-yellow" id="generate-room-btn">🎲 צור קוד אקראי</button>
+          <button type="button" class="btn" id="leave-room-btn">נתק חדר</button>
+        </form>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-block-start: 0.75rem;">
+          <button type="button" class="btn btn-blue" id="copy-room-link-btn">📋 העתק קישור הצטרפות לוואטסאפ</button>
+          <span id="room-copy-status" style="font-weight: 800; color: var(--brand-green-dark);"></span>
+        </div>
       </div>
     </div>
-  </div>
+  </dialog>
 
-  <script src="app.js"></script>
+  <!-- 2. Multi-Player Scoreboard Modal Dialog (Responsive Table) -->
+  <dialog id="scoreboard-dialog" closedby="any" aria-labelledby="scoreboard-dialog-title">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <h2 class="modal-title" id="scoreboard-dialog-title">🏆 טבלת שחקנים קבוצתית (4–7 שחקנים)</h2>
+        <form method="dialog">
+          <button type="submit" class="btn" autofocus>סגור ✕</button>
+        </form>
+      </div>
+      <div class="modal-body">
+        <div class="bank-controls">
+          <form id="add-player-form" style="display: flex; gap: 0.45rem; flex: 1;">
+            <input type="text" id="new-player-name" class="search-input" placeholder="שם שחקן חדש..." required aria-label="שם שחקן חדש">
+            <button type="submit" class="btn btn-green">➕ הוסף שחקן</button>
+          </form>
+          <button type="button" class="btn btn-yellow" id="sync-my-score-btn">🔄 עדכן את הניקוד שלי מהלוח</button>
+        </div>
+
+        <div tabindex="0" role="region" aria-labelledby="scoreboard-caption" class="table-wrapper">
+          <table class="scoreboard-table">
+            <caption id="scoreboard-caption">דירוג שחקנים מצטבר ל-3 סיבובים (המוביל מסומן ב-👑)</caption>
+            <thead>
+              <tr>
+                <th scope="col">שחקן</th>
+                <th scope="col">סיבוב 1</th>
+                <th scope="col">סיבוב 2</th>
+                <th scope="col">סיבוב 3</th>
+                <th scope="col">סה״כ</th>
+                <th scope="col">פעולות</th>
+              </tr>
+            </thead>
+            <tbody id="scoreboard-tbody">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- 3. AI Bots Configuration Modal Dialog -->
+  <dialog id="bots-dialog" closedby="any" aria-labelledby="bots-dialog-title">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <h2 class="modal-title" id="bots-dialog-title">🤖 משחק ואימון מול בוטים ישראליים</h2>
+        <form method="dialog">
+          <button type="submit" class="btn" autofocus>סגור ✕</button>
+        </form>
+      </div>
+      <div class="modal-body">
+        <p style="margin-block-start: 0;">חסרים לכם שחקנים ל-4–7 משתתפים או שבא לכם להתאמן לבד? בחרו אילו דמויות AI ישראליות ישחקו מולכם בשולחן, מלאו את הלוח שלכם, ולחצו על <strong>״🤖 השווה תשובות מול בוטים!״</strong></p>
+        <div id="bots-selection-list" class="rules-grid" style="margin-block-end: 1rem;">
+          <!-- Populated dynamically -->
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+          <button type="button" class="btn btn-purple" id="run-bots-from-modal-btn">🚀 הרץ השוואת בוטים לסיבוב הנוכחי!</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- 4. Dispute / Judge Modal Dialog -->
+  <dialog id="judge-dialog" closedby="any" aria-labelledby="judge-dialog-title">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <h2 class="modal-title" id="judge-dialog-title">⚖️ שופט ג'ינקס והצבעת שולחן</h2>
+        <form method="dialog">
+          <button type="submit" class="btn" autofocus>סגור ✕</button>
+        </form>
+      </div>
+      <div class="modal-body">
+        <div class="judge-grid">
+          <!-- Smart Hebrew Match Analyzer -->
+          <div class="judge-box">
+            <h3 style="margin-block-start: 0;">🔍 בודק התאמות חכם בעברית</h3>
+            <p style="font-size: 0.84rem;">בודק אוטומטית אותיות שימוש (ה/ו/ב/ל/מ), יחיד/רבים והבחנה בין כללי לספציפי:</p>
+            <div style="display: flex; flex-direction: column; gap: 0.45rem;">
+              <input type="text" id="judge-word-1" class="search-input" placeholder="תשובה של שחקן א׳ (למשל: חומוס)..." aria-label="תשובה של שחקן א">
+              <input type="text" id="judge-word-2" class="search-input" placeholder="תשובה של שחקן ב׳ (למשל: החומוס)..." aria-label="תשובה של שחקן ב">
+              <button type="button" class="btn btn-blue" id="judge-check-btn">בדוק התאמה ⚖️</button>
+            </div>
+            <div class="judge-result-banner" id="judge-smart-result">הזינו שתי תשובות לבדיקה</div>
+          </div>
+
+          <!-- Table Thumb Vote & Coin Flip -->
+          <div class="judge-box">
+            <h3 style="margin-block-start: 0;">👍👎 הצבעת שחקנים והכרעה</h3>
+            <p style="font-size: 0.84rem;">לפי חוקי JinxO: כשיש ספק אם שתי מילים נרדפות נחשבות להתאמה – שאר השחקנים מצביעים!</p>
+            <div style="display: flex; gap: 0.45rem; margin-block-end: 0.5rem;">
+              <button type="button" class="btn btn-green" style="flex: 1;" id="vote-yes-btn">👍 בעד התאמה (<span id="vote-yes-count">0</span>)</button>
+              <button type="button" class="btn btn-pink" style="flex: 1;" id="vote-no-btn">👎 נגד (<span id="vote-no-count">0</span>)</button>
+            </div>
+            <div style="display: flex; gap: 0.45rem;">
+              <button type="button" class="btn btn-sm" id="vote-reset-btn">אפס הצבעה</button>
+              <button type="button" class="btn btn-sm btn-yellow" id="coin-flip-btn">🪙 הטלת מטבע שוברת שוויון</button>
+            </div>
+            <div class="judge-result-banner" id="judge-vote-result">מוכנים להצבעה!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- 5. Share & Image Summary Modal Dialog -->
+  <dialog id="share-dialog" closedby="any" aria-labelledby="share-dialog-title">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <h2 class="modal-title" id="share-dialog-title">📤 שיתוף וסיכום משחק (תמונה / וואטסאפ)</h2>
+        <form method="dialog">
+          <button type="submit" class="btn" autofocus>סגור ✕</button>
+        </form>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-block-end: 0.75rem;">
+          <button type="button" class="btn btn-green" id="copy-whatsapp-btn">💬 העתק סיכום לוואטסאפ</button>
+          <button type="button" class="btn btn-blue" id="download-png-btn">🖼️ הורד כרטיס תמונה (PNG)</button>
+          <span id="share-status-msg" style="font-weight: 800; color: var(--brand-green-dark); align-self: center;"></span>
+        </div>
+        <div class="share-canvas-wrap">
+          <canvas id="share-preview-canvas" width="600" height="520"></canvas>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- 6. Rules Modal Dialog -->
+  <dialog id="rules-dialog" closedby="any" aria-labelledby="rules-dialog-title">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <h2 class="modal-title" id="rules-dialog-title">📖 איך משחקים ב-JinxO? (4–7 שחקנים)</h2>
+        <form method="dialog">
+          <button type="submit" class="btn" autofocus>סגור ✕</button>
+        </form>
+      </div>
+      <div class="modal-body">
+        <div class="rules-grid">
+          <div class="rule-step">
+            <h3>1. בחירת 3 נושאים ומילוי הלוח (9 תשובות)</h3>
+            <p>השחקן הראשון שולף כרטיס נושא ובוחר אחד מ-2 הנושאים שעליו. כל השחקנים כותבים בסתר <strong>בדיוק 3 תשובות</strong> לנושא שנבחר ב-3 משבצות פנויות כלשהן בלוח ה-3×3 שלהם. חוזרים על כך <strong>3 פעמים</strong> עד שכל 9 המשבצות בלוח מלאות.</p>
+          </div>
+          <div class="rule-step">
+            <h3>✅ מה נחשב לתשובה חוקית?</h3>
+            <ul>
+              <li><strong>עד 2 מילים בלבד</strong> (למעט שמות פרטיים כגון שם עיר, מותג, סרט או אדם).</li>
+              <li><strong>אסור לחזור על אותה תשובה פעמיים</strong> על אותו לוח (גם אם מדובר בנושאים שונים!). המערכת מזהה אוטומטית כפילויות כולל אותיות שימוש בעברית.</li>
+            </ul>
+          </div>
+          <div class="rule-step">
+            <h3>2. הקראת תשובות וסימון התאמות</h3>
+            <p>החל מהשחקן הראשון ובכיוון השעון, כל שחקן בתורו מכריז בקול על תשובה אחת מהלוח שלו שעדיין לא נאמרה בסיבוב:</p>
+            <ul>
+              <li><strong>א. כמה שחקנים כתבו אותה תשובה (⭕ הקפה):</strong> כל השחקנים עם התשובה התואמת מקיפים אותה בעיגול (<strong>נקודה אחת</strong>).</li>
+              <li><strong>ב. רק שחקן אחד נוסף כתב אותה תשובה (⭐ ג'ינקס!):</strong> שני השחקנים צועקים <strong>״ג'ינקס!״</strong>, מקיפים את התשובה בעיגול <strong>וצובעים את כוכב הג'ינקס</strong> בפינת המשבצת (<strong>1 נק׳ על ההקפה + 2 נק׳ על הכוכב = 3 נק׳!</strong>).</li>
+              <li><strong>ג. אף שחקן אחר לא כתב את התשובה (❌ מחיקה):</strong> השחקן הפעיל מסמן X על התשובה שלו (0 נקודות).</li>
+            </ul>
+          </div>
+          <div class="rule-step">
+            <h3>3. סיום הסיבוב וחישוב בונוסים</h3>
+            <p>ברגע שלאחד השחקנים לא נותרו משבצות פנויות לסימון, הוא מכריז <strong>״סיימתי!״</strong> והסיבוב מסתיים מיד עבור כולם!</p>
+            <ul>
+              <li><strong>1 נקודה</strong> לכל תשובה מוקפת בעיגול (⭕).</li>
+              <li><strong>2 נקודות נוספות</strong> לכל כוכב ג'ינקס צבוע (⭐).</li>
+              <li><strong>נקודות בונוס שורות וטורים:</strong> אם הקפתם בעיגול (או ג'ינקס) את כל 3 התשובות בשורה או בטור שלם, תקבלו את נקודות הבונוס של אותה שורה (3, 2 או 1) או טור (1, 2 או 3)!</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- 7. Question Bank Modal Dialog -->
+  <dialog id="bank-dialog" closedby="any" aria-labelledby="bank-dialog-title">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <h2 class="modal-title" id="bank-dialog-title">🗂️ מאגר כרטיסי הנושא בעברית</h2>
+        <form method="dialog">
+          <button type="submit" class="btn" autofocus>סגור ✕</button>
+        </form>
+      </div>
+      <div class="modal-body">
+        <search class="bank-controls">
+          <input type="search" id="bank-search-input" class="search-input" placeholder="חיפוש חופשי בשאלות (למשל: חומוס, צבא, קיץ, ילדים)..." aria-label="חיפוש בשאלות">
+        </search>
+
+        <form id="add-card-form" class="bank-controls">
+          <input type="text" id="custom-topic-a" class="search-input" placeholder="נושא א׳ חדש..." required aria-label="נושא א׳ חדש">
+          <input type="text" id="custom-topic-b" class="search-input" placeholder="נושא ב׳ חדש..." required aria-label="נושא ב׳ חדש">
+          <button type="submit" class="btn btn-green">➕ הוסף כרטיס</button>
+        </form>
+
+        <ul class="bank-list" id="bank-list">
+          <!-- Populated dynamically -->
+        </ul>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="questions.js"></script>
+  <script>
+    (() => {
+      // Extra Built-in Card Packs for PRO Edition (Kids & Family + Party & Night)
+      const EXTRA_PRO_CARDS = [
+        // --- ילדים ומשפחה (kids) ---
+        { id: 101, category: "kids", topicA: "חיות שיש בגן חיות או בספארי", topicB: "טעמים של גלידה" },
+        { id: 102, category: "kids", topicA: "דברים שיש בקלמר בבית הספר", topicB: "דמויות מצוירות מפורסמות" },
+        { id: 103, category: "kids", topicA: "מקצועות שלומדים בבית הספר", topicB: "דברים שיש בחדר שינה של ילדים" },
+        { id: 104, category: "kids", topicA: "משחקים שמשחקים בהפסקה", topicB: "פירות מתוקים" },
+        { id: 105, category: "kids", topicA: "דברים שלוקחים לבריכה", topicB: "גיבורי על מוכרים" },
+        { id: 106, category: "kids", topicA: "דברים בצבע אדום", topicB: "חיות מחמד שאפשר לגדל בבית" },
+        { id: 107, category: "kids", topicA: "דברים שעושים בבוקר לפני בית ספר", topicB: "מאכלים שאוהבים לאכול בצהריים" },
+        { id: 108, category: "kids", topicA: "כלי תחבורה שנוסעים או עפים", topicB: "דברים שיש בלונה פארק" },
+        { id: 109, category: "kids", topicA: "צעצועים ומשחקי הרכבה", topicB: "דברים שרואים בחורף" },
+        { id: 110, category: "kids", topicA: "ממתקים שיש בשקית הפתעה", topicB: "חיות שחיות בים" },
+        { id: 111, category: "kids", topicA: "דברים שיש במסיבת פיג׳מות", topicB: "ענפי ספורט וכדור" },
+        { id: 112, category: "kids", topicA: "ספרים או אגדות ילדים מפורסמות", topicB: "דברים שעושים עם חברים אחר הצהריים" },
+        { id: 113, category: "kids", topicA: "דברים שיש בקרקס או במופע קסמים", topicB: "מאכלים בצבע כתום או צהוב" },
+        { id: 114, category: "kids", topicA: "דברים שלוקחים לטיול שנתי", topicB: "שירים ששרים ביום הולדת" },
+        { id: 115, category: "kids", topicA: "דברים שעשויים משוקולד", topicB: "חיות שקופצות או רצות מהר" },
+        { id: 116, category: "kids", topicA: "דברים שיש בחוף הים", topicB: "משחקי מחשב או טלפון פופולריים" },
+        { id: 117, category: "kids", topicA: "דברים שגורמים לצחוק בקול", topicB: "ירקות ירוקים" },
+        { id: 118, category: "kids", topicA: "דברים שלובשים כשקר", topicB: "מקומות שכיף לטייל בהם עם המשפחה" },
+        { id: 119, category: "kids", topicA: "דברים שיש במטבח", topicB: "דברים שעושים בחופש הגדול" },
+        { id: 120, category: "kids", topicA: "תוספות על פנקייק או ופל בלגי", topicB: "דברים שיש בגינת משחקים" },
+
+        // --- מסיבה ולילה (party) ---
+        { id: 121, category: "party", topicA: "דגלים אדומים בדייט ראשון", topicB: "תירוצים לבטל תוכניות ברגע האחרון" },
+        { id: 122, category: "party", topicA: "דברים שכותבים בהודעה שמתחרטים עליה בבוקר", topicB: "משקאות שמזמינים בבר" },
+        { id: 123, category: "party", topicA: "סיבות לריב בין שותפים לדירה", topicB: "דברים שרואים בפרופיל באפליקציית היכרויות" },
+        { id: 124, category: "party", topicA: "דברים שעושים כשלא נרדמים ב-3 בלילה", topicB: "שקרים שאומרים בראיון עבודה" },
+        { id: 125, category: "party", topicA: "דברים שמביך לקנות בסופר", topicB: "סוגי אנשים שתמיד פוגשים במסיבה" },
+        { id: 126, category: "party", topicA: "דברים שאנשים משוויצים בהם באינסטגרם", topicB: "מתנות שממחזרים ומעבירים הלאה" },
+        { id: 127, category: "party", topicA: "דברים שאומרים כשנתפסים על חם", topicB: "מאנצ׳ים של אמצע הלילה" },
+        { id: 128, category: "party", topicA: "נושאי שיחה שמביכים בארוחה משפחתית", topicB: "דברים שעושים כדי להרשים קראש" },
+        { id: 129, category: "party", topicA: "סיבות לעזוב קבוצת וואטסאפ", topicB: "הרגלים מעצבנים של אנשים בקולנוע" },
+        { id: 130, category: "party", topicA: "דברים שקורים במסיבת רווקים או רווקות", topicB: "תכונות של בוס מעצבן" },
+        { id: 131, category: "party", topicA: "דברים שמחפשים בגוגל במצב גלישה בסתר", topicB: "סיבות שבגללן שכנים דופקים בדלת" },
+        { id: 132, category: "party", topicA: "משפטים של פרידה", topicB: "דברים שתמיד נגמרים בדירת רווקים" },
+        { id: 133, category: "party", topicA: "דברים שעושים כששכחתם איך קוראים למישהו", topicB: "טרנדים מביכים מהעבר" },
+        { id: 134, category: "party", topicA: "דברים שאנשים עושים ברמזור אדום", topicB: "סיבות להתקשר לאקס" },
+        { id: 135, category: "party", topicA: "דברים שאומרים כדי להתחמק מדו״ח", topicB: "דברים שיש בכל מסיבת טבע או פסטיבל" },
+        { id: 136, category: "party", topicA: "דברים שמגלים על בן או בת זוג רק כשעוברים לגור יחד", topicB: "שירים שכולם צועקים במסיבה" },
+        { id: 137, category: "party", topicA: "דברים שעושים כשנגמרת הסוללה בטלפון בבילוי", topicB: "תירוצים למה לא עניתם להודעה יומיים" },
+        { id: 138, category: "party", topicA: "דברים שגורמים לאנשים להיראות חשודים", topicB: "בזבוזים מיותרים אחרי משכורת" },
+        { id: 139, category: "party", topicA: "דברים שאף אחד לא מודה שהוא אוהב", topicB: "דברים שקורים בחתונה אחרי חצות" },
+        { id: 140, category: "party", topicA: "השלימו: ״ידעתי שהערב הולך להיות משוגע כש___״", topicB: "דברים שעושים ביום שאחרי מסיבה" }
+      ];
+
+      // Israeli AI Bots Personas & Answer Generation Engine
+      const AI_BOTS = [
+        { id: 'rachel', name: '🍲 דודה רחל', desc: 'אלופת הסירים, החגים והמשפחה', active: true },
+        { id: 'omer', name: '🎒 עומר מהמילואים', desc: 'פק״ל קפה, טיולים, צבא ועל האש', active: true },
+        { id: 'noa', name: '🛴 נועה מתל אביב', desc: 'וולט, בתי קפה, מסיבות וים', active: true },
+        { id: 'shimon', name: '📰 סבא שמעון', desc: 'קלאסיקות ישראליות, שוק ונוסטלגיה', active: true },
+        { id: 'guy', name: '🎮 גיא הגיימר', desc: 'גאדג׳טים, סרטים, חטיפים ולילה', active: false }
+      ];
+
+      // Keyword-driven Hebrew answer pools so bots give realistic, matching Hebrew answers
+      const BOT_KEYWORD_POOLS = [
+        { keys: ['אמבטיה', 'מקלחת', 'שיניים'], answers: ['מברשת שיניים', 'משחת שיניים', 'סבון', 'שמפו', 'מגבת', 'מראה', 'מרכך', 'פלסטר'] },
+        { keys: ['קר', 'חורף', 'פוך', 'גשום'], answers: ['שוקו חם', 'מרק', 'מזגן', 'גרביים', 'תה', 'סוודר', 'מעיל', 'נטפליקס', 'חרמון'] },
+        { keys: ['פנים', 'מראה'], answers: ['משקפיים', 'משקפי שמש', 'קרם הגנה', 'איפור', 'מסכה', 'כובע', 'חיוך'] },
+        { keys: ['אוכל מעולה', 'מדינות', 'חו״ל', 'לטוס', 'טיול הגדול'], answers: ['איטליה', 'יוון', 'תאילנד', 'יפן', 'ספרד', 'צרפת', 'מקסיקו', 'הודו', 'קפריסין'] },
+        { keys: ['קופסה', 'קלפים', 'משחק'], answers: ['טאקי', 'מונופול', 'קטאן', 'שש בש', 'רמיקוב', 'פוקר', 'שחמט', 'דומינו'] },
+        { keys: ['קיץ', 'חוף', 'ים', 'אילת', 'בריכה'], answers: ['אבטיח', 'גלידה', 'מטקות', 'קרם הגנה', 'כפכפים', 'ארטיק', 'מזגן', 'שמשייה', 'מדוזה'] },
+        { keys: ['פלאפל', 'שווארמה', 'פיתה', 'חומוס'], answers: ['טחינה', 'צ׳יפס', 'חמוצים', 'עמבה', 'חריף', 'סלט', 'פول', 'כדורי פלאפל', 'בצל'] },
+        { keys: ['חטיפים', 'ממתקים', 'פיצוצייה', 'שק״ם'], answers: ['במבה', 'ביסלי', 'תפוצ׳יפס', 'פסק זמן', 'דוריטוס', 'אפרופו', 'קרמבו', 'קליק'] },
+        { keys: ['שישי', 'שבת', 'סבתא', 'חגים'], answers: ['חלה', 'קובה', 'ג׳חנון', 'שניצל', 'חמין', 'מרק עוף', 'דג מרוקאי', 'קידוש', 'בורקס'] },
+        { keys: ['מקרר', 'סופר', 'גבינות', 'בוקר'], answers: ['חלב', 'ביצים', 'קוטג׳', 'גבינה צהובה', 'חומוס', 'מלפפון', 'עגבנייה', 'בולגרית', 'לאבנה'] },
+        { keys: ['מנגל', 'עצמאות', 'פיקניק', 'על האש'], answers: ['קבב', 'פרגיות', 'נקניקיות', 'פיתות', 'חומוס', 'מרשמלו', 'סלט כרוב', 'נפנף'] },
+        { keys: ['פיצה', 'טוסט'], answers: ['זיתים', 'פטריות', 'בולגרית', 'תירס', 'בצל', 'עגבנייה', 'אקסטרה גבינה'] },
+        { keys: ['קפה', 'בית קפה'], answers: ['הפוך', 'אייס קפה', 'קפה שחור', 'אספרסו', 'קוראסון', 'חלב שיבולת', 'שקשוקה'] },
+        { keys: ['צבא', 'מילואים', 'צה״ל'], answers: ['פק״ל קפה', 'מדים', 'דיסקית', 'שק שינה', 'לוף', 'קציצה', 'מטכ״לי', 'שק״ם', 'מפקד'] },
+        { keys: ['ערים', 'ישראל', 'ירושלים', 'תל אביב'], answers: ['תל אביב', 'ירושלים', 'חיפה', 'אילת', 'באר שבע', 'ראשון לציון', 'נתניה', 'הרצליה'] },
+        { keys: ['כביש', 'פקק', 'נהג', 'חניה', 'רכב'], answers: ['רמזור', 'ווייז', 'טלפון', 'רדיו', 'מזגן', 'קפה', 'ביטוח', 'רישיון', 'מגבונים'] },
+        { keys: ['אפליקציות', 'טלפון'], answers: ['וואטסאפ', 'ווייז', 'אינסטגרם', 'ביט', 'וולט', 'טיקטוק', 'פנגו', 'יוטיוב'] },
+        { keys: ['חתונה', 'מסיבה', 'בר'], answers: ['צ׳ק', 'חולצה לבנה', 'בירה', 'יין', 'וודקה', 'מוזיקה', 'ריקודים', 'קונפטי'] },
+        { keys: ['פורים', 'חנוכה', 'פסח', 'כיפור'], answers: ['אוזן המן', 'סופגנייה', 'מצה', 'חרוסת', 'אופניים', 'פאזל', 'תחפושת', 'משלוח מנות'] },
+        { keys: ['זמרים', 'מוזיקה', 'שירים', 'להקות'], answers: ['אריק איינשטיין', 'שלמה ארצי', 'כוורת', 'עומר אדם', 'נועה קירל', 'עידן רייכל', 'משינה', 'היהודים'] },
+        { keys: ['סרטים', 'סדרות', 'טלוויזיה', 'קולנוע'], answers: ['פופקורן', 'קולה', 'קופה ראשית', 'פאודה', 'גבעת חלפון', 'ארץ נהדרת', 'האח הגדול', 'הישרדות'] },
+        { keys: ['חיות', 'טבע', 'ספארי', 'מחמד'], answers: ['כלב', 'חתול', 'אריה', 'פיל', 'ג׳ירפה', 'נחש', 'ציפור', 'דולפין', 'תוכי'] },
+        { keys: ['בית ספר', 'קלמר', 'שיעור', 'משרד'], answers: ['עט', 'עיפרון', 'מחק', 'מחברת', 'טלפון', 'מחשב', 'קפה', 'תיק', 'טוש'] }
+      ];
+
+      const GENERIC_ISRAELI_ANSWERS = [
+        'קפה', 'טלפון', 'חומוס', 'שוקולד', 'מזגן', 'מים', 'חברים', 'מוזיקה',
+        'כסף', 'מפתחות', 'פיצה', 'גלידה', 'ספה', 'טלוויזיה', 'שמש', 'במבה'
+      ];
+
+      const STORAGE_KEY = 'jinxo_israel_pro_state_v2';
+      const ROW_BONUSES = [3, 2, 1];
+      const COL_BONUSES = [1, 2, 3];
+
+      function createEmptyRound() {
+        return {
+          topics: [],
+          cells: Array.from({ length: 9 }, (_, i) => ({
+            text: '',
+            state: 'none',
+            topicTag: (Math.floor(i / 3) + 1), // default row 1 -> topic 1, row 2 -> topic 2, row 3 -> topic 3
+            botMatchNote: ''
+          }))
+        };
+      }
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && Array.isArray(parsed.rounds) && parsed.rounds.length === 3) {
+              return {
+                currentRound: parsed.currentRound ?? 0,
+                selectedCategory: parsed.selectedCategory ?? 'all',
+                currentCardIndex: parsed.currentCardIndex ?? 0,
+                roomCode: parsed.roomCode ?? '',
+                soundEnabled: parsed.soundEnabled ?? true,
+                secretMode: parsed.secretMode ?? false,
+                seenCardIds: Array.isArray(parsed.seenCardIds) ? parsed.seenCardIds : [],
+                customCards: Array.isArray(parsed.customCards) ? parsed.customCards : [],
+                players: Array.isArray(parsed.players) && parsed.players.length
+                  ? parsed.players
+                  : [
+                      { name: 'אני (הלוח שלי)', r1: 0, r2: 0, r3: 0, isSelf: true },
+                      { name: 'שחקן 2', r1: 0, r2: 0, r3: 0, isSelf: false },
+                      { name: 'שחקן 3', r1: 0, r2: 0, r3: 0, isSelf: false },
+                      { name: 'שחקן 4', r1: 0, r2: 0, r3: 0, isSelf: false }
+                    ],
+                activeBots: Array.isArray(parsed.activeBots) ? parsed.activeBots : ['rachel', 'omer', 'noa', 'shimon'],
+                rounds: parsed.rounds.map((r) => ({
+                  topics: Array.isArray(r.topics) ? r.topics : [],
+                  cells: Array.from({ length: 9 }, (_, idx) => ({
+                    text: r.cells?.[idx]?.text ?? '',
+                    state: r.cells?.[idx]?.state ?? 'none',
+                    topicTag: r.cells?.[idx]?.topicTag ?? (Math.floor(idx / 3) + 1),
+                    botMatchNote: r.cells?.[idx]?.botMatchNote ?? ''
+                  }))
+                }))
+              };
+            }
+          }
+        } catch (_) {
+          // ignore storage errors
+        }
+        return {
+          currentRound: 0,
+          selectedCategory: 'all',
+          currentCardIndex: 0,
+          roomCode: '',
+          soundEnabled: true,
+          secretMode: false,
+          seenCardIds: [],
+          customCards: [],
+          players: [
+            { name: 'אני (הלוח שלי)', r1: 0, r2: 0, r3: 0, isSelf: true },
+            { name: 'שחקן 2', r1: 0, r2: 0, r3: 0, isSelf: false },
+            { name: 'שחקן 3', r1: 0, r2: 0, r3: 0, isSelf: false },
+            { name: 'שחקן 4', r1: 0, r2: 0, r3: 0, isSelf: false }
+          ],
+          activeBots: ['rachel', 'omer', 'noa', 'shimon'],
+          rounds: [createEmptyRound(), createEmptyRound(), createEmptyRound()]
+        };
+      }
+
+      const state = loadState();
+
+      // Check URL params for ?room=XXXX&round=N
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('room')) {
+        const rm = urlParams.get('room').trim().toUpperCase();
+        if (rm) {
+          state.roomCode = rm;
+          state.currentCardIndex = 0;
+        }
+      }
+      if (urlParams.has('round')) {
+        const rd = Number(urlParams.get('round')) - 1;
+        if (rd >= 0 && rd < 3) state.currentRound = rd;
+      }
+
+      function saveState() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (_) {
+          // ignore storage errors
+        }
+      }
+
+      // --- Web Audio API Synthesizer (No external files needed) ---
+      let audioCtx = null;
+      function playSound(type) {
+        if (!state.soundEnabled) return;
+        try {
+          if (!audioCtx) {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContextClass) return;
+            audioCtx = new AudioContextClass();
+          }
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+          const now = audioCtx.currentTime;
+
+          const playTone = (freq, start, duration, wave = 'sine', gainVal = 0.12) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = wave;
+            osc.frequency.setValueAtTime(freq, start);
+            gain.gain.setValueAtTime(gainVal, start);
+            gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(start);
+            osc.stop(start + duration);
+          };
+
+          if (type === 'flip') {
+            playTone(320, now, 0.08, 'triangle', 0.1);
+            playTone(480, now + 0.05, 0.09, 'triangle', 0.1);
+          } else if (type === 'circle') {
+            playTone(523.25, now, 0.12, 'sine', 0.12);
+            playTone(659.25, now + 0.08, 0.16, 'sine', 0.12);
+          } else if (type === 'jinx') {
+            playTone(523.25, now, 0.1, 'triangle', 0.15);
+            playTone(659.25, now + 0.08, 0.1, 'triangle', 0.15);
+            playTone(783.99, now + 0.16, 0.12, 'triangle', 0.15);
+            playTone(1046.5, now + 0.24, 0.28, 'triangle', 0.18);
+          } else if (type === 'cross') {
+            playTone(210, now, 0.14, 'sawtooth', 0.08);
+            playTone(165, now + 0.1, 0.18, 'sawtooth', 0.08);
+          } else if (type === 'tick') {
+            playTone(800, now, 0.04, 'sine', 0.05);
+          } else if (type === 'win') {
+            [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((f, idx) => {
+              playTone(f, now + idx * 0.09, 0.25, 'triangle', 0.15);
+            });
+          }
+        } catch (_) {
+          // ignore audio restrictions
+        }
+      }
+
+      // --- Lightweight Canvas Confetti ---
+      const confettiCanvas = document.getElementById('confetti-canvas');
+      const confettiCtx = confettiCanvas.getContext('2d');
+      let confettiParticles = [];
+      let confettiAnimId = null;
+
+      function launchConfetti() {
+        playSound('win');
+        confettiCanvas.width = window.innerWidth;
+        confettiCanvas.height = window.innerHeight;
+        const colors = ['#e51b83', '#009c5b', '#f9d616', '#1877c9', '#f47920', '#6b21a8'];
+        confettiParticles = Array.from({ length: 90 }, () => ({
+          x: Math.random() * confettiCanvas.width,
+          y: -20 - Math.random() * 120,
+          w: 7 + Math.random() * 7,
+          h: 10 + Math.random() * 8,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          vx: (Math.random() - 0.5) * 5,
+          vy: 3 + Math.random() * 4.5,
+          angle: Math.random() * Math.PI * 2,
+          vAngle: (Math.random() - 0.5) * 0.2
+        }));
+
+        if (confettiAnimId) cancelAnimationFrame(confettiAnimId);
+        const step = () => {
+          confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+          let active = false;
+          for (const p of confettiParticles) {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.angle += p.vAngle;
+            if (p.y < confettiCanvas.height + 20) active = true;
+            confettiCtx.save();
+            confettiCtx.translate(p.x, p.y);
+            confettiCtx.rotate(p.angle);
+            confettiCtx.fillStyle = p.color;
+            confettiCtx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            confettiCtx.restore();
+          }
+          if (active) {
+            confettiAnimId = requestAnimationFrame(step);
+          } else {
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            confettiAnimId = null;
+          }
+        };
+        confettiAnimId = requestAnimationFrame(step);
+      }
+
+      // --- Seeded PRNG for Shared Room Code Sync ---
+      function hashStringToSeed(str) {
+        let h = 2166136261 >>> 0;
+        for (let i = 0; i < str.length; i++) {
+          h = Math.imul(h ^ str.charCodeAt(i), 16777619);
+        }
+        return h >>> 0;
+      }
+
+      function mulberry32(a) {
+        return function () {
+          let t = (a += 0x6d2b79f5);
+          t = Math.imul(t ^ (t >>> 15), t | 1);
+          t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      function getAllCards() {
+        const base = Array.isArray(window.JINX_CARDS) ? window.JINX_CARDS : [];
+        return [...state.customCards, ...base, ...EXTRA_PRO_CARDS];
+      }
+
+      function getFilteredCards() {
+        const all = getAllCards();
+        const filtered = state.selectedCategory === 'all'
+          ? [...all]
+          : all.filter((c) => c.category === state.selectedCategory);
+
+        // If a Room Code is active, deterministically shuffle the deck by roomCode + category
+        if (state.roomCode) {
+          const rng = mulberry32(hashStringToSeed(`${state.roomCode}_${state.selectedCategory}`));
+          for (let i = filtered.length - 1; i > 0; i--) {
+            const j = Math.floor(rng() * (i + 1));
+            [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
+          }
+        }
+        return filtered;
+      }
+
+      // --- Smart Hebrew Text Normalization (for Duplicate & Match Detection) ---
+      function normalizeHebrewAnswer(raw) {
+        if (!raw) return '';
+        let s = raw
+          .trim()
+          .toLowerCase()
+          .replace(/["'״׳.,!?()\-]/g, '')
+          .replace(/\s+/g, ' ');
+
+        // Strip common single-letter Hebrew prefixes (ה, ו, ב, ל, מ) on words >= 4 chars
+        s = s
+          .split(' ')
+          .map((w) => {
+            if (w.length >= 4 && /^(ה|ו|ב|ל|מ)/.test(w)) {
+              return w.slice(1);
+            }
+            return w;
+          })
+          .join(' ');
+        return s;
+      }
+
+      // DOM Elements
+      const gridEl = document.getElementById('jinxo-grid');
+      const topicATextEl = document.getElementById('card-topic-a-text');
+      const topicBTextEl = document.getElementById('card-topic-b-text');
+      const roundTopicsListEl = document.getElementById('round-topics-list');
+      const topicsCounterBadge = document.getElementById('topics-counter-badge');
+      const doneBannerEl = document.getElementById('done-banner');
+      const totalQuestionsCountEl = document.getElementById('total-questions-count');
+      const roomCodeDisplayEl = document.getElementById('room-code-display');
+      const deckStepIndicatorEl = document.getElementById('deck-step-indicator');
+      const seenCardsCountEl = document.getElementById('seen-cards-count');
+
+      function markCardSeen(cardId) {
+        if (!cardId) return;
+        if (!state.seenCardIds.includes(cardId)) {
+          state.seenCardIds.push(cardId);
+        }
+      }
+
+      function renderCurrentCard() {
+        const deck = getFilteredCards();
+        roomCodeDisplayEl.textContent = state.roomCode || 'חופשי';
+
+        if (deck.length === 0) {
+          topicATextEl.textContent = 'אין כרטיסים בקטגוריה זו';
+          topicBTextEl.textContent = 'בחרו קטגוריה אחרת';
+          deckStepIndicatorEl.textContent = '0 / 0';
+          return;
+        }
+        const safeIdx = ((state.currentCardIndex % deck.length) + deck.length) % deck.length;
+        const card = deck[safeIdx];
+        markCardSeen(card.id);
+        topicATextEl.textContent = card.topicA;
+        topicBTextEl.textContent = card.topicB;
+        totalQuestionsCountEl.textContent = String(getAllCards().length * 2);
+        deckStepIndicatorEl.textContent = state.roomCode
+          ? `חדר ${state.roomCode} • כרטיס #${safeIdx + 1} מתוך ${deck.length}`
+          : `כרטיס #${safeIdx + 1} מתוך ${deck.length}`;
+        seenCardsCountEl.textContent = `${state.seenCardIds.length}/${getAllCards().length}`;
+      }
+
+      function drawNextCard() {
+        const deck = getFilteredCards();
+        if (deck.length <= 1) {
+          state.currentCardIndex = 0;
+        } else if (state.roomCode) {
+          // In Room Sync mode, advance sequentially through the room's seeded deck
+          state.currentCardIndex = (state.currentCardIndex + 1) % deck.length;
+        } else {
+          // Prefer unseen cards first!
+          const unseenIndices = deck
+            .map((c, idx) => (state.seenCardIds.includes(c.id) ? -1 : idx))
+            .filter((idx) => idx !== -1);
+
+          if (unseenIndices.length > 0) {
+            state.currentCardIndex = unseenIndices[Math.floor(Math.random() * unseenIndices.length)];
+          } else {
+            let next = Math.floor(Math.random() * deck.length);
+            if (next === state.currentCardIndex) next = (next + 1) % deck.length;
+            state.currentCardIndex = next;
+          }
+        }
+
+        const cardBox = document.getElementById('topic-card-box');
+        cardBox.classList.add('flipping');
+        setTimeout(() => cardBox.classList.remove('flipping'), 180);
+
+        playSound('flip');
+        saveState();
+        renderCurrentCard();
+      }
+
+      function addTopicToRound(topicText) {
+        const round = state.rounds[state.currentRound];
+        if (round.topics.includes(topicText)) return;
+        if (round.topics.length >= 3) {
+          round.topics.shift();
+        }
+        round.topics.push(topicText);
+        playSound('circle');
+        saveState();
+        renderRoundTopics();
+      }
+
+      function autoPick3TopicsForRound() {
+        const deck = getFilteredCards();
+        if (deck.length === 0) return;
+        const round = state.rounds[state.currentRound];
+        round.topics = [];
+
+        if (state.roomCode) {
+          // Deterministic 3 topics per room + round!
+          const rng = mulberry32(hashStringToSeed(`${state.roomCode}_R${state.currentRound}`));
+          const usedIdx = new Set();
+          while (round.topics.length < 3 && usedIdx.size < deck.length) {
+            const idx = Math.floor(rng() * deck.length);
+            if (usedIdx.has(idx)) continue;
+            usedIdx.add(idx);
+            const side = rng() < 0.5 ? deck[idx].topicA : deck[idx].topicB;
+            round.topics.push(side);
+          }
+        } else {
+          const usedIdx = new Set();
+          while (round.topics.length < 3 && usedIdx.size < deck.length) {
+            const idx = Math.floor(Math.random() * deck.length);
+            if (usedIdx.has(idx)) continue;
+            usedIdx.add(idx);
+            const side = Math.random() < 0.5 ? deck[idx].topicA : deck[idx].topicB;
+            round.topics.push(side);
+          }
+        }
+        playSound('flip');
+        saveState();
+        renderRoundTopics();
+      }
+
+      function renderRoundTopics() {
+        const round = state.rounds[state.currentRound];
+        topicsCounterBadge.textContent = `${round.topics.length} / 3`;
+        roundTopicsListEl.innerHTML = '';
+
+        // Count how many filled cells are tagged for each topic (1, 2, 3)
+        const tagCounts = [0, 0, 0];
+        round.cells.forEach((cell) => {
+          if (cell.text.trim() && cell.topicTag >= 1 && cell.topicTag <= 3) {
+            tagCounts[cell.topicTag - 1]++;
+          }
+        });
+
+        for (let i = 0; i < 3; i++) {
+          const li = document.createElement('li');
+          const topic = round.topics[i];
+          if (topic) {
+            li.className = 'round-topic-slot';
+            const badge = document.createElement('span');
+            badge.className = 'slot-badge';
+            badge.dataset.topicNum = String(i + 1);
+            badge.textContent = `נושא ${i + 1}`;
+
+            const textSpan = document.createElement('span');
+            textSpan.style.flex = '1';
+            textSpan.textContent = topic;
+
+            const countPill = document.createElement('span');
+            countPill.className = 'slot-count-pill' + (tagCounts[i] === 3 ? ' complete' : '');
+            countPill.title = 'כמה תשובות כתבתם לנושא זה מתוך 3';
+            countPill.textContent = `${tagCounts[i]}/3 תשובות`;
+
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'slot-remove';
+            removeBtn.setAttribute('aria-label', `הסר נושא ${i + 1}`);
+            removeBtn.textContent = '✕';
+            removeBtn.addEventListener('click', () => {
+              round.topics.splice(i, 1);
+              saveState();
+              renderRoundTopics();
+            });
+
+            li.append(badge, textSpan, countPill, removeBtn);
+          } else {
+            li.className = 'round-topic-slot empty';
+            li.textContent = `נושא ${i + 1}: לחצו על נושא א׳ או ב׳ בכרטיס למעלה`;
+          }
+          roundTopicsListEl.appendChild(li);
+        }
+      }
+
+      // Score Calculation
+      function calculateRoundScore(roundIndex) {
+        const round = state.rounds[roundIndex];
+        const isCircled = (idx) =>
+          round.cells[idx].state === 'circle' || round.cells[idx].state === 'jinx';
+
+        let circles = 0;
+        let stars = 0;
+        for (let i = 0; i < 9; i++) {
+          if (isCircled(i)) circles += 1;
+          if (round.cells[i].state === 'jinx') stars += 1;
+        }
+
+        const rowAchieved = [false, false, false];
+        const colAchieved = [false, false, false];
+        let bonus = 0;
+
+        for (let r = 0; r < 3; r++) {
+          if (isCircled(r * 3) && isCircled(r * 3 + 1) && isCircled(r * 3 + 2)) {
+            rowAchieved[r] = true;
+            bonus += ROW_BONUSES[r];
+          }
+        }
+
+        for (let c = 0; c < 3; c++) {
+          if (isCircled(c) && isCircled(c + 3) && isCircled(c + 6)) {
+            colAchieved[c] = true;
+            bonus += COL_BONUSES[c];
+          }
+        }
+
+        const total = circles * 1 + stars * 2 + bonus;
+        return { circles, stars, bonus, total, rowAchieved, colAchieved };
+      }
+
+      function getCellValidationWarning(cells, index) {
+        const raw = cells[index].text.trim();
+        if (!raw) return '';
+        const words = raw.split(/\s+/).filter(Boolean);
+        if (words.length > 2) {
+          return 'שימו לב: עד 2 מילים (למעט שם פרטי)';
+        }
+        const normalized = normalizeHebrewAnswer(raw);
+        if (!normalized) return '';
+        const duplicateIdx = cells.findIndex(
+          (cell, i) => i !== index && cell.text.trim() && normalizeHebrewAnswer(cell.text) === normalized
+        );
+        if (duplicateIdx !== -1) {
+          return `תשובה כפולה (כמו במשבצת #${duplicateIdx + 1})!`;
+        }
+        return '';
+      }
+
+      // Render 3x3 Board + Bonus Badges
+      let wasAllMarkedBefore = false;
+      function renderBoard() {
+        const round = state.rounds[state.currentRound];
+        const stats = calculateRoundScore(state.currentRound);
+        gridEl.innerHTML = '';
+        gridEl.classList.toggle('secret-blur', Boolean(state.secretMode));
+
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < 3; c++) {
+            const idx = r * 3 + c;
+            const cellData = round.cells[idx];
+
+            const cell = document.createElement('div');
+            cell.className = 'answer-cell';
+            cell.dataset.state = cellData.state;
+
+            // Top row: box number + Topic Tag (1/2/3) + Jinx Star button
+            const topRow = document.createElement('div');
+            topRow.className = 'cell-top-row';
+
+            const numSpan = document.createElement('span');
+            numSpan.className = 'cell-num';
+            numSpan.textContent = `#${idx + 1}`;
+
+            const topicTagBtn = document.createElement('button');
+            topicTagBtn.type = 'button';
+            topicTagBtn.className = 'cell-topic-tag';
+            const tagNum = cellData.topicTag || 1;
+            topicTagBtn.dataset.topic = String(tagNum);
+            topicTagBtn.textContent = `נושא ${tagNum}`;
+            topicTagBtn.title = 'לחצו להחלפת שיוך לנושא 1 / 2 / 3';
+            topicTagBtn.addEventListener('click', () => {
+              cellData.topicTag = ((cellData.topicTag || 1) % 3) + 1;
+              saveState();
+              renderBoard();
+              renderRoundTopics();
+            });
+
+            const starBtn = document.createElement('button');
+            starBtn.type = 'button';
+            starBtn.className = 'jinx-star-btn';
+            starBtn.setAttribute('aria-label', `כוכב ג'ינקס למשבצת ${idx + 1}`);
+            starBtn.textContent = cellData.state === 'jinx' ? '★' : '☆';
+            starBtn.addEventListener('click', () => {
+              cellData.state = cellData.state === 'jinx' ? 'circle' : 'jinx';
+              playSound(cellData.state === 'jinx' ? 'jinx' : 'circle');
+              saveState();
+              renderBoard();
+            });
+
+            topRow.append(numSpan, topicTagBtn, starBtn);
+
+            // Input area + visual overlay
+            const inputWrap = document.createElement('div');
+            inputWrap.className = 'cell-input-wrap';
+
+            const markVisual = document.createElement('div');
+            markVisual.className = 'cell-mark-visual';
+            markVisual.setAttribute('aria-hidden', 'true');
+
+            const textarea = document.createElement('textarea');
+            textarea.className = 'cell-input';
+            textarea.rows = 2;
+            textarea.placeholder = `תשובה לנושא ${tagNum}...`;
+            textarea.setAttribute('aria-label', `תשובה במשבצת ${idx + 1}`);
+            textarea.value = cellData.text;
+
+            const warningEl = document.createElement('div');
+            warningEl.className = 'cell-warning';
+            warningEl.textContent = getCellValidationWarning(round.cells, idx);
+
+            const botNoteEl = document.createElement('div');
+            botNoteEl.className = 'cell-bot-match';
+            botNoteEl.textContent = cellData.botMatchNote || '';
+
+            textarea.addEventListener('input', (e) => {
+              cellData.text = e.target.value;
+              cellData.botMatchNote = '';
+              saveState();
+              updateAllWarnings();
+              renderRoundTopics();
+            });
+
+            inputWrap.append(markVisual, textarea);
+
+            // Marking buttons (Circle / Jinx! / Cross)
+            const actionsRow = document.createElement('div');
+            actionsRow.className = 'cell-actions';
+
+            const btnCircle = document.createElement('button');
+            btnCircle.type = 'button';
+            btnCircle.className = 'mark-btn';
+            btnCircle.dataset.mark = 'circle';
+            btnCircle.textContent = '⭕ הקף';
+            btnCircle.addEventListener('click', () => {
+              cellData.state = cellData.state === 'circle' ? 'none' : 'circle';
+              if (cellData.state === 'circle') playSound('circle');
+              saveState();
+              renderBoard();
+            });
+
+            const btnJinx = document.createElement('button');
+            btnJinx.type = 'button';
+            btnJinx.className = 'mark-btn';
+            btnJinx.dataset.mark = 'jinx';
+            btnJinx.textContent = '⭐ ג׳ינקס';
+            btnJinx.addEventListener('click', () => {
+              cellData.state = cellData.state === 'jinx' ? 'none' : 'jinx';
+              if (cellData.state === 'jinx') playSound('jinx');
+              saveState();
+              renderBoard();
+            });
+
+            const btnCross = document.createElement('button');
+            btnCross.type = 'button';
+            btnCross.className = 'mark-btn';
+            btnCross.dataset.mark = 'cross';
+            btnCross.textContent = '❌ X';
+            btnCross.addEventListener('click', () => {
+              cellData.state = cellData.state === 'cross' ? 'none' : 'cross';
+              if (cellData.state === 'cross') playSound('cross');
+              saveState();
+              renderBoard();
+            });
+
+            actionsRow.append(btnCircle, btnJinx, btnCross);
+            cell.append(topRow, inputWrap, warningEl, botNoteEl, actionsRow);
+            gridEl.appendChild(cell);
+          }
+
+          // Row bonus badge at the end of each row
+          const rowBadge = document.createElement('div');
+          rowBadge.className = 'bonus-badge' + (stats.rowAchieved[r] ? ' achieved' : '');
+          rowBadge.title = `בונוס שורה ${r + 1}: ${ROW_BONUSES[r]} נקודות אם כל השורה מוקפת`;
+          const rowCircle = document.createElement('span');
+          rowCircle.className = 'bonus-circle';
+          rowCircle.textContent = String(ROW_BONUSES[r]);
+          rowBadge.appendChild(rowCircle);
+          gridEl.appendChild(rowBadge);
+        }
+
+        // Bottom row: Column bonus badges (1, 2, 3)
+        for (let c = 0; c < 3; c++) {
+          const colBadge = document.createElement('div');
+          colBadge.className = 'bonus-badge' + (stats.colAchieved[c] ? ' achieved' : '');
+          colBadge.title = `בונוס טור ${c + 1}: ${COL_BONUSES[c]} נקודות אם כל הטור מוקף`;
+          const colCircle = document.createElement('span');
+          colCircle.className = 'bonus-circle';
+          colCircle.textContent = String(COL_BONUSES[c]);
+          colBadge.appendChild(colCircle);
+          gridEl.appendChild(colBadge);
+        }
+
+        const cornerSpacer = document.createElement('div');
+        cornerSpacer.setAttribute('aria-hidden', 'true');
+        gridEl.appendChild(cornerSpacer);
+
+        updateScoresUI();
+      }
+
+      function updateAllWarnings() {
+        const round = state.rounds[state.currentRound];
+        const warningEls = gridEl.querySelectorAll('.cell-warning');
+        warningEls.forEach((el, idx) => {
+          el.textContent = getCellValidationWarning(round.cells, idx);
+        });
+      }
+
+      function updateScoresUI() {
+        const currentStats = calculateRoundScore(state.currentRound);
+        const r1 = calculateRoundScore(0).total;
+        const r2 = calculateRoundScore(1).total;
+        const r3 = calculateRoundScore(2).total;
+
+        document.getElementById('score-circles').textContent = String(currentStats.circles);
+        document.getElementById('score-stars').textContent = String(currentStats.stars * 2);
+        document.getElementById('score-bonus').textContent = String(currentStats.bonus);
+        document.getElementById('score-r1').textContent = String(r1);
+        document.getElementById('score-r2').textContent = String(r2);
+        document.getElementById('score-r3').textContent = String(r3);
+        document.getElementById('score-final').textContent = String(r1 + r2 + r3);
+
+        // Sync self player in group scoreboard
+        const selfPlayer = state.players.find((p) => p.isSelf);
+        if (selfPlayer) {
+          selfPlayer.r1 = r1;
+          selfPlayer.r2 = r2;
+          selfPlayer.r3 = r3;
+        }
+
+        const round = state.rounds[state.currentRound];
+        const allMarked = round.cells.every((cell) => cell.state !== 'none');
+        if (allMarked && !wasAllMarkedBefore) {
+          launchConfetti();
+        }
+        wasAllMarkedBefore = allMarked;
+        doneBannerEl.hidden = !allMarked;
+      }
+
+      // --- Sand Timer Logic ---
+      let timerInterval = null;
+      let timerRemaining = 90;
+      const timerDisplayEl = document.getElementById('timer-display');
+      const timerWidgetEl = document.getElementById('timer-widget');
+      const timerToggleBtn = document.getElementById('timer-toggle-btn');
+      const timerSelectEl = document.getElementById('timer-duration-select');
+
+      function formatSeconds(sec) {
+        const m = String(Math.floor(sec / 60)).padStart(2, '0');
+        const s = String(sec % 60).padStart(2, '0');
+        return `${m}:${s}`;
+      }
+
+      function updateTimerDisplay() {
+        timerDisplayEl.textContent = formatSeconds(timerRemaining);
+        timerWidgetEl.classList.toggle('urgent', timerRemaining <= 10 && timerRemaining > 0);
+      }
+
+      timerToggleBtn.addEventListener('click', () => {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          timerToggleBtn.textContent = 'המשך';
+        } else {
+          if (timerRemaining <= 0) {
+            timerRemaining = Number(timerSelectEl.value) || 90;
+          }
+          timerToggleBtn.textContent = 'השהה';
+          timerInterval = setInterval(() => {
+            timerRemaining = Math.max(0, timerRemaining - 1);
+            updateTimerDisplay();
+            if (timerRemaining <= 5 && timerRemaining > 0) {
+              playSound('tick');
+            }
+            if (timerRemaining === 0) {
+              clearInterval(timerInterval);
+              timerInterval = null;
+              timerToggleBtn.textContent = 'הפעל';
+              playSound('cross');
+            }
+          }, 1000);
+        }
+      });
+
+      document.getElementById('timer-reset-btn').addEventListener('click', () => {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+        timerRemaining = Number(timerSelectEl.value) || 90;
+        timerToggleBtn.textContent = 'הפעל';
+        updateTimerDisplay();
+      });
+
+      timerSelectEl.addEventListener('change', () => {
+        if (!timerInterval) {
+          timerRemaining = Number(timerSelectEl.value) || 90;
+          updateTimerDisplay();
+        }
+      });
+
+      // --- AI Bots Round Simulation ---
+      function generateAnswersForTopic(topicText, botSeed, playerAnswers) {
+        const pool = new Set();
+        const lowerTopic = (topicText || '').toLowerCase();
+
+        for (const entry of BOT_KEYWORD_POOLS) {
+          if (entry.keys.some((k) => lowerTopic.includes(k))) {
+            entry.answers.forEach((a) => pool.add(a));
+          }
+        }
+        GENERIC_ISRAELI_ANSWERS.forEach((a) => pool.add(a));
+
+        // Include some of the player's own filled answers in the thematic universe so realistic matches & Jinxes happen!
+        playerAnswers.forEach((ans) => {
+          if (ans && ans.trim().length > 1) pool.add(ans.trim());
+        });
+
+        const arr = Array.from(pool);
+        const rng = mulberry32(hashStringToSeed(`${topicText}_${botSeed}_${Date.now() % 10000}`));
+        const chosen = [];
+        while (chosen.length < 3 && arr.length > 0) {
+          const idx = Math.floor(rng() * arr.length);
+          const candidate = arr.splice(idx, 1)[0];
+          if (!chosen.includes(candidate)) chosen.push(candidate);
+        }
+        return chosen;
+      }
+
+      function simulateBotsRound() {
+        const round = state.rounds[state.currentRound];
+        const activeBotList = AI_BOTS.filter((b) => state.activeBots.includes(b.id));
+        if (activeBotList.length === 0) {
+          state.activeBots = ['rachel', 'omer', 'noa'];
+        }
+
+        const playerRawAnswers = round.cells.map((c) => c.text.trim()).filter(Boolean);
+        const topics = round.topics.length > 0
+          ? round.topics
+          : ['נושא חופשי 1', 'נושא חופשי 2', 'נושא חופשי 3'];
+
+        // Generate 9 answers per active bot
+        const botsBoards = activeBotList.map((bot) => {
+          const answers = [];
+          for (let t = 0; t < 3; t++) {
+            const topicStr = topics[t] || topics[0];
+            const three = generateAnswersForTopic(topicStr, `${bot.id}_${t}`, playerRawAnswers);
+            three.forEach((ans) => {
+              if (!answers.some((existing) => normalizeHebrewAnswer(existing) === normalizeHebrewAnswer(ans))) {
+                answers.push(ans);
+              }
+            });
+          }
+          while (answers.length < 9) {
+            const fallback = GENERIC_ISRAELI_ANSWERS[answers.length % GENERIC_ISRAELI_ANSWERS.length];
+            if (!answers.includes(fallback)) answers.push(fallback);
+            else break;
+          }
+          return { bot, answers: answers.slice(0, 9) };
+        });
+
+        // Compare player's 9 cells against bots' answers
+        round.cells.forEach((cell) => {
+          const norm = normalizeHebrewAnswer(cell.text);
+          if (!norm) {
+            cell.state = 'none';
+            cell.botMatchNote = '';
+            return;
+          }
+          const matchedBots = botsBoards.filter((b) =>
+            b.answers.some((a) => normalizeHebrewAnswer(a) === norm)
+          );
+
+          if (matchedBots.length === 1) {
+            cell.state = 'jinx';
+            cell.botMatchNote = `⭐ ג'ינקס עם ${matchedBots[0].bot.name}!`;
+          } else if (matchedBots.length >= 2) {
+            cell.state = 'circle';
+            cell.botMatchNote = `⭕ משותף עם ${matchedBots.length} בוטים`;
+          } else {
+            cell.state = 'cross';
+            cell.botMatchNote = '❌ רק אצלך';
+          }
+        });
+
+        // Render Bots Results Panel
+        const botsPanel = document.getElementById('bots-results-panel');
+        const botsGrid = document.getElementById('bots-results-grid');
+        botsGrid.innerHTML = '';
+
+        const playerNormSet = new Set(round.cells.map((c) => normalizeHebrewAnswer(c.text)).filter(Boolean));
+
+        botsBoards.forEach(({ bot, answers }) => {
+          const card = document.createElement('div');
+          card.className = 'bot-card';
+
+          // Calculate bot score
+          let botPts = 0;
+          const ul = document.createElement('ul');
+          ul.className = 'bot-answers-list';
+
+          answers.forEach((ans) => {
+            const norm = normalizeHebrewAnswer(ans);
+            const li = document.createElement('li');
+            li.className = 'bot-answer-chip';
+
+            // Count how many other players/bots have this answer
+            let otherCount = playerNormSet.has(norm) ? 1 : 0;
+            botsBoards.forEach((other) => {
+              if (other.bot.id !== bot.id && other.answers.some((a) => normalizeHebrewAnswer(a) === norm)) {
+                otherCount++;
+              }
+            });
+
+            if (otherCount === 1) {
+              botPts += 3;
+              if (playerNormSet.has(norm)) {
+                li.classList.add('matched-jinx');
+                li.textContent = `⭐ ${ans}`;
+              } else {
+                li.textContent = ans;
+              }
+            } else if (otherCount >= 2) {
+              botPts += 1;
+              if (playerNormSet.has(norm)) {
+                li.classList.add('matched-circle');
+                li.textContent = `⭕ ${ans}`;
+              } else {
+                li.textContent = ans;
+              }
+            } else {
+              li.textContent = ans;
+            }
+            ul.appendChild(li);
+          });
+
+          const header = document.createElement('div');
+          header.className = 'bot-card-header';
+          header.innerHTML = `<span>${bot.name}</span><span>${botPts} נק׳</span>`;
+
+          card.append(header, ul);
+          botsGrid.appendChild(card);
+        });
+
+        botsPanel.hidden = false;
+        playSound('jinx');
+        saveState();
+        renderBoard();
+      }
+
+      // --- Multi-Player Scoreboard Rendering ---
+      function renderScoreboardTable() {
+        const tbody = document.getElementById('scoreboard-tbody');
+        tbody.innerHTML = '';
+
+        const totals = state.players.map((p) => (Number(p.r1) || 0) + (Number(p.r2) || 0) + (Number(p.r3) || 0));
+        const maxTotal = Math.max(0, ...totals);
+
+        state.players.forEach((player, idx) => {
+          const total = totals[idx];
+          const isLeader = maxTotal > 0 && total === maxTotal;
+
+          const tr = document.createElement('tr');
+          if (isLeader) tr.className = 'leader-row';
+
+          const th = document.createElement('th');
+          th.scope = 'row';
+          th.textContent = `${isLeader ? '👑 ' : ''}${player.name}`;
+
+          const createRoundTd = (roundKey) => {
+            const td = document.createElement('td');
+            const inp = document.createElement('input');
+            inp.type = 'number';
+            inp.className = 'score-num-input';
+            inp.value = String(player[roundKey] || 0);
+            inp.setAttribute('aria-label', `ניקוד ${player.name} ב-${roundKey}`);
+            inp.addEventListener('change', (e) => {
+              player[roundKey] = Number(e.target.value) || 0;
+              saveState();
+              renderScoreboardTable();
+            });
+            td.appendChild(inp);
+            return td;
+          };
+
+          const tdTotal = document.createElement('td');
+          tdTotal.style.fontWeight = '900';
+          tdTotal.style.fontSize = '1.08rem';
+          tdTotal.textContent = String(total);
+
+          const tdActions = document.createElement('td');
+          if (!player.isSelf) {
+            const delBtn = document.createElement('button');
+            delBtn.type = 'button';
+            delBtn.className = 'btn btn-sm';
+            delBtn.textContent = '🗑️ הסר';
+            delBtn.addEventListener('click', () => {
+              state.players.splice(idx, 1);
+              saveState();
+              renderScoreboardTable();
+            });
+            tdActions.appendChild(delBtn);
+          } else {
+            tdActions.textContent = 'מסונכרן ללוח';
+          }
+
+          tr.append(th, createRoundTd('r1'), createRoundTd('r2'), createRoundTd('r3'), tdTotal, tdActions);
+          tbody.appendChild(tr);
+        });
+      }
+
+      // --- Bots Modal Rendering ---
+      function renderBotsModalList() {
+        const container = document.getElementById('bots-selection-list');
+        container.innerHTML = '';
+        AI_BOTS.forEach((bot) => {
+          const label = document.createElement('label');
+          label.className = 'rule-step';
+          label.style.display = 'flex';
+          label.style.alignItems = 'center';
+          label.style.justifyContent = 'space-between';
+          label.style.cursor = 'pointer';
+
+          const info = document.createElement('div');
+          info.innerHTML = `<strong>${bot.name}</strong><div style="font-size:0.82rem;color:var(--ink-muted);">${bot.desc}</div>`;
+
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.style.inlineSize = '22px';
+          checkbox.style.blockSize = '22px';
+          checkbox.checked = state.activeBots.includes(bot.id);
+          checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+              if (!state.activeBots.includes(bot.id)) state.activeBots.push(bot.id);
+            } else {
+              state.activeBots = state.activeBots.filter((id) => id !== bot.id);
+            }
+            saveState();
+          });
+
+          label.append(info, checkbox);
+          container.appendChild(label);
+        });
+      }
+
+      // --- Share Summary Canvas & WhatsApp Generator ---
+      function renderShareCanvas() {
+        const canvas = document.getElementById('share-preview-canvas');
+        const ctx = canvas.getContext('2d');
+        const round = state.rounds[state.currentRound];
+        const stats = calculateRoundScore(state.currentRound);
+        const r1 = calculateRoundScore(0).total;
+        const r2 = calculateRoundScore(1).total;
+        const r3 = calculateRoundScore(2).total;
+
+        // Background
+        ctx.fillStyle = '#f9d616';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Card frame
+        ctx.fillStyle = '#1b80d4';
+        ctx.strokeStyle = '#1d1d1b';
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.roundRect(18, 18, canvas.width - 36, canvas.height - 36, 20);
+        ctx.fill();
+        ctx.stroke();
+
+        // Title
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 28px system-ui, sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText(`JinxO! ג'ינקס-או 🇮🇱 - סיבוב ${state.currentRound + 1}`, canvas.width - 42, 62);
+
+        // 3x3 cells
+        const startX = canvas.width - 42;
+        const startY = 85;
+        const cellW = 155;
+        const cellH = 92;
+        const gap = 12;
+
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < 3; c++) {
+            const idx = r * 3 + c;
+            const cell = round.cells[idx];
+            const x = startX - (c + 1) * cellW - c * gap;
+            const y = startY + r * (cellH + gap);
+
+            ctx.fillStyle = cell.state === 'jinx' ? '#fff6db' : cell.state === 'circle' ? '#effdf5' : '#ffffff';
+            ctx.strokeStyle = cell.state === 'jinx' ? '#e51b83' : cell.state === 'circle' ? '#009c5b' : '#1d1d1b';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.roundRect(x, y, cellW, cellH, 12);
+            ctx.fill();
+            ctx.stroke();
+
+            // State badge
+            const badgeEmoji = cell.state === 'jinx' ? '⭐ ג׳ינקס!' : cell.state === 'circle' ? '⭕ הקפה' : cell.state === 'cross' ? '❌' : '';
+            ctx.fillStyle = '#575756';
+            ctx.font = '800 13px system-ui, sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText(`#${idx + 1} ${badgeEmoji}`, x + cellW - 10, y + 22);
+
+            // Answer text
+            ctx.fillStyle = '#1d1d1b';
+            ctx.font = '800 17px system-ui, sans-serif';
+            ctx.textAlign = 'center';
+            const displayTxt = (cell.text || '—').slice(0, 18);
+            ctx.fillText(displayTxt, x + cellW / 2, y + 58);
+          }
+        }
+
+        // Bottom Score Summary Strip
+        ctx.fillStyle = '#f9d616';
+        ctx.strokeStyle = '#1d1d1b';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.roundRect(42, 405, canvas.width - 84, 76, 14);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#1d1d1b';
+        ctx.font = '900 20px system-ui, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(
+          `ניקוד סיבוב ${state.currentRound + 1}: ${stats.total} נק׳  |  סה״כ משחק: ${r1 + r2 + r3} נק׳ (⭕${stats.circles} ⭐${stats.stars} ➕${stats.bonus})`,
+          canvas.width / 2,
+          450
+        );
+      }
+
+      function generateWhatsAppSummaryText() {
+        const round = state.rounds[state.currentRound];
+        const stats = calculateRoundScore(state.currentRound);
+        const r1 = calculateRoundScore(0).total;
+        const r2 = calculateRoundScore(1).total;
+        const r3 = calculateRoundScore(2).total;
+
+        const emojiGrid = [];
+        for (let r = 0; r < 3; r++) {
+          const rowEmojis = [0, 1, 2].map((c) => {
+            const st = round.cells[r * 3 + c].state;
+            return st === 'jinx' ? '⭐' : st === 'circle' ? '⭕' : st === 'cross' ? '❌' : '⬜';
+          });
+          emojiGrid.push(rowEmojis.join(' '));
+        }
+
+        return [
+          `🎉 *JinxO! ג'ינקס-או ישראלי - סיבוב ${state.currentRound + 1}* 🇮🇱`,
+          state.roomCode ? `🔑 חדר: *${state.roomCode}*` : '',
+          '',
+          ...emojiGrid,
+          '',
+          `⭕ הקפות: ${stats.circles} | ⭐ ג'ינקס: ${stats.stars * 2} | ➕ בונוס: ${stats.bonus}`,
+          `🏆 *ניקוד סיבוב ${state.currentRound + 1}: ${stats.total} נק׳* (סה״כ במשחק: ${r1 + r2 + r3} נק׳)`
+        ].filter(Boolean).join('\n');
+      }
+
+      // --- Question Bank Modal Rendering ---
+      function renderBankList(filterQuery = '') {
+        const bankListEl = document.getElementById('bank-list');
+        bankListEl.innerHTML = '';
+        const q = filterQuery.trim().toLowerCase();
+        const cards = getAllCards().filter(
+          (c) =>
+            !q ||
+            c.topicA.toLowerCase().includes(q) ||
+            c.topicB.toLowerCase().includes(q)
+        );
+
+        cards.forEach((card) => {
+          const li = document.createElement('li');
+          li.className = 'bank-card-item';
+
+          const lineA = document.createElement('div');
+          lineA.className = 'bank-topic-line bank-topic-a';
+          lineA.textContent = `א׳: ${card.topicA}`;
+
+          const lineB = document.createElement('div');
+          lineB.className = 'bank-topic-line bank-topic-b';
+          lineB.textContent = `ב׳: ${card.topicB}`;
+
+          const actions = document.createElement('div');
+          actions.style.display = 'flex';
+          actions.style.gap = '0.4rem';
+
+          const pickA = document.createElement('button');
+          pickA.type = 'button';
+          pickA.className = 'btn btn-yellow';
+          pickA.style.fontSize = '0.78rem';
+          pickA.style.flex = '1';
+          pickA.textContent = 'בחר א׳ לסיבוב';
+          pickA.addEventListener('click', () => {
+            addTopicToRound(card.topicA);
+            document.getElementById('bank-dialog').close();
+          });
+
+          const pickB = document.createElement('button');
+          pickB.type = 'button';
+          pickB.className = 'btn btn-pink';
+          pickB.style.fontSize = '0.78rem';
+          pickB.style.flex = '1';
+          pickB.textContent = 'בחר ב׳ לסיבוב';
+          pickB.addEventListener('click', () => {
+            addTopicToRound(card.topicB);
+            document.getElementById('bank-dialog').close();
+          });
+
+          actions.append(pickA, pickB);
+          li.append(lineA, lineB, actions);
+          bankListEl.appendChild(li);
+        });
+      }
+
+      // --- Event Listeners ---
+      document.getElementById('draw-card-btn').addEventListener('click', drawNextCard);
+
+      document.getElementById('prev-card-btn').addEventListener('click', () => {
+        const deck = getFilteredCards();
+        if (deck.length <= 1) return;
+        state.currentCardIndex = (state.currentCardIndex - 1 + deck.length) % deck.length;
+        playSound('flip');
+        saveState();
+        renderCurrentCard();
+      });
+
+      document.getElementById('reset-seen-btn').addEventListener('click', () => {
+        state.seenCardIds = [];
+        saveState();
+        renderCurrentCard();
+      });
+
+      document.getElementById('auto-pick-3-btn').addEventListener('click', autoPick3TopicsForRound);
+
+      document.getElementById('pick-topic-a').addEventListener('click', () => {
+        const deck = getFilteredCards();
+        if (!deck.length) return;
+        const card = deck[((state.currentCardIndex % deck.length) + deck.length) % deck.length];
+        addTopicToRound(card.topicA);
+      });
+
+      document.getElementById('pick-topic-b').addEventListener('click', () => {
+        const deck = getFilteredCards();
+        if (!deck.length) return;
+        const card = deck[((state.currentCardIndex % deck.length) + deck.length) % deck.length];
+        addTopicToRound(card.topicB);
+      });
+
+      document.querySelectorAll('.cat-pill').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.selectedCategory = btn.dataset.cat;
+          state.currentCardIndex = 0;
+          document.querySelectorAll('.cat-pill').forEach((b) => {
+            b.setAttribute('aria-pressed', String(b === btn));
+          });
+          saveState();
+          renderCurrentCard();
+        });
+      });
+
+      document.querySelectorAll('.round-tab').forEach((tab) => {
+        tab.addEventListener('click', () => {
+          state.currentRound = Number(tab.dataset.round);
+          wasAllMarkedBefore = false;
+          document.querySelectorAll('.round-tab').forEach((t) => {
+            t.setAttribute('aria-selected', String(t === tab));
+          });
+          saveState();
+          renderRoundTopics();
+          renderBoard();
+        });
+      });
+
+      // Secret / Privacy Mode
+      const secretModeBtn = document.getElementById('secret-mode-btn');
+      function updateSecretBtnUI() {
+        secretModeBtn.setAttribute('aria-pressed', String(Boolean(state.secretMode)));
+        secretModeBtn.textContent = state.secretMode ? '👁️ הצג תשובות בלוח' : '🙈 הסתר תשובות מהשכנים';
+      }
+      secretModeBtn.addEventListener('click', () => {
+        state.secretMode = !state.secretMode;
+        saveState();
+        updateSecretBtnUI();
+        renderBoard();
+      });
+
+      // Auto-tag rows 1, 2, 3 to Topics 1, 2, 3
+      document.getElementById('auto-tag-topics-btn').addEventListener('click', () => {
+        const round = state.rounds[state.currentRound];
+        round.cells.forEach((cell, idx) => {
+          cell.topicTag = Math.floor(idx / 3) + 1;
+        });
+        saveState();
+        renderBoard();
+        renderRoundTopics();
+      });
+
+      // Sound Toggle
+      const soundToggleBtn = document.getElementById('sound-toggle-btn');
+      function updateSoundBtnUI() {
+        soundToggleBtn.setAttribute('aria-pressed', String(Boolean(state.soundEnabled)));
+        soundToggleBtn.textContent = state.soundEnabled ? '🔊 סאונד: פעיל' : '🔇 סאונד: מושתק';
+      }
+      soundToggleBtn.addEventListener('click', () => {
+        state.soundEnabled = !state.soundEnabled;
+        saveState();
+        updateSoundBtnUI();
+        if (state.soundEnabled) playSound('circle');
+      });
+
+      // TV Mode Toggle
+      const tvModeBtn = document.getElementById('tv-mode-btn');
+      tvModeBtn.addEventListener('click', () => {
+        const isTv = document.body.classList.toggle('tv-mode');
+        tvModeBtn.setAttribute('aria-pressed', String(isTv));
+      });
+      document.getElementById('exit-tv-btn').addEventListener('click', () => {
+        document.body.classList.remove('tv-mode');
+        tvModeBtn.setAttribute('aria-pressed', 'false');
+      });
+
+      // Print Button
+      document.getElementById('print-sheet-btn').addEventListener('click', () => {
+        window.print();
+      });
+
+      // Celebrate Confetti Button
+      document.getElementById('celebrate-again-btn').addEventListener('click', launchConfetti);
+
+      // Clear & Reset
+      document.getElementById('clear-round-btn').addEventListener('click', () => {
+        state.rounds[state.currentRound] = createEmptyRound();
+        wasAllMarkedBefore = false;
+        document.getElementById('bots-results-panel').hidden = true;
+        saveState();
+        renderRoundTopics();
+        renderBoard();
+      });
+
+      document.getElementById('reset-game-btn').addEventListener('click', () => {
+        state.currentRound = 0;
+        wasAllMarkedBefore = false;
+        state.rounds = [createEmptyRound(), createEmptyRound(), createEmptyRound()];
+        document.getElementById('bots-results-panel').hidden = true;
+        document.querySelectorAll('.round-tab').forEach((t, idx) => {
+          t.setAttribute('aria-selected', String(idx === 0));
+        });
+        saveState();
+        drawNextCard();
+        renderRoundTopics();
+        renderBoard();
+      });
+
+      // --- Modals & Dialog Controls ---
+      const roomDialog = document.getElementById('room-dialog');
+      const scoreboardDialog = document.getElementById('scoreboard-dialog');
+      const botsDialog = document.getElementById('bots-dialog');
+      const judgeDialog = document.getElementById('judge-dialog');
+      const shareDialog = document.getElementById('share-dialog');
+      const rulesDialog = document.getElementById('rules-dialog');
+      const bankDialog = document.getElementById('bank-dialog');
+
+      // 1. Room Sync Dialog
+      document.getElementById('open-room-btn').addEventListener('click', () => {
+        document.getElementById('room-code-input').value = state.roomCode || '';
+        document.getElementById('room-copy-status').textContent = '';
+        roomDialog.showModal();
+      });
+
+      document.getElementById('room-sync-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const code = document.getElementById('room-code-input').value.trim().toUpperCase();
+        state.roomCode = code;
+        state.currentCardIndex = 0;
+        saveState();
+        renderCurrentCard();
+        roomDialog.close();
+      });
+
+      document.getElementById('generate-room-btn').addEventListener('click', () => {
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        let code = '';
+        for (let i = 0; i < 4; i++) code += chars[Math.floor(Math.random() * chars.length)];
+        document.getElementById('room-code-input').value = code;
+        state.roomCode = code;
+        state.currentCardIndex = 0;
+        saveState();
+        renderCurrentCard();
+      });
+
+      document.getElementById('leave-room-btn').addEventListener('click', () => {
+        state.roomCode = '';
+        document.getElementById('room-code-input').value = '';
+        saveState();
+        renderCurrentCard();
+        roomDialog.close();
+      });
+
+      document.getElementById('copy-room-link-btn').addEventListener('click', async () => {
+        const code = document.getElementById('room-code-input').value.trim().toUpperCase() || state.roomCode || 'JX42';
+        state.roomCode = code;
+        saveState();
+        renderCurrentCard();
+        const url = new URL(window.location.href);
+        url.searchParams.set('room', code);
+        url.searchParams.set('round', String(state.currentRound + 1));
+        try {
+          await navigator.clipboard.writeText(url.toString());
+          document.getElementById('room-copy-status').textContent = 'הקישור הועתק! שלחו בקבוצה 🎉';
+        } catch (_) {
+          document.getElementById('room-copy-status').textContent = `קוד חדר: ${code}`;
+        }
+      });
+
+      // 2. Scoreboard Dialog
+      document.getElementById('open-scoreboard-btn').addEventListener('click', () => {
+        updateScoresUI();
+        renderScoreboardTable();
+        scoreboardDialog.showModal();
+      });
+
+      document.getElementById('add-player-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const inp = document.getElementById('new-player-name');
+        const name = inp.value.trim();
+        if (!name) return;
+        state.players.push({ name, r1: 0, r2: 0, r3: 0, isSelf: false });
+        inp.value = '';
+        saveState();
+        renderScoreboardTable();
+      });
+
+      document.getElementById('sync-my-score-btn').addEventListener('click', () => {
+        updateScoresUI();
+        saveState();
+        renderScoreboardTable();
+      });
+
+      // 3. Bots Dialog & Direct Run
+      document.getElementById('open-bots-btn').addEventListener('click', () => {
+        renderBotsModalList();
+        botsDialog.showModal();
+      });
+
+      document.getElementById('simulate-bots-round-btn').addEventListener('click', simulateBotsRound);
+      document.getElementById('run-bots-from-modal-btn').addEventListener('click', () => {
+        botsDialog.close();
+        simulateBotsRound();
+      });
+      document.getElementById('close-bots-results-btn').addEventListener('click', () => {
+        document.getElementById('bots-results-panel').hidden = true;
+      });
+
+      // 4. Judge / Dispute Dialog
+      let voteYes = 0;
+      let voteNo = 0;
+      document.getElementById('open-judge-btn').addEventListener('click', () => {
+        judgeDialog.showModal();
+      });
+
+      document.getElementById('judge-check-btn').addEventListener('click', () => {
+        const w1 = document.getElementById('judge-word-1').value.trim();
+        const w2 = document.getElementById('judge-word-2').value.trim();
+        const resEl = document.getElementById('judge-smart-result');
+        if (!w1 || !w2) {
+          resEl.textContent = 'הזינו שתי תשובות להשוואה!';
+          return;
+        }
+        const n1 = normalizeHebrewAnswer(w1);
+        const n2 = normalizeHebrewAnswer(w2);
+        if (n1 === n2) {
+          resEl.textContent = '✅ התאמה מלאה! (זהות אחרי הורדת ה׳ הידיעה / אותיות שימוש)';
+          playSound('jinx');
+        } else if (n1.includes(n2) || n2.includes(n1)) {
+          resEl.textContent = '⚠️ זהירות: אחת התשובות ספציפית יותר מהשנייה (למשל גבינה מול גבינה צהובה). לפי החוקים זו אינה התאמה אלא אם השולחן מאשר!';
+          playSound('cross');
+        } else {
+          resEl.textContent = '🤔 מילים שונות — אם מדובר במילים נרדפות שמבטאות אותו רעיון בדיוק, בצעו הצבעת שחקנים משמאל!';
+        }
+      });
+
+      function updateJudgeVoteUI(customMsg) {
+        document.getElementById('vote-yes-count').textContent = String(voteYes);
+        document.getElementById('vote-no-count').textContent = String(voteNo);
+        const resEl = document.getElementById('judge-vote-result');
+        if (customMsg) {
+          resEl.textContent = customMsg;
+          return;
+        }
+        if (voteYes === 0 && voteNo === 0) {
+          resEl.textContent = 'מוכנים להצבעה!';
+        } else if (voteYes > voteNo) {
+          resEl.textContent = `✅ הרוב קובע: התאמה חוקית! (${voteYes} מול ${voteNo})`;
+        } else if (voteNo > voteYes) {
+          resEl.textContent = `❌ הרוב קובע: אין התאמה! (${voteNo} מול ${voteYes})`;
+        } else {
+          resEl.textContent = `⚖️ תיקו (${voteYes}:${voteNo})! הטילו מטבע להכרעה!`;
+        }
+      }
+
+      document.getElementById('vote-yes-btn').addEventListener('click', () => {
+        voteYes++;
+        playSound('circle');
+        updateJudgeVoteUI();
+      });
+      document.getElementById('vote-no-btn').addEventListener('click', () => {
+        voteNo++;
+        playSound('cross');
+        updateJudgeVoteUI();
+      });
+      document.getElementById('vote-reset-btn').addEventListener('click', () => {
+        voteYes = 0;
+        voteNo = 0;
+        updateJudgeVoteUI();
+      });
+      document.getElementById('coin-flip-btn').addEventListener('click', () => {
+        const win = Math.random() < 0.5;
+        playSound(win ? 'jinx' : 'cross');
+        updateJudgeVoteUI(win ? '🪙 המטבע קבע: ✅ ההתאמה מאושרת!' : '🪙 המטבע קבע: ❌ אין התאמה!');
+      });
+
+      // 5. Share Dialog
+      document.getElementById('open-share-btn').addEventListener('click', () => {
+        document.getElementById('share-status-msg').textContent = '';
+        renderShareCanvas();
+        shareDialog.showModal();
+      });
+
+      document.getElementById('copy-whatsapp-btn').addEventListener('click', async () => {
+        const txt = generateWhatsAppSummaryText();
+        try {
+          await navigator.clipboard.writeText(txt);
+          document.getElementById('share-status-msg').textContent = 'הסיכום הועתק לוואטסאפ! 💬';
+        } catch (_) {
+          document.getElementById('share-status-msg').textContent = 'לא ניתן להעתיק אוטומטית בדפדפן זה';
+        }
+      });
+
+      document.getElementById('download-png-btn').addEventListener('click', () => {
+        renderShareCanvas();
+        const canvas = document.getElementById('share-preview-canvas');
+        const link = document.createElement('a');
+        link.download = `jinxo-round-${state.currentRound + 1}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        document.getElementById('share-status-msg').textContent = 'התמונה ירדה למכשיר! 🖼️';
+      });
+
+      // 6. Rules & 7. Bank Dialogs
+      document.getElementById('open-rules-btn').addEventListener('click', () => {
+        rulesDialog.showModal();
+      });
+
+      document.getElementById('open-bank-btn').addEventListener('click', () => {
+        renderBankList(document.getElementById('bank-search-input').value);
+        bankDialog.showModal();
+      });
+
+      document.getElementById('bank-search-input').addEventListener('input', (e) => {
+        renderBankList(e.target.value);
+      });
+
+      document.getElementById('add-card-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const inputA = document.getElementById('custom-topic-a');
+        const inputB = document.getElementById('custom-topic-b');
+        const topicA = inputA.value.trim();
+        const topicB = inputB.value.trim();
+        if (!topicA || !topicB) return;
+
+        state.customCards.unshift({
+          id: Date.now(),
+          category: 'israel',
+          topicA,
+          topicB
+        });
+        inputA.value = '';
+        inputB.value = '';
+        saveState();
+        renderCurrentCard();
+        renderBankList(document.getElementById('bank-search-input').value);
+      });
+
+      // Fallback for browsers without closedby="any" support (Modern Web Guidance compliant)
+      if (!('closedBy' in HTMLDialogElement.prototype)) {
+        for (const dialog of document.querySelectorAll('dialog[closedby="any"]')) {
+          dialog.addEventListener('click', (event) => {
+            if (event.target !== dialog) return;
+            const rect = dialog.getBoundingClientRect();
+            const isDialogContent =
+              rect.top <= event.clientY &&
+              event.clientY <= rect.top + rect.height &&
+              rect.left <= event.clientX &&
+              event.clientX <= rect.left + rect.width;
+            if (isDialogContent) return;
+            dialog.close();
+          });
+        }
+      }
+
+      // Initial Render
+      document.querySelectorAll('.round-tab').forEach((t, idx) => {
+        t.setAttribute('aria-selected', String(idx === state.currentRound));
+      });
+      document.querySelectorAll('.cat-pill').forEach((b) => {
+        b.setAttribute('aria-pressed', String(b.dataset.cat === state.selectedCategory));
+      });
+      updateSoundBtnUI();
+      updateSecretBtnUI();
+      updateTimerDisplay();
+      renderCurrentCard();
+      renderRoundTopics();
+      renderBoard();
+    })();
+  </script>
 </body>
 </html>

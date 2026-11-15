@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JinxO! | ג'ינקס-או - מהדורה ישראלית</title>
+  <style>
+    :root {
+      --bg-yellow: #f9d616;
+      --bg-yellow-soft: #fff8cc;
+      --brand-pink: #e51b83;
+      --brand-pink-dark: #b81267;
+      --brand-green: #009c5b;
+      --brand-green-dark: #007543;
+      --brand-blue: #1877c9;
+      --brand-blue-light: #e6f3ff;
+      --brand-BlueBoard: #1b80d4;
+      --brand-orange: #f47920;
+      --card-surface: #ffffff;
+      --ink-dark: #1d1d1b;
+      --ink-muted: #575756;
+      --border-heavy: 3px solid #1d1d1b;
+      --shadow-pop: 0 4px 0 #1d1d1b;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-block-size: 100dvh;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-yellow);
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(229, 27, 131, 0.1) 0, rgba(229, 27, 131, 0.1) 24px, transparent 25px),
+        radial-gradient(circle at 88% 80%, rgba(0, 156, 91, 0.12) 0, rgba(0, 156, 91, 0.12) 32px, transparent 33px);
+      color: var(--ink-dark);
+      display: flex;
+      flex-direction: column;
+      line-height: 1.45;
+    }
+
+    /* Header */
+    .site-header {
+      background-color: var(--card-surface);
+      border-block-end: var(--border-heavy);
+      padding-block: 0.75rem;
+      padding-inline: 1rem;
+      position: sticky;
+      inset-block-start: 0;
+      z-index: 10;
+    }
+
+    .header-inner {
+      max-inline-size: 1140px;
+      margin-inline: auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: safe center;
+      gap: 0.75rem;
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .brand-jinx {
+      color: var(--brand-pink);
+      text-shadow: 2px 2px 0 #1d1d1b;
+    }
+
+    .brand-o {
+      color: var(--brand-green);
+      text-shadow: 2px 2px 0 #1d1d1b;
+    }
+
+    .brand-badge {
+      font-size: 0.8rem;
+      background-color: var(--bg-yellow);
+      color: var(--ink-dark);
+      padding-block: 0.15rem;
+      padding-inline: 0.55rem;
+      border-radius: 999px;
+      border: 2px solid #1d1d1b;
+      font-weight: 700;
+    }
+
+    .header-actions {
+      margin-inline-start: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: safe center;
+    }
+
+    /* Buttons */
+    .btn {
+      appearance: none;
+      border: 2.5px solid #1d1d1b;
+      border-radius: 10px;
+      background-color: var(--card-surface);
+      color: var(--ink-dark);
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 700;
+      padding-block: 0.45rem;
+      padding-inline: 0.85rem;
+      cursor: pointer;
+      box-shadow: 0 3px 0 #1d1d1b;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+    }
+
+    .btn:hover {
+      background-color: #f4f4f4;
+    }
+
+    .btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #1d1d1b;
+    }
+
+    .btn:focus-visible {
+      outline: 3px solid var(--brand-blue);
+      outline-offset: 2px;
+    }
+
+    .btn-pink {
+      background-color: var(--brand-pink);
+      color: #ffffff;
+    }
+
+    .btn-pink:hover {
+      background-color: var(--brand-pink-dark);
+    }
+
+    .btn-green {
+      background-color: var(--brand-green);
+      color: #ffffff;
+    }
+
+    .btn-green:hover {
+      background-color: var(--brand-green-dark);
+    }
+
+    .btn-yellow {
+      background-color: var(--bg-yellow);
+      color: var(--ink-dark);
+    }
+
+    .btn-yellow:hover {
+      background-color: #eac60e;
+    }
+
+    /* Main Workspace Layout */
+    .workspace {
+      inline-size: 100%;
+      max-inline-size: 1140px;
+      margin-inline: auto;
+      padding-block: 1.25rem;
+      padding-inline: 1rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      flex: 1;
+    }
+
+    @media (min-width: 920px) {
+      .workspace {
+        grid-template-columns: 370px 1fr;
+        align-items: start;
+      }
+    }
+
+    /* Card Section (Topic Deck) */
+    .panel-card {
+      background-color: var(--card-surface);
+      border: var(--border-heavy);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-pop);
+      padding: 1rem;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: safe center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-block-end: 0.75rem;
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+
+    .category-bar {
+      display: flex;
+      flex-wrap: wrap;
+      flex-wrap: balance;
+      gap: 0.35rem;
+      margin-block-end: 0.85rem;
+    }
+
+    .cat-pill {
+      appearance: none;
+      border: 2px solid #1d1d1b;
+      background-color: #f7f7f7;
+      color: var(--ink-dark);
+      border-radius: 999px;
+      padding-block: 0.22rem;
+      padding-inline: 0.65rem;
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .cat-pill[aria-pressed="true"] {
+      background-color: var(--ink-dark);
+      color: var(--bg-yellow);
+    }
+
+    /* Physical JinxO Topic Card Replica */
+    .topic-card-stage {
+      margin-block-end: 0.9rem;
+    }
+
+    .jinxo-topic-card {
+      border: var(--border-heavy);
+      border-radius: 14px;
+      overflow: clip;
+      box-shadow: 0 4px 0 #1d1d1b;
+      background-color: #ffffff;
+    }
+
+    .topic-half {
+      inline-size: 100%;
+      border: 0;
+      padding-block: 1rem;
+      padding-inline: 0.9rem;
+      font-family: inherit;
+      text-align: center;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      transition: filter 0.15s ease;
+    }
+
+    .topic-half:hover {
+      filter: brightness(0.96);
+    }
+
+    .topic-half:focus-visible {
+      outline: 3px solid #1d1d1b;
+      outline-offset: -4px;
+    }
+
+    .topic-half-a {
+      background-color: #ffde2e;
+      color: var(--ink-dark);
+      border-block-end: 2.5px dashed #1d1d1b;
+    }
+
+    .topic-half-b {
+      background-color: var(--brand-pink);
+      color: #ffffff;
+    }
+
+    .topic-side-tag {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding-block: 0.1rem;
+      padding-inline: 0.5rem;
+      border-radius: 999px;
+      background-color: rgba(0, 0, 0, 0.14);
+    }
+
+    .topic-text {
+      font-size: 1.08rem;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    .round-topics-box {
+      background-color: var(--bg-yellow-soft);
+      border: 2px solid #1d1d1b;
+      border-radius: 12px;
+      padding: 0.75rem;
+    }
+
+    .round-topics-title {
+      margin: 0 0 0.5rem 0;
+      font-size: 0.88rem;
+      font-weight: 800;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .round-topics-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .round-topic-slot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      background-color: #ffffff;
+      border: 1.5px solid #1d1d1b;
+      border-radius: 8px;
+      padding-block: 0.35rem;
+      padding-inline: 0.6rem;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .round-topic-slot.empty {
+      color: var(--ink-muted);
+      border-style: dashed;
+      font-weight: 500;
+    }
+
+    .slot-badge {
+      background-color: var(--brand-blue);
+      color: #ffffff;
+      border-radius: 6px;
+      padding-block: 0.1rem;
+      padding-inline: 0.4rem;
+      font-size: 0.75rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .slot-remove {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--brand-pink-dark);
+      font-weight: 900;
+      cursor: pointer;
+      padding-inline: 0.25rem;
+      font-size: 0.95rem;
+    }
+
+    /* JinxO Player Board Replica */
+    .board-container {
+      background-color: var(--brand-BlueBoard);
+      border: 4px solid #1d1d1b;
+      border-radius: 22px;
+      box-shadow: 0 6px 0 #1d1d1b;
+      padding: 1rem;
+      color: #ffffff;
+    }
+
+    .board-top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: safe center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-block-end: 0.9rem;
+    }
+
+    .round-tabs {
+      display: flex;
+      gap: 0.4rem;
+      background-color: rgba(0, 0, 0, 0.22);
+      padding: 0.3rem;
+      border-radius: 12px;
+      border: 2px solid #1d1d1b;
+    }
+
+    .round-tab {
+      appearance: none;
+      border: 2px solid transparent;
+      background: transparent;
+      color: #ffffff;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 0.88rem;
+      padding-block: 0.35rem;
+      padding-inline: 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .round-tab[aria-selected="true"] {
+      background-color: var(--bg-yellow);
+      color: var(--ink-dark);
+      border-color: #1d1d1b;
+    }
+
+    .done-banner {
+      background-color: var(--brand-green);
+      color: #ffffff;
+      border: 2.5px solid #1d1d1b;
+      border-radius: 12px;
+      padding-block: 0.55rem;
+      padding-inline: 0.9rem;
+      margin-block-end: 0.85rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      box-shadow: 0 3px 0 #1d1d1b;
+    }
+
+    .done-banner[hidden] {
+      display: none;
+    }
+
+    /* Board Grid + Score Panel Layout */
+    .board-main-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    @media (min-width: 640px) {
+      .board-main-layout {
+        grid-template-columns: 1fr 150px;
+        align-items: stretch;
+      }
+    }
+
+    /* 3x3 Grid + Bonus Badges */
+    .grid-with-bonuses {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+      grid-template-rows: repeat(3, minmax(118px, 1fr)) auto;
+      gap: 0.6rem;
+      align-items: stretch;
+    }
+
+    .answer-cell {
+      background-color: #fffdf7;
+      border: 3px solid #1d1d1b;
+      border-radius: 14px;
+      padding: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      color: var(--ink-dark);
+      box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.06);
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .answer-cell[data-state="circle"] {
+      background-color: #effdf5;
+      border-color: var(--brand-green);
+    }
+
+    .answer-cell[data-state="jinx"] {
+      background-color: #fff6db;
+      border-color: var(--brand-pink);
+    }
+
+    .answer-cell[data-state="cross"] {
+      background-color: #f8f1f1;
+      opacity: 0.88;
+    }
+
+    .cell-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.25rem;
+      margin-block-end: 0.25rem;
+    }
+
+    .cell-num {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--ink-muted);
+      background-color: #ececec;
+      border-radius: 6px;
+      padding-inline: 0.35rem;
+      padding-block: 0.05rem;
+    }
+
+    .jinx-star-btn {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      padding: 0.1rem;
+      cursor: pointer;
+      font-size: 1.35rem;
+      line-height: 1;
+      color: #b5b5b5;
+      transition: transform 0.15s ease, color 0.15s ease;
+    }
+
+    .jinx-star-btn:hover {
+      transform: scale(1.15);
+    }
+
+    .answer-cell[data-state="jinx"] .jinx-star-btn {
+      color: var(--brand-pink);
+      transform: scale(1.18);
+    }
+
+    .cell-input-wrap {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cell-input {
+      inline-size: 100%;
+      border: 0;
+      background: transparent;
+      text-align: center;
+      font-family: inherit;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--ink-dark);
+      resize: none;
+      padding: 0.2rem;
+      line-height: 1.25;
+      z-index: 2;
+    }
+
+    .cell-input:focus {
+      outline: 2px dashed var(--brand-blue);
+      border-radius: 6px;
+    }
+
+    .cell-input::placeholder {
+      color: #b0b0b0;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    /* Visual Circle / Cross Overlay inside Cell */
+    .cell-mark-visual {
+      position: absolute;
+      inset: 2px;
+      pointer-events: none;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .answer-cell[data-state="circle"] .cell-mark-visual::before,
+    .answer-cell[data-state="jinx"] .cell-mark-visual::before {
+      content: "";
+      inline-size: 92%;
+      block-size: 82%;
+      border: 3.5px solid var(--brand-green);
+      border-radius: 50%;
+      opacity: 0.65;
+    }
+
+    .answer-cell[data-state="jinx"] .cell-mark-visual::before {
+      border-color: var(--brand-pink);
+    }
+
+    .answer-cell[data-state="cross"] .cell-mark-visual::before {
+      content: "✕";
+      font-size: 3.4rem;
+      font-weight: 900;
+      color: rgba(217, 48, 37, 0.28);
+      line-height: 1;
+    }
+
+    .cell-warning {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #b3261e;
+      text-align: center;
+      min-block-size: 0.95rem;
+    }
+
+    /* State Toggle Bar inside each Answer Box */
+    .cell-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.25rem;
+      margin-block-start: 0.25rem;
+      z-index: 2;
+    }
+
+    .mark-btn {
+      appearance: none;
+      border: 1.5px solid #1d1d1b;
+      border-radius: 6px;
+      background-color: #f2f2f2;
+      color: var(--ink-dark);
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding-block: 0.2rem;
+      padding-inline: 0.15rem;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .mark-btn:hover {
+      background-color: #e4e4e4;
+    }
+
+    .answer-cell[data-state="circle"] .mark-btn[data-mark="circle"] {
+      background-color: var(--brand-green);
+      color: #ffffff;
+    }
+
+    .answer-cell[data-state="jinx"] .mark-btn[data-mark="jinx"] {
+      background-color: var(--brand-pink);
+      color: #ffffff;
+    }
+
+    .answer-cell[data-state="cross"] .mark-btn[data-mark="cross"] {
+      background-color: #d93025;
+      color: #ffffff;
+    }
+
+    /* Row & Column Bonus Point Badges */
+    .bonus-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.25);
+      border: 2.5px solid #1d1d1b;
+      border-radius: 12px;
+      padding: 0.35rem;
+      min-inline-size: 42px;
+      min-block-size: 42px;
+      font-weight: 900;
+      color: #ffffff;
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+    .bonus-circle {
+      inline-size: 28px;
+      block-size: 28px;
+      border-radius: 50%;
+      background-color: var(--brand-orange);
+      border: 2px solid #1d1d1b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: #ffffff;
+    }
+
+    .bonus-badge.achieved {
+      background-color: var(--bg-yellow);
+      color: var(--ink-dark);
+      transform: scale(1.05);
+    }
+
+    .bonus-badge.achieved .bonus-circle {
+      background-color: var(--brand-green);
+    }
+
+    /* Score Column on Side of Board */
+    .score-sidebar {
+      background-color: rgba(0, 0, 0, 0.2);
+      border: 2.5px solid #1d1d1b;
+      border-radius: 14px;
+      padding: 0.65rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      justify-content: space-between;
+    }
+
+    .score-box {
+      background-color: #ffffff;
+      color: var(--ink-dark);
+      border: 2px solid #1d1d1b;
+      border-radius: 10px;
+      padding-block: 0.35rem;
+      padding-inline: 0.5rem;
+      text-align: center;
+    }
+
+    .score-box-label {
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: var(--ink-muted);
+      display: block;
+    }
+
+    .score-box-value {
+      font-size: 1.2rem;
+      font-weight: 900;
+      display: block;
+    }
+
+    .score-box.final-total {
+      background-color: var(--bg-yellow);
+      border-width: 2.5px;
+    }
+
+    .score-box.final-total .score-box-value {
+      font-size: 1.45rem;
+      color: var(--brand-pink-dark);
+    }
+
+    /* Footer */
+    .site-footer {
+      text-align: center;
+      padding-block: 1rem;
+      padding-inline: 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* Native Modal Dialogs (Modern Web Guidance compliant) */
+    dialog:modal {
+      overscroll-behavior: contain;
+      max-inline-size: min(680px, 94dvw);
+      inline-size: 100%;
+      max-block-size: 88dvh;
+      border: 4px solid #1d1d1b;
+      border-radius: 18px;
+      padding: 0;
+      box-shadow: 0 10px 0 #1d1d1b;
+      background-color: #ffffff;
+      color: var(--ink-dark);
+    }
+
+    dialog::backdrop {
+      overflow: hidden;
+      overscroll-behavior: contain;
+      background-color: rgba(29, 29, 27, 0.6);
+      backdrop-filter: blur(3px);
+    }
+
+    .modal-inner {
+      display: flex;
+      flex-direction: column;
+      max-block-size: 86dvh;
+    }
+
+    .modal-header {
+      background-color: var(--bg-yellow);
+      border-block-end: 3px solid #1d1d1b;
+      padding-block: 0.85rem;
+      padding-inline: 1.15rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 900;
+    }
+
+    .modal-body {
+      padding: 1.15rem;
+      overflow-y: auto;
+      scrollbar-gutter: stable;
+      overscroll-behavior: contain;
+    }
+
+    /* Question Bank Search & List */
+    .bank-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-block-end: 1rem;
+    }
+
+    .search-input {
+      flex: 1 1 220px;
+      border: 2px solid #1d1d1b;
+      border-radius: 10px;
+      padding-block: 0.5rem;
+      padding-inline: 0.75rem;
+      font-family: inherit;
+      font-size: 0.95rem;
+    }
+
+    .bank-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 0.65rem;
+    }
+
+    .bank-card-item {
+      border: 2px solid #1d1d1b;
+      border-radius: 10px;
+      padding: 0.65rem;
+      background-color: #fffef9;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.45rem;
+    }
+
+    .bank-topic-line {
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 0.35rem 0.5rem;
+      border-radius: 6px;
+    }
+
+    .bank-topic-a {
+      background-color: #fff099;
+    }
+
+    .bank-topic-b {
+      background-color: #ffd6eb;
+    }
+
+    .rules-grid {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .rule-step {
+      background-color: var(--bg-yellow-soft);
+      border: 2px solid #1d1d1b;
+      border-radius: 12px;
+      padding: 0.85rem;
+    }
+
+    .rule-step h3 {
+      margin: 0 0 0.35rem 0;
+      font-size: 1.02rem;
+    }
+
+    .rule-step p, .rule-step ul {
+      margin: 0;
+      font-size: 0.92rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <h1 class="brand-title">
+        <span class="brand-jinx">Jinx</span><span class="brand-o">O!</span>
+        <span>ג'ינקס-או</span>
+        <span class="brand-badge">מהדורה ישראלית 🇮🇱</span>
+      </h1>
+
+      <nav class="header-actions" aria-label="פעולות משחק">
+        <button type="button" class="btn btn-yellow" id="open-rules-btn">📖 חוקי המשחק</button>
+        <button type="button" class="btn" id="open-bank-btn">🗂️ מאגר השאלות (<span id="total-questions-count">200</span>)</button>
+        <button type="button" class="btn" id="clear-round-btn">🧹 נקה סיבוב</button>
+        <button type="button" class="btn btn-pink" id="reset-game-btn">🔄 משחק חדש</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <!-- Topic Cards Deck Panel -->
+    <aside class="panel-card" aria-labelledby="deck-heading">
+      <div class="panel-header">
+        <h2 class="panel-title" id="deck-heading">🎴 כרטיסי נושא</h2>
+        <button type="button" class="btn btn-green" id="draw-card-btn">שלוף כרטיס 🎲</button>
+      </div>
+
+      <div class="category-bar" role="group" aria-label="סינון קטגוריית שאלות">
+        <button type="button" class="cat-pill" data-cat="all" aria-pressed="true">הכל</button>
+        <button type="button" class="cat-pill" data-cat="israel" aria-pressed="false">ישראלי אסלי</button>
+        <button type="button" class="cat-pill" data-cat="food" aria-pressed="false">אוכל ישראלי</button>
+        <button type="button" class="cat-pill" data-cat="holidays" aria-pressed="false">חגים</button>
+        <button type="button" class="cat-pill" data-cat="culture" aria-pressed="false">תרבות ומוזיקה</button>
+        <button type="button" class="cat-pill" data-cat="original" aria-pressed="false">המקורי מתורגם</button>
+      </div>
+
+      <div class="topic-card-stage">
+        <div class="jinxo-topic-card" aria-live="polite">
+          <button type="button" class="topic-half topic-half-a" id="pick-topic-a" title="לחצו לבחירת נושא א׳ לסיבוב">
+            <span class="topic-side-tag">נושא א׳ (לחצו לבחירה לסיבוב)</span>
+            <span class="topic-text" id="card-topic-a-text">טוען כרטיס...</span>
+          </button>
+          <button type="button" class="topic-half topic-half-b" id="pick-topic-b" title="לחצו לבחירת נושא ב׳ לסיבוב">
+            <span class="topic-side-tag">נושא ב׳ (לחצו לבחירה לסיבוב)</span>
+            <span class="topic-text" id="card-topic-b-text">טוען כרטיס...</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="round-topics-box">
+        <div class="round-topics-title">
+          <span>3 הנושאים שנבחרו לסיבוב זה:</span>
+          <span id="topics-counter-badge">0 / 3</span>
+        </div>
+        <ol class="round-topics-list" id="round-topics-list">
+          <!-- Populated dynamically -->
+        </ol>
+      </div>
+    </aside>
+
+    <!-- Player JinxO Board & Score Sheet -->
+    <section class="board-container" aria-labelledby="board-heading">
+      <div class="board-top-bar">
+        <h2 class="panel-title" id="board-heading">✏️ לוח ה-JinxO שלי (3 תשובות לכל נושא = 9 סה״כ)</h2>
+
+        <div class="round-tabs" role="tablist" aria-label="בחירת סיבוב">
+          <button type="button" class="round-tab" role="tab" data-round="0" aria-selected="true">סיבוב 1</button>
+          <button type="button" class="round-tab" role="tab" data-round="1" aria-selected="false">סיבוב 2</button>
+          <button type="button" class="round-tab" role="tab" data-round="2" aria-selected="false">סיבוב 3</button>
+        </div>
+      </div>
+
+      <div class="done-banner" id="done-banner" hidden>
+        <span>🎉 כל 9 התשובות בלוח סומנו! הכריזו בקול: <strong>״סיימתי!״ (I'm done!)</strong> לסיום הסיבוב!</span>
+      </div>
+
+      <div class="board-main-layout">
+        <!-- 3x3 Answer Grid + Row & Column Bonus Points -->
+        <div class="grid-with-bonuses" id="jinxo-grid">
+          <!-- Generated dynamically: 3 rows of 3 answer cells + row bonus badge, plus bottom column bonus row -->
+        </div>
+
+        <!-- Score Boxes on the side (matching JinxO Board & Dito Pad) -->
+        <div class="score-sidebar" aria-label="טבלת ניקוד">
+          <div class="score-box">
+            <span class="score-box-label">⭕ הקפות (×1)</span>
+            <span class="score-box-value" id="score-circles">0</span>
+          </div>
+          <div class="score-box">
+            <span class="score-box-label">⭐ ג'ינקס! (×2)</span>
+            <span class="score-box-value" id="score-stars">0</span>
+          </div>
+          <div class="score-box">
+            <span class="score-box-label">➕ בונוס שורות/טורים</span>
+            <span class="score-box-value" id="score-bonus">0</span>
+          </div>
+          <div class="score-box">
+            <span class="score-box-label">סיבוב 1</span>
+            <span class="score-box-value" id="score-r1">0</span>
+          </div>
+          <div class="score-box">
+            <span class="score-box-label">סיבוב 2</span>
+            <span class="score-box-value" id="score-r2">0</span>
+          </div>
+          <div class="score-box">
+            <span class="score-box-label">סיבוב 3</span>
+            <span class="score-box-value" id="score-r3">0</span>
+          </div>
+          <div class="score-box final-total">
+            <span class="score-box-label">סה״כ ניקוד (Σ)</span>
+            <span class="score-box-value" id="score-final">0</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    מבוסס על משחק הקופסה JinxO / Dito! מאת Martin Ang (Tabletoys Games) • הותאם לעברית ולישראל 🇮🇱
+  </footer>
+
+  <!-- Rules Modal Dialog -->
+  <dialog id="rules-dialog" closedby="any" aria-labelledby="rules-dialog-title">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <h2 class="modal-title" id="rules-dialog-title">📖 איך משחקים ב-JinxO? (4–7 שחקנים)</h2>
+        <form method="dialog">
+          <button type="submit" class="btn" autofocus>סגור ✕</button>
+        </form>
+      </div>
+      <div class="modal-body">
+        <div class="rules-grid">
+          <div class="rule-step">
+            <h3>1. בחירת 3 נושאים ומילוי הלוח (9 תשובות)</h3>
+            <p>השחקן הראשון שולף כרטיס נושא ובוחר אחד מ-2 הנושאים שעליו. כל השחקנים כותבים בסתר <strong>בדיוק 3 תשובות</strong> לנושא שנבחר ב-3 משבצות פנויות כלשהן בלוח ה-3×3 שלהם. חוזרים על כך <strong>3 פעמים</strong> עד שכל 9 המשבצות בלוח מלאות.</p>
+          </div>
+          <div class="rule-step">
+            <h3>✅ מה נחשב לתשובה חוקית?</h3>
+            <ul>
+              <li><strong>עד 2 מילים בלבד</strong> (למעט שמות פרטיים כגון שם עיר, מותג, סרט או אדם).</li>
+              <li><strong>אסור לחזור על אותה תשובה פעמיים</strong> על אותו לוח (גם אם מדובר בנושאים שונים!).</li>
+            </ul>
+          </div>
+          <div class="rule-step">
+            <h3>2. הקראת תשובות וסימון התאמות</h3>
+            <p>החל מהשחקן הראשון ובכיוון השעון, כל שחקן בתורו מכריז בקול על תשובה אחת מהלוח שלו שעדיין לא נאמרה בסיבוב:</p>
+            <ul>
+              <li><strong>א. כמה שחקנים כתבו אותה תשובה (⭕ הקפה):</strong> כל השחקנים עם התשובה התואמת מקיפים אותה בעיגול (<strong>נקודה אחת</strong>).</li>
+              <li><strong>ב. רק שחקן אחד נוסף כתב אותה תשובה (⭐ ג'ינקס!):</strong> שני השחקנים צועקים <strong>״ג'ינקס!״</strong>, מקיפים את התשובה בעיגול <strong>וצובעים את כוכב הג'ינקס</strong> בפינת המשבצת (<strong>1 נק׳ על ההקפה + 2 נק׳ על הכוכב = 3 נק׳!</strong>).</li>
+              <li><strong>ג. אף שחקן אחר לא כתב את התשובה (❌ מחיקה):</strong> השחקן הפעיל מסמן X על התשובה שלו (0 נקודות).</li>
+            </ul>
+          </div>
+          <div class="rule-step">
+            <h3>3. סיום הסיבוב וחישוב בונוסים</h3>
+            <p>ברגע שלאחד השחקנים לא נותרו משבצות פנויות לסימון, הוא מכריז <strong>״סיימתי!״</strong> והסיבוב מסתיים מיד עבור כולם!</p>
+            <ul>
+              <li><strong>1 נקודה</strong> לכל תשובה מוקפת בעיגול (⭕).</li>
+              <li><strong>2 נקודות נוספות</strong> לכל כוכב ג'ינקס צבוע (⭐).</li>
+              <li><strong>נקודות בונוס שורות וטורים:</strong> אם הקפתם בעיגול (או ג'ינקס) את כל 3 התשובות בשורה או בטור שלם, תקבלו את נקודות הבונוס של אותה שורה (3, 2 או 1) או טור (1, 2 או 3)!</li>
+            </ul>
+          </div>
+          <div class="rule-step">
+            <h3>❓ מה נחשב להתאמה (Match)?</h3>
+            <p>קטגוריה כללית לעומת ספציפית <strong>אינה</strong> נחשבת להתאמה (למשל: ״גבינה״ ו״גבינה צהובה״ אינן התאמה). מילים נרדפות שמבטאות אותו רעיון בדיוק <strong>כן</strong> נחשבות להתאמה (למשל: ״קטן״ ו״זעיר״). במקרה של ספק – שאר השחקנים מצביעים ומכריעים!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Question Bank Modal Dialog -->
+  <dialog id="bank-dialog" closedby="any" aria-labelledby="bank-dialog-title">
+    <div class="modal-inner">
+      <div class="modal-header">
+        <h2 class="modal-title" id="bank-dialog-title">🗂️ מאגר כרטיסי הנושא בעברית</h2>
+        <form method="dialog">
+          <button type="submit" class="btn" autofocus>סגור ✕</button>
+        </form>
+      </div>
+      <div class="modal-body">
+        <search class="bank-controls">
+          <input type="search" id="bank-search-input" class="search-input" placeholder="חיפוש חופשי בשאלות (למשל: חומוס, צבא, קיץ)..." aria-label="חיפוש בשאלות">
+        </search>
+
+        <form id="add-card-form" class="bank-controls">
+          <input type="text" id="custom-topic-a" class="search-input" placeholder="נושא א׳ חדש..." required aria-label="נושא א׳ חדש">
+          <input type="text" id="custom-topic-b" class="search-input" placeholder="נושא ב׳ חדש..." required aria-label="נושא ב׳ חדש">
+          <button type="submit" class="btn btn-green">➕ הוסף כרטיס</button>
+        </form>
+
+        <ul class="bank-list" id="bank-list">
+          <!-- Populated dynamically -->
+        </ul>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="questions.js"></script>
+  <script>
+    (() => {
+      const STORAGE_KEY = 'jinxo_israel_state_v1';
+      const ROW_BONUSES = [3, 2, 1];
+      const COL_BONUSES = [1, 2, 3];
+
+      function createEmptyRound() {
+        return {
+          topics: [],
+          cells: Array.from({ length: 9 }, () => ({ text: '', state: 'none' }))
+        };
+      }
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && Array.isArray(parsed.rounds) && parsed.rounds.length === 3) {
+              return parsed;
+            }
+          }
+        } catch (_) {
+          // ignore storage errors
+        }
+        return {
+          currentRound: 0,
+          selectedCategory: 'all',
+          currentCardIndex: 0,
+          customCards: [],
+          rounds: [createEmptyRound(), createEmptyRound(), createEmptyRound()]
+        };
+      }
+
+      const state = loadState();
+
+      function saveState() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (_) {
+          // ignore storage errors
+        }
+      }
+
+      function getAllCards() {
+        const base = Array.isArray(window.JINX_CARDS) ? window.JINX_CARDS : [];
+        return [... state.customCards, ...base];
+      }
+
+      function getFilteredCards() {
+        const all = getAllCards();
+        if (state.selectedCategory === 'all') return all;
+        return all.filter((c) => c.category === state.selectedCategory);
+      }
+
+      // DOM elements
+      const gridEl = document.getElementById('jinxo-grid');
+      const topicATextEl = document.getElementById('card-topic-a-text');
+      const topicBTextEl = document.getElementById('card-topic-b-text');
+      const roundTopicsListEl = document.getElementById('round-topics-list');
+      const topicsCounterBadge = document.getElementById('topics-counter-badge');
+      const doneBannerEl = document.getElementById('done-banner');
+      const totalQuestionsCountEl = document.getElementById('total-questions-count');
+
+      // Render Topic Card
+      function renderCurrentCard() {
+        const deck = getFilteredCards();
+        if (deck.length === 0) {
+          topicATextEl.textContent = 'אין כרטיסים בקטגוריה זו';
+          topicBTextEl.textContent = 'בחרו קטגוריה אחרת';
+          return;
+        }
+        const safeIdx = ((state.currentCardIndex % deck.length) + deck.length) % deck.length;
+        const card = deck[safeIdx];
+        topicATextEl.textContent = card.topicA;
+        topicBTextEl.textContent = card.topicB;
+        totalQuestionsCountEl.textContent = String(getAllCards().length * 2);
+      }
+
+      function drawRandomCard() {
+        const deck = getFilteredCards();
+        if (deck.length <= 1) {
+          state.currentCardIndex = 0;
+        } else {
+          let next = Math.floor(Math.random() * deck.length);
+          if (next === state.currentCardIndex) {
+            next = (next + 1) % deck.length;
+          }
+          state.currentCardIndex = next;
+        }
+        saveState();
+        renderCurrentCard();
+      }
+
+      function addTopicToRound(topicText) {
+        const round = state.rounds[state.currentRound];
+        if (round.topics.includes(topicText)) return;
+        if (round.topics.length >= 3) {
+          round.topics.shift();
+        }
+        round.topics.push(topicText);
+        saveState();
+        renderRoundTopics();
+      }
+
+      function renderRoundTopics() {
+        const round = state.rounds[state.currentRound];
+        topicsCounterBadge.textContent = `${round.topics.length} / 3`;
+        roundTopicsListEl.innerHTML = '';
+
+        for (let i = 0; i < 3; i++) {
+          const li = document.createElement('li');
+          const topic = round.topics[i];
+          if (topic) {
+            li.className = 'round-topic-slot';
+            const badge = document.createElement('span');
+            badge.className = 'slot-badge';
+            badge.textContent = `נושא ${i + 1}`;
+
+            const textSpan = document.createElement('span');
+            textSpan.style.flex = '1';
+            textSpan.textContent = topic;
+
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'slot-remove';
+            removeBtn.setAttribute('aria-label', `הסר נושא ${i + 1}`);
+            removeBtn.textContent = '✕';
+            removeBtn.addEventListener('click', () => {
+              round.topics.splice(i, 1);
+              saveState();
+              renderRoundTopics();
+            });
+
+            li.append(badge, textSpan, removeBtn);
+          } else {
+            li.className = 'round-topic-slot empty';
+            li.textContent = `נושא ${i + 1}: לחצו על נושא א׳ או ב׳ בכרטיס למעלה`;
+          }
+          roundTopicsListEl.appendChild(li);
+        }
+      }
+
+      // Score Calculation
+      function calculateRoundScore(roundIndex) {
+        const round = state.rounds[roundIndex];
+        const isCircled = (idx) =>
+          round.cells[idx].state === 'circle' || round.cells[idx].state === 'jinx';
+
+        let circles = 0;
+        let stars = 0;
+        for (let i = 0; i < 9; i++) {
+          if (isCircled(i)) circles += 1;
+          if (round.cells[i].state === 'jinx') stars += 1;
+        }
+
+        const rowAchieved = [false, false, false];
+        const colAchieved = [false, false, false];
+        let bonus = 0;
+
+        for (let r = 0; r < 3; r++) {
+          if (isCircled(r * 3) && isCircled(r * 3 + 1) && isCircled(r * 3 + 2)) {
+            rowAchieved[r] = true;
+            bonus += ROW_BONUSES[r];
+          }
+        }
+
+        for (let c = 0; c < 3; c++) {
+          if (isCircled(c) && isCircled(c + 3) && isCircled(c + 6)) {
+            colAchieved[c] = true;
+            bonus += COL_BONUSES[c];
+          }
+        }
+
+        const total = circles * 1 + stars * 2 + bonus;
+        return { circles, stars, bonus, total, rowAchieved, colAchieved };
+      }
+
+      function getCellValidationWarning(cells, index) {
+        const raw = cells[index].text.trim();
+        if (!raw) return '';
+        const words = raw.split(/\s+/).filter(Boolean);
+        if (words.length > 2) {
+          return 'שימו לב: מותר עד 2 מילים (למעט שם פרטי)';
+        }
+        const normalized = raw.toLowerCase();
+        const duplicate = cells.some(
+          (cell, i) => i !== index && cell.text.trim().toLowerCase() === normalized
+        );
+        if (duplicate) {
+          return 'תשובה כפולה על הלוח!';
+        }
+        return '';
+      }
+
+      // Render 3x3 Board + Bonus Badges
+      function renderBoard() {
+        const round = state.rounds[state.currentRound];
+        const stats = calculateRoundScore(state.currentRound);
+        gridEl.innerHTML = '';
+
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < 3; c++) {
+            const idx = r * 3 + c;
+            const cellData = round.cells[idx];
+
+            const cell = document.createElement('div');
+            cell.className = 'answer-cell';
+            cell.dataset.state = cellData.state;
+
+            // Top row: box number + Jinx Star button
+            const topRow = document.createElement('div');
+            topRow.className = 'cell-top-row';
+
+            const numSpan = document.createElement('span');
+            numSpan.className = 'cell-num';
+            numSpan.textContent = `#${idx + 1}`;
+
+            const starBtn = document.createElement('button');
+            starBtn.type = 'button';
+            starBtn.className = 'jinx-star-btn';
+            starBtn.setAttribute('aria-label', `כוכב ג'ינקס למשבצת ${idx + 1}`);
+            starBtn.textContent = cellData.state === 'jinx' ? '★' : '☆';
+            starBtn.addEventListener('click', () => {
+              cellData.state = cellData.state === 'jinx' ? 'circle' : 'jinx';
+              saveState();
+              renderBoard();
+            });
+
+            topRow.append(numSpan, starBtn);
+
+            // Input area + visual overlay
+            const inputWrap = document.createElement('div');
+            inputWrap.className = 'cell-input-wrap';
+
+            const markVisual = document.createElement('div');
+            markVisual.className = 'cell-mark-visual';
+            markVisual.setAttribute('aria-hidden', 'true');
+
+            const textarea = document.createElement('textarea');
+            textarea.className = 'cell-input';
+            textarea.rows = 2;
+            textarea.placeholder = 'כתבו תשובה...';
+            textarea.setAttribute('aria-label', `תשובה במשבצת ${idx + 1}`);
+            textarea.value = cellData.text;
+
+            const warningEl = document.createElement('div');
+            warningEl.className = 'cell-warning';
+            warningEl.textContent = getCellValidationWarning(round.cells, idx);
+
+            textarea.addEventListener('input', (e) => {
+              cellData.text = e.target.value;
+              saveState();
+              updateAllWarnings();
+            });
+
+            inputWrap.append(markVisual, textarea);
+
+            // Marking buttons (Circle / Jinx! / Cross)
+            const actionsRow = document.createElement('div');
+            actionsRow.className = 'cell-actions';
+
+            const btnCircle = document.createElement('button');
+            btnCircle.type = 'button';
+            btnCircle.className = 'mark-btn';
+            btnCircle.dataset.mark = 'circle';
+            btnCircle.textContent = '⭕ הקף';
+            btnCircle.addEventListener('click', () => {
+              cellData.state = cellData.state === 'circle' ? 'none' : 'circle';
+              saveState();
+              renderBoard();
+            });
+
+            const btnJinx = document.createElement('button');
+            btnJinx.type = 'button';
+            btnJinx.className = 'mark-btn';
+            btnJinx.dataset.mark = 'jinx';
+            btnJinx.textContent = '⭐ ג׳ינקס';
+            btnJinx.addEventListener('click', () => {
+              cellData.state = cellData.state === 'jinx' ? 'none' : 'jinx';
+              saveState();
+              renderBoard();
+            });
+
+            const btnCross = document.createElement('button');
+            btnCross.type = 'button';
+            btnCross.className = 'mark-btn';
+            btnCross.dataset.mark = 'cross';
+            btnCross.textContent = '❌ X';
+            btnCross.addEventListener('click', () => {
+              cellData.state = cellData.state === 'cross' ? 'none' : 'cross';
+              saveState();
+              renderBoard();
+            });
+
+            actionsRow.append(btnCircle, btnJinx, btnCross);
+            cell.append(topRow, inputWrap, warningEl, actionsRow);
+            gridEl.appendChild(cell);
+          }
+
+          // Row bonus badge at the end of each row
+          const rowBadge = document.createElement('div');
+          rowBadge.className = 'bonus-badge' + (stats.rowAchieved[r] ? ' achieved' : '');
+          rowBadge.title = `בונוס שורה ${r + 1}: ${ROW_BONUSES[r]} נקודות אם כל השורה מוקפת`;
+          const rowCircle = document.createElement('span');
+          rowCircle.className = 'bonus-circle';
+          rowCircle.textContent = String(ROW_BONUSES[r]);
+          rowBadge.appendChild(rowCircle);
+          gridEl.appendChild(rowBadge);
+        }
+
+        // Bottom row: Column bonus badges (1, 2, 3)
+        for (let c = 0; c < 3; c++) {
+          const colBadge = document.createElement('div');
+          colBadge.className = 'bonus-badge' + (stats.colAchieved[c] ? ' achieved' : '');
+          colBadge.title = `בונוס טור ${c + 1}: ${COL_BONUSES[c]} נקודות אם כל הטור מוקף`;
+          const colCircle = document.createElement('span');
+          colCircle.className = 'bonus-circle';
+          colCircle.textContent = String(COL_BONUSES[c]);
+          colBadge.appendChild(colCircle);
+          gridEl.appendChild(colBadge);
+        }
+
+        // Bottom corner spacer
+        const cornerSpacer = document.createElement('div');
+        cornerSpacer.setAttribute('aria-hidden', 'true');
+        gridEl.appendChild(cornerSpacer);
+
+        updateScoresUI();
+      }
+
+      function updateAllWarnings() {
+        const round = state.rounds[state.currentRound];
+        const warningEls = gridEl.querySelectorAll('.cell-warning');
+        warningEls.forEach((el, idx) => {
+          el.textContent = getCellValidationWarning(round.cells, idx);
+        });
+      }
+
+      function updateScoresUI() {
+        const currentStats = calculateRoundScore(state.currentRound);
+        const r1 = calculateRoundScore(0).total;
+        const r2 = calculateRoundScore(1).total;
+        const r3 = calculateRoundScore(2).total;
+
+        document.getElementById('score-circles').textContent = String(currentStats.circles);
+        document.getElementById('score-stars').textContent = String(currentStats.stars * 2);
+        document.getElementById('score-bonus').textContent = String(currentStats.bonus);
+        document.getElementById('score-r1').textContent = String(r1);
+        document.getElementById('score-r2').textContent = String(r2);
+        document.getElementById('score-r3').textContent = String(r3);
+        document.getElementById('score-final').textContent = String(r1 + r2 + r3);
+
+        const round = state.rounds[state.currentRound];
+        const allMarked = round.cells.every((cell) => cell.state !== 'none');
+        doneBannerEl.hidden = !allMarked;
+      }
+
+      // Question Bank Modal Rendering
+      function renderBankList(filterQuery = '') {
+        const bankListEl = document.getElementById('bank-list');
+        bankListEl.innerHTML = '';
+        const q = filterQuery.trim().toLowerCase();
+        const cards = getAllCards().filter(
+          (c) =>
+            !q ||
+            c.topicA.toLowerCase().includes(q) ||
+            c.topicB.toLowerCase().includes(q)
+        );
+
+        cards.forEach((card, idx) => {
+          const li = document.createElement('li');
+          li.className = 'bank-card-item';
+
+          const lineA = document.createElement('div');
+          lineA.className = 'bank-topic-line bank-topic-a';
+          lineA.textContent = `א׳: ${card.topicA}`;
+
+          const lineB = document.createElement('div');
+          lineB.className = 'bank-topic-line bank-topic-b';
+          lineB.textContent = `ב׳: ${card.topicB}`;
+
+          const actions = document.createElement('div');
+          actions.style.display = 'flex';
+          actions.style.gap = '0.4rem';
+
+          const pickA = document.createElement('button');
+          pickA.type = 'button';
+          pickA.className = 'btn btn-yellow';
+          pickA.style.fontSize = '0.78rem';
+          pickA.style.flex = '1';
+          pickA.textContent = 'בחר א׳ לסיבוב';
+          pickA.addEventListener('click', () => {
+            addTopicToRound(card.topicA);
+            document.getElementById('bank-dialog').close();
+          });
+
+          const pickB = document.createElement('button');
+          pickB.type = 'button';
+          pickB.className = 'btn btn-pink';
+          pickB.style.fontSize = '0.78rem';
+          pickB.style.flex = '1';
+          pickB.textContent = 'בחר ב׳ לסיבוב';
+          pickB.addEventListener('click', () => {
+            addTopicToRound(card.topicB);
+            document.getElementById('bank-dialog').close();
+          });
+
+          actions.append(pickA, pickB);
+          li.append(lineA, lineB, actions);
+          bankListEl.appendChild(li);
+        });
+      }
+
+      // Event Listeners
+      document.getElementById('draw-card-btn').addEventListener('click', drawRandomCard);
+
+      document.getElementById('pick-topic-a').addEventListener('click', () => {
+        const deck = getFilteredCards();
+        if (!deck.length) return;
+        const card = deck[((state.currentCardIndex % deck.length) + deck.length) % deck.length];
+        addTopicToRound(card.topicA);
+      });
+
+      document.getElementById('pick-topic-b').addEventListener('click', () => {
+        const deck = getFilteredCards();
+        if (!deck.length) return;
+        const card = deck[((state.currentCardIndex % deck.length) + deck.length) % deck.length];
+        addTopicToRound(card.topicB);
+      });
+
+      document.querySelectorAll('.cat-pill').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.selectedCategory = btn.dataset.cat;
+          state.currentCardIndex = 0;
+          document.querySelectorAll('.cat-pill').forEach((b) => {
+            b.setAttribute('aria-pressed', String(b === btn));
+          });
+          saveState();
+          drawRandomCard();
+        });
+      });
+
+      document.querySelectorAll('.round-tab').forEach((tab) => {
+        tab.addEventListener('click', () => {
+          state.currentRound = Number(tab.dataset.round);
+          document.querySelectorAll('.round-tab').forEach((t) => {
+            t.setAttribute('aria-selected', String(t === tab));
+          });
+          saveState();
+          renderRoundTopics();
+          renderBoard();
+        });
+      });
+
+      document.getElementById('clear-round-btn').addEventListener('click', () => {
+        state.rounds[state.currentRound] = createEmptyRound();
+        saveState();
+        renderRoundTopics();
+        renderBoard();
+      });
+
+      document.getElementById('reset-game-btn').addEventListener('click', () => {
+        state.currentRound = 0;
+        state.rounds = [createEmptyRound(), createEmptyRound(), createEmptyRound()];
+        document.querySelectorAll('.round-tab').forEach((t, idx) => {
+          t.setAttribute('aria-selected', String(idx === 0));
+        });
+        saveState();
+        drawRandomCard();
+        renderRoundTopics();
+        renderBoard();
+      });
+
+      // Native Dialogs + Light-Dismiss Fallback
+      const rulesDialog = document.getElementById('rules-dialog');
+      const bankDialog = document.getElementById('bank-dialog');
+
+      document.getElementById('open-rules-btn').addEventListener('click', () => {
+        rulesDialog.showModal();
+      });
+
+      document.getElementById('open-bank-btn').addEventListener('click', () => {
+        renderBankList(document.getElementById('bank-search-input').value);
+        bankDialog.showModal();
+      });
+
+      document.getElementById('bank-search-input').addEventListener('input', (e) => {
+        renderBankList(e.target.value);
+      });
+
+      document.getElementById('add-card-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const inputA = document.getElementById('custom-topic-a');
+        const inputB = document.getElementById('custom-topic-b');
+        const topicA = inputA.value.trim();
+        const topicB = inputB.value.trim();
+        if (!topicA || !topicB) return;
+
+        state.customCards.unshift({
+          id: Date.now(),
+          category: 'israel',
+          topicA,
+          topicB
+        });
+        inputA.value = '';
+        inputB.value = '';
+        saveState();
+        renderCurrentCard();
+        renderBankList(document.getElementById('bank-search-input').value);
+      });
+
+      // Fallback for browsers without closedby="any" support
+      if (!('closedBy' in HTMLDialogElement.prototype)) {
+        for (const dialog of document.querySelectorAll('dialog[closedby="any"]')) {
+          dialog.addEventListener('click', (event) => {
+            if (event.target !== dialog) return;
+            const rect = dialog.getBoundingClientRect();
+            const isDialogContent =
+              rect.top <= event.clientY &&
+              event.clientY <= rect.top + rect.height &&
+              rect.left <= event.clientX &&
+              event.clientX <= rect.left + rect.width;
+            if (isDialogContent) return;
+            dialog.close();
+          });
+        }
+      }
+
+      // Initial render
+      document.querySelectorAll('.round-tab').forEach((t, idx) => {
+        t.setAttribute('aria-selected', String(idx === state.currentRound));
+      });
+      renderCurrentCard();
+      renderRoundTopics();
+      renderBoard();
+    })();
+  </script>
+</body>
+</html>
+
