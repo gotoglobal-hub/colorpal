@@ -625,13 +625,14 @@ const PAINT_TYPE_GLOSSARY = [
   { range: 'Layer', companies: ['Citadel'], description: 'Thinner and more translucent than Base paint, built for building up highlights.', whenToUse: 'Painted over a Base coat to add lighter tones and definition.' },
   { range: 'Shade', companies: ['Citadel'], description: 'A thin, ink-like wash that flows into recesses and adds depth automatically.', whenToUse: 'Applied over a base coat to shade crevices in one step — the single biggest "make it look good fast" tool.' },
   { range: 'Dry', companies: ['Citadel'], description: 'Thick, chalky paint made for drybrushing — catches only raised edges and texture.', whenToUse: 'Great for fur, rubble, fabric texture, or a fast highlight over a shaded model.' },
-  { range: 'Edge', companies: ['Citadel'], description: 'Opaque paint formulated to go on cleanly in a thin line along raised edges.', whenToUse: 'For crisp edge highlights on armor plates and blades.' },
-  { range: 'Glaze', companies: ['Citadel'], description: 'Very translucent paint that tints the color underneath rather than covering it.', whenToUse: 'Subtle color blending/toning over a finished area — an intermediate technique.' },
   { range: 'Technical', companies: ['Citadel'], description: 'Special-effect paints — texture, rust, cracked earth, snow, blood and similar.', whenToUse: 'Basing and effects, usually applied last.' },
   { range: 'Contrast', companies: ['Citadel'], description: 'One-coat paint that self-shades as it dries, combining a base color and a wash.', whenToUse: 'Fast painting: apply over a white or grey primer for a finished look in one coat.' },
+  { range: 'Tone Pro', companies: ['Citadel'], description: 'Warhammer Tone Pro 5-step color families (1 = darkest shade to 5 = lightest highlight) built for basecoating, layering, glazing, and drybrushing.', whenToUse: 'Pick a color family and step cleanly from 1 to 5 for consistent shadows and highlights.' },
   { range: 'Game Color', companies: ['Vallejo'], description: "Vallejo's general-purpose wargaming range, roughly equivalent to Citadel Base/Layer.", whenToUse: 'General base coating and layering for tabletop miniatures.' },
   { range: 'Model Color', companies: ['Vallejo'], description: 'Artist-grade acrylic aimed at scale modelers, with a huge, precise color range.', whenToUse: 'Fine detail work and historical/scale-model painting.' },
   { range: 'True Metallic Metal', companies: ['Vallejo'], description: 'A metallic system with matched light/base/shade/airbrush tones per metal color.', whenToUse: 'Realistic non-painted metal (NMM alternative) — layering the light/base/shade set together.' },
+  { range: 'Xpress Color', companies: ['Vallejo'], description: "Vallejo's matte, high-capillarity one-coat paint that shades recesses as it dries.", whenToUse: 'Fast painting over a white or light grey primer for instant shading and highlights.' },
+  { range: 'Squidmar Color', companies: ['Vallejo'], description: '72-paint system (acrylics, metallics, fluorescents, and inks) co-designed with Squidmar Miniatures for high-contrast painting.', whenToUse: 'Vibrant fantasy and display painting with rich saturation across acrylics, inks, and fluos.' },
   { range: 'Speedpaint 2.0', companies: ['Army Painter'], description: "Army Painter's one-coat contrast-style paint — similar role to Citadel Contrast.", whenToUse: 'Fast painting over a light-colored primer, one coat to a finished result.' },
   { range: 'Speedpaint Markers', companies: ['Army Painter'], description: 'Speedpaint formula in a felt-tip marker for very fast, mess-free application.', whenToUse: 'Same as Speedpaint 2.0, when speed matters more than fine control.' },
   { range: 'Formula P3', companies: ['P3 Paints'], description: "Privateer Press's studio paint system, covering base and layer duties in one range.", whenToUse: 'General base coating and highlighting, similar workflow to Citadel Base+Layer.' },
@@ -692,7 +693,7 @@ function renderTechniqueGlossary() {
 /* ── Learn: starter kit ──────────────────────────────────── */
 const STARTER_KIT = [
   { role: 'Black Base', ids: { 'Citadel': 'citadel-base-abaddon-black', 'Vallejo': 'vallejo-model-color-black', 'Army Painter': 'army-painter-sp2-grim-black' } },
-  { role: 'White Base', ids: { 'Citadel': 'citadel-base-ceramite-white', 'Vallejo': 'vallejo-model-color-white', 'Army Painter': 'army-painter-sp2-holy-white' } },
+  { role: 'White Base', ids: { 'Citadel': 'citadel-base-corax-white', 'Vallejo': 'vallejo-model-color-white', 'Army Painter': 'army-painter-sp2-holy-white' } },
   { role: 'All-Purpose Shade / Wash', ids: { 'Citadel': 'citadel-shade-nuln-oil', 'Vallejo': 'vallejo-game-color-smokey-ink' } },
   { role: 'Red', ids: { 'Citadel': 'citadel-base-khorne-red', 'Vallejo': 'vallejo-game-color-scarlet-red', 'Army Painter': 'army-painter-sp2-blood-red' } },
   { role: 'Blue', ids: { 'Citadel': 'citadel-base-macragge-blue', 'Vallejo': 'vallejo-game-color-ultramarine-blue', 'Army Painter': 'army-painter-sp2-beowulf-blue' } },
@@ -2742,6 +2743,185 @@ document.querySelectorAll('#onboarding-checklist li').forEach(li => {
 });
 
 if (!localStorage.getItem(ONBOARDING_KEY)) showOnboarding();
+
+/* ── Photo Color Matcher (client-side canvas) ────────────── */
+const photoModal       = document.getElementById('photo-modal');
+const photoCameraInput = document.getElementById('photo-camera-input');
+const photoFileInput   = document.getElementById('photo-file-input');
+const photoCanvasWrap  = document.getElementById('photo-canvas-wrap');
+const photoCanvas      = document.getElementById('photo-canvas');
+const photoHint        = document.getElementById('photo-hint');
+const photoResults     = document.getElementById('photo-results');
+const photoMatchList   = document.getElementById('photo-match-list');
+const btnPhotoWb       = document.getElementById('btn-photo-wb');
+const btnPhotoWbReset  = document.getElementById('btn-photo-wb-reset');
+
+let photoWbScale = null;
+let photoWbPicking = false;
+let lastSampledHex = null;
+
+function rgbToHex(r, g, b) {
+  return '#' + [r, g, b].map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('').toUpperCase();
+}
+
+function loadPhotoFile(file) {
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => {
+    const maxDim = 900;
+    const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+    photoCanvas.width = Math.max(1, Math.round(img.width * scale));
+    photoCanvas.height = Math.max(1, Math.round(img.height * scale));
+    const ctx = photoCanvas.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(img, 0, 0, photoCanvas.width, photoCanvas.height);
+    URL.revokeObjectURL(url);
+
+    photoWbScale = null;
+    photoWbPicking = false;
+    lastSampledHex = null;
+    btnPhotoWb.hidden = false;
+    btnPhotoWb.classList.remove('active');
+    btnPhotoWbReset.hidden = true;
+    photoCanvasWrap.hidden = false;
+    photoResults.hidden = true;
+    photoHint.textContent = 'Tap anywhere on the photo to sample its color.';
+  };
+  img.onerror = () => {
+    URL.revokeObjectURL(url);
+    showToast('Could not load image.');
+  };
+  img.src = url;
+}
+
+function sampleCanvasAt(clientX, clientY) {
+  const rect = photoCanvas.getBoundingClientRect();
+  const cx = Math.floor((clientX - rect.left) * (photoCanvas.width / rect.width));
+  const cy = Math.floor((clientY - rect.top) * (photoCanvas.height / rect.height));
+  const radius = 2;
+  const x0 = Math.max(0, cx - radius);
+  const y0 = Math.max(0, cy - radius);
+  const w = Math.min(photoCanvas.width - x0, radius * 2 + 1);
+  const h = Math.min(photoCanvas.height - y0, radius * 2 + 1);
+  const ctx = photoCanvas.getContext('2d', { willReadFrequently: true });
+  const data = ctx.getImageData(x0, y0, w, h).data;
+
+  let rSum = 0, gSum = 0, bSum = 0;
+  const count = data.length / 4;
+  for (let i = 0; i < data.length; i += 4) {
+    rSum += data[i];
+    gSum += data[i + 1];
+    bSum += data[i + 2];
+  }
+  let r = rSum / count;
+  let g = gSum / count;
+  let b = bSum / count;
+
+  if (photoWbPicking) {
+    const avg = (r + g + b) / 3 || 1;
+    photoWbScale = [
+      Math.min(2.5, Math.max(0.4, avg / Math.max(1, r))),
+      Math.min(2.5, Math.max(0.4, avg / Math.max(1, g))),
+      Math.min(2.5, Math.max(0.4, avg / Math.max(1, b))),
+    ];
+    photoWbPicking = false;
+    btnPhotoWb.classList.remove('active');
+    btnPhotoWbReset.hidden = false;
+    photoHint.textContent = 'White balance set. Now tap the paint color to match.';
+    showToast('White balance calibrated.');
+    return;
+  }
+
+  if (photoWbScale) {
+    r *= photoWbScale[0];
+    g *= photoWbScale[1];
+    b *= photoWbScale[2];
+  }
+
+  lastSampledHex = rgbToHex(r, g, b);
+  renderPhotoMatches();
+}
+
+function renderPhotoMatches() {
+  if (!lastSampledHex || !allColors.length) return;
+  document.getElementById('photo-sampled-swatch').style.background = lastSampledHex;
+  document.getElementById('photo-sampled-hex').textContent = lastSampledHex;
+
+  const owned = getOwned();
+  const cart = getCart();
+  const matches = allColors
+    .map(c => ({ paint: c, dist: colorDistance(lastSampledHex, c.hex) }))
+    .sort((a, b) => a.dist - b.dist)
+    .slice(0, 5);
+
+  photoMatchList.innerHTML = matches.map(({ paint }) => {
+    const isOwned = owned.has(paint.id);
+    const inCart = cart.has(paint.id);
+    return `
+      <div class="photo-match-row">
+        <span class="color-circle" style="background:${paint.hex}"></span>
+        <div class="photo-match-info">
+          <div class="photo-match-name">${paint.name}</div>
+          <div class="photo-match-meta">${paint.company} · ${paint.brand} · ${paint.hex}</div>
+        </div>
+        <div class="photo-match-actions">
+          <button class="action-btn${isOwned ? ' active' : ''}" data-photo-own="${paint.id}" type="button">${isOwned ? '✓ Owned' : '+ Own'}</button>
+          <button class="action-btn${inCart ? ' active' : ''}" data-photo-cart="${paint.id}" type="button">${inCart ? '✓ Cart' : '🛒'}</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  photoMatchList.querySelectorAll('[data-photo-own]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      toggleOwned(btn.dataset.photoOwn);
+      renderPhotoMatches();
+    });
+  });
+  photoMatchList.querySelectorAll('[data-photo-cart]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      toggleCart(btn.dataset.photoCart);
+      renderPhotoMatches();
+    });
+  });
+
+  photoResults.hidden = false;
+}
+
+document.getElementById('btn-photo-match').addEventListener('click', () => {
+  photoModal.hidden = false;
+});
+document.getElementById('btn-photo-close').addEventListener('click', () => {
+  photoModal.hidden = true;
+});
+photoModal.addEventListener('click', e => {
+  if (e.target === photoModal) photoModal.hidden = true;
+});
+photoCameraInput.addEventListener('change', e => {
+  loadPhotoFile(e.target.files[0]);
+  e.target.value = '';
+});
+photoFileInput.addEventListener('change', e => {
+  loadPhotoFile(e.target.files[0]);
+  e.target.value = '';
+});
+photoCanvas.addEventListener('click', e => {
+  sampleCanvasAt(e.clientX, e.clientY);
+});
+btnPhotoWb.addEventListener('click', () => {
+  photoWbPicking = !photoWbPicking;
+  btnPhotoWb.classList.toggle('active', photoWbPicking);
+  photoHint.textContent = photoWbPicking
+    ? 'Tap a white or neutral grey surface in the photo.'
+    : 'Tap anywhere on the photo to sample its color.';
+});
+btnPhotoWbReset.addEventListener('click', () => {
+  photoWbScale = null;
+  photoWbPicking = false;
+  btnPhotoWb.classList.remove('active');
+  btnPhotoWbReset.hidden = true;
+  photoHint.textContent = 'White balance reset. Tap the paint color to sample.';
+});
 
 /* ── Init ─────────────────────────────────────────────────── */
 fetch('colors.json')

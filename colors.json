@@ -56,13 +56,6 @@
     "hex": "#90A8A8"
   },
   {
-    "id": "citadel-base-ceramite-white",
-    "company": "Citadel",
-    "brand": "Base",
-    "name": "Ceramite White",
-    "hex": "#FFFFFF"
-  },
-  {
     "id": "citadel-base-daemonette-hide",
     "company": "Citadel",
     "brand": "Base",
@@ -1111,90 +1104,6 @@
     "brand": "Dry",
     "name": "Wrack White",
     "hex": "#FCFBFA"
-  },
-  {
-    "id": "citadel-edge-baharroth-blue",
-    "company": "Citadel",
-    "brand": "Edge",
-    "name": "Baharroth Blue",
-    "hex": "#58C1CD"
-  },
-  {
-    "id": "citadel-edge-blue-horror",
-    "company": "Citadel",
-    "brand": "Edge",
-    "name": "Blue Horror",
-    "hex": "#A2BAD2"
-  },
-  {
-    "id": "citadel-edge-dechala-lilac",
-    "company": "Citadel",
-    "brand": "Edge",
-    "name": "Dechala Lilac",
-    "hex": "#B69FCC"
-  },
-  {
-    "id": "citadel-edge-dorn-yellow",
-    "company": "Citadel",
-    "brand": "Edge",
-    "name": "Dorn Yellow",
-    "hex": "#FFF200"
-  },
-  {
-    "id": "citadel-edge-fulgrim-pink",
-    "company": "Citadel",
-    "brand": "Edge",
-    "name": "Fulgrim Pink",
-    "hex": "#F4AFCD"
-  },
-  {
-    "id": "citadel-edge-gauss-blaster-green",
-    "company": "Citadel",
-    "brand": "Edge",
-    "name": "Gauss Blaster Green",
-    "hex": "#84C3AA"
-  },
-  {
-    "id": "citadel-edge-krieg-khaki",
-    "company": "Citadel",
-    "brand": "Edge",
-    "name": "Krieg Khaki",
-    "hex": "#C0BD81"
-  },
-  {
-    "id": "citadel-edge-lugganath-orange",
-    "company": "Citadel",
-    "brand": "Edge",
-    "name": "Lugganath Orange",
-    "hex": "#F79E86"
-  },
-  {
-    "id": "citadel-glaze-bloodletter",
-    "company": "Citadel",
-    "brand": "Glaze",
-    "name": "Bloodletter",
-    "hex": "#F37355"
-  },
-  {
-    "id": "citadel-glaze-guilliman-blue",
-    "company": "Citadel",
-    "brand": "Glaze",
-    "name": "Guilliman Blue",
-    "hex": "#2F9AD6"
-  },
-  {
-    "id": "citadel-glaze-lamenters-yellow",
-    "company": "Citadel",
-    "brand": "Glaze",
-    "name": "Lamenters Yellow",
-    "hex": "#FFF56B"
-  },
-  {
-    "id": "citadel-glaze-waywatcher-green",
-    "company": "Citadel",
-    "brand": "Glaze",
-    "name": "Waywatcher Green",
-    "hex": "#6DC066"
   },
   {
     "id": "citadel-technical-ardcoat",
@@ -7299,5 +7208,1853 @@
     "brand": "Contrast",
     "name": "Asurmen Blue",
     "hex": "#1A4A9A"
+  },
+  {
+    "id": "citadel-tone-pro-blackstone-void-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Blackstone Void 1",
+    "hex": "#000208"
+  },
+  {
+    "id": "citadel-tone-pro-blackstone-void-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Blackstone Void 2",
+    "hex": "#4E5458"
+  },
+  {
+    "id": "citadel-tone-pro-blackstone-void-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Blackstone Void 3",
+    "hex": "#6E7074"
+  },
+  {
+    "id": "citadel-tone-pro-blackstone-void-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Blackstone Void 4",
+    "hex": "#9B9D9F"
+  },
+  {
+    "id": "citadel-tone-pro-blackstone-void-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Blackstone Void 5",
+    "hex": "#FFFFFF"
+  },
+  {
+    "id": "citadel-tone-pro-bloodtoof-red-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Bloodtoof Red 1",
+    "hex": "#581E16"
+  },
+  {
+    "id": "citadel-tone-pro-bloodtoof-red-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Bloodtoof Red 2",
+    "hex": "#94001E"
+  },
+  {
+    "id": "citadel-tone-pro-bloodtoof-red-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Bloodtoof Red 3",
+    "hex": "#AD072B"
+  },
+  {
+    "id": "citadel-tone-pro-bloodtoof-red-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Bloodtoof Red 4",
+    "hex": "#D60020"
+  },
+  {
+    "id": "citadel-tone-pro-bloodtoof-red-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Bloodtoof Red 5",
+    "hex": "#EF353C"
+  },
+  {
+    "id": "citadel-tone-pro-blue-gorkshroom-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Blue Gorkshroom 1",
+    "hex": "#002356"
+  },
+  {
+    "id": "citadel-tone-pro-blue-gorkshroom-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Blue Gorkshroom 2",
+    "hex": "#004487"
+  },
+  {
+    "id": "citadel-tone-pro-blue-gorkshroom-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Blue Gorkshroom 3",
+    "hex": "#0057A3"
+  },
+  {
+    "id": "citadel-tone-pro-blue-gorkshroom-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Blue Gorkshroom 4",
+    "hex": "#006CAD"
+  },
+  {
+    "id": "citadel-tone-pro-blue-gorkshroom-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Blue Gorkshroom 5",
+    "hex": "#007BB2"
+  },
+  {
+    "id": "citadel-tone-pro-carmine-blades-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Carmine Blades 1",
+    "hex": "#3C262A"
+  },
+  {
+    "id": "citadel-tone-pro-carmine-blades-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Carmine Blades 2",
+    "hex": "#5B3539"
+  },
+  {
+    "id": "citadel-tone-pro-carmine-blades-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Carmine Blades 3",
+    "hex": "#750019"
+  },
+  {
+    "id": "citadel-tone-pro-carmine-blades-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Carmine Blades 4",
+    "hex": "#910022"
+  },
+  {
+    "id": "citadel-tone-pro-carmine-blades-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Carmine Blades 5",
+    "hex": "#C64D50"
+  },
+  {
+    "id": "citadel-tone-pro-carthalos-skin-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Carthalos Skin 1",
+    "hex": "#241815"
+  },
+  {
+    "id": "citadel-tone-pro-carthalos-skin-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Carthalos Skin 2",
+    "hex": "#2D140C"
+  },
+  {
+    "id": "citadel-tone-pro-carthalos-skin-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Carthalos Skin 3",
+    "hex": "#4E2212"
+  },
+  {
+    "id": "citadel-tone-pro-carthalos-skin-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Carthalos Skin 4",
+    "hex": "#5F3A37"
+  },
+  {
+    "id": "citadel-tone-pro-carthalos-skin-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Carthalos Skin 5",
+    "hex": "#795346"
+  },
+  {
+    "id": "citadel-tone-pro-celestine-skin-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Celestine Skin 1",
+    "hex": "#CD8169"
+  },
+  {
+    "id": "citadel-tone-pro-celestine-skin-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Celestine Skin 2",
+    "hex": "#D58B70"
+  },
+  {
+    "id": "citadel-tone-pro-celestine-skin-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Celestine Skin 3",
+    "hex": "#D99578"
+  },
+  {
+    "id": "citadel-tone-pro-celestine-skin-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Celestine Skin 4",
+    "hex": "#EAA889"
+  },
+  {
+    "id": "citadel-tone-pro-celestine-skin-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Celestine Skin 5",
+    "hex": "#DDB398"
+  },
+  {
+    "id": "citadel-tone-pro-chotec-orange-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Chotec Orange 1",
+    "hex": "#93150B"
+  },
+  {
+    "id": "citadel-tone-pro-chotec-orange-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Chotec Orange 2",
+    "hex": "#B82F2D"
+  },
+  {
+    "id": "citadel-tone-pro-chotec-orange-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Chotec Orange 3",
+    "hex": "#E04A33"
+  },
+  {
+    "id": "citadel-tone-pro-chotec-orange-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Chotec Orange 4",
+    "hex": "#F56230"
+  },
+  {
+    "id": "citadel-tone-pro-chotec-orange-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Chotec Orange 5",
+    "hex": "#F78030"
+  },
+  {
+    "id": "citadel-tone-pro-craventhrone-cloak-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Craventhrone Cloak 1",
+    "hex": "#08232E"
+  },
+  {
+    "id": "citadel-tone-pro-craventhrone-cloak-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Craventhrone Cloak 2",
+    "hex": "#12373E"
+  },
+  {
+    "id": "citadel-tone-pro-craventhrone-cloak-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Craventhrone Cloak 3",
+    "hex": "#164858"
+  },
+  {
+    "id": "citadel-tone-pro-craventhrone-cloak-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Craventhrone Cloak 4",
+    "hex": "#41717D"
+  },
+  {
+    "id": "citadel-tone-pro-craventhrone-cloak-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Craventhrone Cloak 5",
+    "hex": "#598A8E"
+  },
+  {
+    "id": "citadel-tone-pro-dataslate-grey-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Dataslate Grey 1",
+    "hex": "#2B2D28"
+  },
+  {
+    "id": "citadel-tone-pro-dataslate-grey-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Dataslate Grey 2",
+    "hex": "#3E3D35"
+  },
+  {
+    "id": "citadel-tone-pro-dataslate-grey-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Dataslate Grey 3",
+    "hex": "#555650"
+  },
+  {
+    "id": "citadel-tone-pro-dataslate-grey-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Dataslate Grey 4",
+    "hex": "#737069"
+  },
+  {
+    "id": "citadel-tone-pro-dataslate-grey-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Dataslate Grey 5",
+    "hex": "#878983"
+  },
+  {
+    "id": "citadel-tone-pro-enrapturess-dusk-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Enrapturess Dusk 1",
+    "hex": "#1E1435"
+  },
+  {
+    "id": "citadel-tone-pro-enrapturess-dusk-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Enrapturess Dusk 2",
+    "hex": "#413549"
+  },
+  {
+    "id": "citadel-tone-pro-enrapturess-dusk-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Enrapturess Dusk 3",
+    "hex": "#534D5E"
+  },
+  {
+    "id": "citadel-tone-pro-enrapturess-dusk-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Enrapturess Dusk 4",
+    "hex": "#6E6773"
+  },
+  {
+    "id": "citadel-tone-pro-enrapturess-dusk-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Enrapturess Dusk 5",
+    "hex": "#817A86"
+  },
+  {
+    "id": "citadel-tone-pro-eye-of-terror-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Eye of Terror 1",
+    "hex": "#920030"
+  },
+  {
+    "id": "citadel-tone-pro-eye-of-terror-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Eye of Terror 2",
+    "hex": "#BD0047"
+  },
+  {
+    "id": "citadel-tone-pro-eye-of-terror-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Eye of Terror 3",
+    "hex": "#C20060"
+  },
+  {
+    "id": "citadel-tone-pro-eye-of-terror-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Eye of Terror 4",
+    "hex": "#D4417B"
+  },
+  {
+    "id": "citadel-tone-pro-eye-of-terror-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Eye of Terror 5",
+    "hex": "#DB6499"
+  },
+  {
+    "id": "citadel-tone-pro-gnarlwood-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Gnarlwood 1",
+    "hex": "#342928"
+  },
+  {
+    "id": "citadel-tone-pro-gnarlwood-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Gnarlwood 2",
+    "hex": "#514235"
+  },
+  {
+    "id": "citadel-tone-pro-gnarlwood-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Gnarlwood 3",
+    "hex": "#725C44"
+  },
+  {
+    "id": "citadel-tone-pro-gnarlwood-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Gnarlwood 4",
+    "hex": "#776857"
+  },
+  {
+    "id": "citadel-tone-pro-gnarlwood-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Gnarlwood 5",
+    "hex": "#887B67"
+  },
+  {
+    "id": "citadel-tone-pro-green-morkshroom-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Green Morkshroom 1",
+    "hex": "#143230"
+  },
+  {
+    "id": "citadel-tone-pro-green-morkshroom-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Green Morkshroom 2",
+    "hex": "#004F48"
+  },
+  {
+    "id": "citadel-tone-pro-green-morkshroom-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Green Morkshroom 3",
+    "hex": "#006458"
+  },
+  {
+    "id": "citadel-tone-pro-green-morkshroom-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Green Morkshroom 4",
+    "hex": "#007B6D"
+  },
+  {
+    "id": "citadel-tone-pro-green-morkshroom-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Green Morkshroom 5",
+    "hex": "#37AC83"
+  },
+  {
+    "id": "citadel-tone-pro-hawkshroud-yellow-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Hawkshroud Yellow 1",
+    "hex": "#F69113"
+  },
+  {
+    "id": "citadel-tone-pro-hawkshroud-yellow-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Hawkshroud Yellow 2",
+    "hex": "#FBA200"
+  },
+  {
+    "id": "citadel-tone-pro-hawkshroud-yellow-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Hawkshroud Yellow 3",
+    "hex": "#FEBB00"
+  },
+  {
+    "id": "citadel-tone-pro-hawkshroud-yellow-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Hawkshroud Yellow 4",
+    "hex": "#FFD300"
+  },
+  {
+    "id": "citadel-tone-pro-hawkshroud-yellow-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Hawkshroud Yellow 5",
+    "hex": "#FDE07E"
+  },
+  {
+    "id": "citadel-tone-pro-hierotek-green-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Hierotek Green 1",
+    "hex": "#00321C"
+  },
+  {
+    "id": "citadel-tone-pro-hierotek-green-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Hierotek Green 2",
+    "hex": "#00542D"
+  },
+  {
+    "id": "citadel-tone-pro-hierotek-green-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Hierotek Green 3",
+    "hex": "#006A2E"
+  },
+  {
+    "id": "citadel-tone-pro-hierotek-green-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Hierotek Green 4",
+    "hex": "#00894E"
+  },
+  {
+    "id": "citadel-tone-pro-hierotek-green-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Hierotek Green 5",
+    "hex": "#00B681"
+  },
+  {
+    "id": "citadel-tone-pro-hive-fleet-purple-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Hive Fleet Purple 1",
+    "hex": "#1E1A40"
+  },
+  {
+    "id": "citadel-tone-pro-hive-fleet-purple-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Hive Fleet Purple 2",
+    "hex": "#3C1E54"
+  },
+  {
+    "id": "citadel-tone-pro-hive-fleet-purple-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Hive Fleet Purple 3",
+    "hex": "#655192"
+  },
+  {
+    "id": "citadel-tone-pro-hive-fleet-purple-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Hive Fleet Purple 4",
+    "hex": "#8769B1"
+  },
+  {
+    "id": "citadel-tone-pro-hive-fleet-purple-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Hive Fleet Purple 5",
+    "hex": "#8F82AE"
+  },
+  {
+    "id": "citadel-tone-pro-kasrkin-green-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Kasrkin Green 1",
+    "hex": "#001B1B"
+  },
+  {
+    "id": "citadel-tone-pro-kasrkin-green-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Kasrkin Green 2",
+    "hex": "#1F4530"
+  },
+  {
+    "id": "citadel-tone-pro-kasrkin-green-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Kasrkin Green 3",
+    "hex": "#40713C"
+  },
+  {
+    "id": "citadel-tone-pro-kasrkin-green-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Kasrkin Green 4",
+    "hex": "#678E55"
+  },
+  {
+    "id": "citadel-tone-pro-kasrkin-green-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Kasrkin Green 5",
+    "hex": "#86A978"
+  },
+  {
+    "id": "citadel-tone-pro-khemri-sands-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Khemri Sands 1",
+    "hex": "#6C4B12"
+  },
+  {
+    "id": "citadel-tone-pro-khemri-sands-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Khemri Sands 2",
+    "hex": "#8D5E06"
+  },
+  {
+    "id": "citadel-tone-pro-khemri-sands-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Khemri Sands 3",
+    "hex": "#B1791E"
+  },
+  {
+    "id": "citadel-tone-pro-khemri-sands-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Khemri Sands 4",
+    "hex": "#CF8400"
+  },
+  {
+    "id": "citadel-tone-pro-khemri-sands-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Khemri Sands 5",
+    "hex": "#DC9A00"
+  },
+  {
+    "id": "citadel-tone-pro-kruleboyz-green-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Kruleboyz Green 1",
+    "hex": "#4A7D36"
+  },
+  {
+    "id": "citadel-tone-pro-kruleboyz-green-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Kruleboyz Green 2",
+    "hex": "#627F3C"
+  },
+  {
+    "id": "citadel-tone-pro-kruleboyz-green-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Kruleboyz Green 3",
+    "hex": "#7A823F"
+  },
+  {
+    "id": "citadel-tone-pro-kruleboyz-green-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Kruleboyz Green 4",
+    "hex": "#939859"
+  },
+  {
+    "id": "citadel-tone-pro-kruleboyz-green-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Kruleboyz Green 5",
+    "hex": "#AEB16C"
+  },
+  {
+    "id": "citadel-tone-pro-lustria-green-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Lustria Green 1",
+    "hex": "#004816"
+  },
+  {
+    "id": "citadel-tone-pro-lustria-green-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Lustria Green 2",
+    "hex": "#006929"
+  },
+  {
+    "id": "citadel-tone-pro-lustria-green-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Lustria Green 3",
+    "hex": "#007931"
+  },
+  {
+    "id": "citadel-tone-pro-lustria-green-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Lustria Green 4",
+    "hex": "#34AD40"
+  },
+  {
+    "id": "citadel-tone-pro-lustria-green-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Lustria Green 5",
+    "hex": "#4EB33F"
+  },
+  {
+    "id": "citadel-tone-pro-magnus-the-red-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Magnus the Red 1",
+    "hex": "#3A202D"
+  },
+  {
+    "id": "citadel-tone-pro-magnus-the-red-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Magnus the Red 2",
+    "hex": "#4A123E"
+  },
+  {
+    "id": "citadel-tone-pro-magnus-the-red-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Magnus the Red 3",
+    "hex": "#76003F"
+  },
+  {
+    "id": "citadel-tone-pro-magnus-the-red-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Magnus the Red 4",
+    "hex": "#9A1B59"
+  },
+  {
+    "id": "citadel-tone-pro-magnus-the-red-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Magnus the Red 5",
+    "hex": "#AA4277"
+  },
+  {
+    "id": "citadel-tone-pro-megaboss-yellow-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Megaboss Yellow 1",
+    "hex": "#F9AD00"
+  },
+  {
+    "id": "citadel-tone-pro-megaboss-yellow-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Megaboss Yellow 2",
+    "hex": "#F8CE00"
+  },
+  {
+    "id": "citadel-tone-pro-megaboss-yellow-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Megaboss Yellow 3",
+    "hex": "#FFE440"
+  },
+  {
+    "id": "citadel-tone-pro-megaboss-yellow-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Megaboss Yellow 4",
+    "hex": "#F8E85F"
+  },
+  {
+    "id": "citadel-tone-pro-megaboss-yellow-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Megaboss Yellow 5",
+    "hex": "#FFF175"
+  },
+  {
+    "id": "citadel-tone-pro-necrolith-bone-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Necrolith Bone 1",
+    "hex": "#877561"
+  },
+  {
+    "id": "citadel-tone-pro-necrolith-bone-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Necrolith Bone 2",
+    "hex": "#B0916A"
+  },
+  {
+    "id": "citadel-tone-pro-necrolith-bone-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Necrolith Bone 3",
+    "hex": "#B99F7D"
+  },
+  {
+    "id": "citadel-tone-pro-necrolith-bone-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Necrolith Bone 4",
+    "hex": "#C1AB86"
+  },
+  {
+    "id": "citadel-tone-pro-necrolith-bone-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Necrolith Bone 5",
+    "hex": "#BCB79E"
+  },
+  {
+    "id": "citadel-tone-pro-plague-toad-venom-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Plague Toad Venom 1",
+    "hex": "#49892D"
+  },
+  {
+    "id": "citadel-tone-pro-plague-toad-venom-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Plague Toad Venom 2",
+    "hex": "#549B32"
+  },
+  {
+    "id": "citadel-tone-pro-plague-toad-venom-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Plague Toad Venom 3",
+    "hex": "#80C234"
+  },
+  {
+    "id": "citadel-tone-pro-plague-toad-venom-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Plague Toad Venom 4",
+    "hex": "#9CC829"
+  },
+  {
+    "id": "citadel-tone-pro-plague-toad-venom-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Plague Toad Venom 5",
+    "hex": "#C8D600"
+  },
+  {
+    "id": "citadel-tone-pro-scinari-blue-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Scinari Blue 1",
+    "hex": "#004789"
+  },
+  {
+    "id": "citadel-tone-pro-scinari-blue-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Scinari Blue 2",
+    "hex": "#005895"
+  },
+  {
+    "id": "citadel-tone-pro-scinari-blue-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Scinari Blue 3",
+    "hex": "#006C9A"
+  },
+  {
+    "id": "citadel-tone-pro-scinari-blue-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Scinari Blue 4",
+    "hex": "#0088BB"
+  },
+  {
+    "id": "citadel-tone-pro-scinari-blue-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Scinari Blue 5",
+    "hex": "#009AB9"
+  },
+  {
+    "id": "citadel-tone-pro-seraphon-blue-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Seraphon Blue 1",
+    "hex": "#002F34"
+  },
+  {
+    "id": "citadel-tone-pro-seraphon-blue-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Seraphon Blue 2",
+    "hex": "#004650"
+  },
+  {
+    "id": "citadel-tone-pro-seraphon-blue-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Seraphon Blue 3",
+    "hex": "#006874"
+  },
+  {
+    "id": "citadel-tone-pro-seraphon-blue-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Seraphon Blue 4",
+    "hex": "#008D92"
+  },
+  {
+    "id": "citadel-tone-pro-seraphon-blue-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Seraphon Blue 5",
+    "hex": "#00B7B9"
+  },
+  {
+    "id": "citadel-tone-pro-shalaxi-violet-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Shalaxi Violet 1",
+    "hex": "#130040"
+  },
+  {
+    "id": "citadel-tone-pro-shalaxi-violet-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Shalaxi Violet 2",
+    "hex": "#262E6D"
+  },
+  {
+    "id": "citadel-tone-pro-shalaxi-violet-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Shalaxi Violet 3",
+    "hex": "#324E99"
+  },
+  {
+    "id": "citadel-tone-pro-shalaxi-violet-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Shalaxi Violet 4",
+    "hex": "#6472B9"
+  },
+  {
+    "id": "citadel-tone-pro-shalaxi-violet-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Shalaxi Violet 5",
+    "hex": "#7E8BC8"
+  },
+  {
+    "id": "citadel-tone-pro-stormwolf-blue-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Stormwolf Blue 1",
+    "hex": "#233F55"
+  },
+  {
+    "id": "citadel-tone-pro-stormwolf-blue-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Stormwolf Blue 2",
+    "hex": "#405568"
+  },
+  {
+    "id": "citadel-tone-pro-stormwolf-blue-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Stormwolf Blue 3",
+    "hex": "#54697D"
+  },
+  {
+    "id": "citadel-tone-pro-stormwolf-blue-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Stormwolf Blue 4",
+    "hex": "#6E95A4"
+  },
+  {
+    "id": "citadel-tone-pro-stormwolf-blue-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Stormwolf Blue 5",
+    "hex": "#87AFB9"
+  },
+  {
+    "id": "citadel-tone-pro-taunar-ochre-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Ta'unar Ochre 1",
+    "hex": "#BB5528"
+  },
+  {
+    "id": "citadel-tone-pro-taunar-ochre-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Ta'unar Ochre 2",
+    "hex": "#D27144"
+  },
+  {
+    "id": "citadel-tone-pro-taunar-ochre-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Ta'unar Ochre 3",
+    "hex": "#E78344"
+  },
+  {
+    "id": "citadel-tone-pro-taunar-ochre-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Ta'unar Ochre 4",
+    "hex": "#EA9B6B"
+  },
+  {
+    "id": "citadel-tone-pro-taunar-ochre-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Ta'unar Ochre 5",
+    "hex": "#E9B06E"
+  },
+  {
+    "id": "citadel-tone-pro-ultramar-blue-1",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Ultramar Blue 1",
+    "hex": "#001A42"
+  },
+  {
+    "id": "citadel-tone-pro-ultramar-blue-2",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Ultramar Blue 2",
+    "hex": "#0F3062"
+  },
+  {
+    "id": "citadel-tone-pro-ultramar-blue-3",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Ultramar Blue 3",
+    "hex": "#0D4F88"
+  },
+  {
+    "id": "citadel-tone-pro-ultramar-blue-4",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Ultramar Blue 4",
+    "hex": "#436CA1"
+  },
+  {
+    "id": "citadel-tone-pro-ultramar-blue-5",
+    "company": "Citadel",
+    "brand": "Tone Pro",
+    "name": "Ultramar Blue 5",
+    "hex": "#6D9ECF"
+  },
+  {
+    "id": "vallejo-xpress-color-templar-white",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Templar White",
+    "hex": "#CCCECD"
+  },
+  {
+    "id": "vallejo-xpress-color-dwarf-skin",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Dwarf Skin",
+    "hex": "#833E2F"
+  },
+  {
+    "id": "vallejo-xpress-color-imperial-yellow",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Imperial Yellow",
+    "hex": "#F59F2E"
+  },
+  {
+    "id": "vallejo-xpress-color-nuclear-yellow",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Nuclear Yellow",
+    "hex": "#DD9213"
+  },
+  {
+    "id": "vallejo-xpress-color-martian-orange",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Martian Orange",
+    "hex": "#CD4619"
+  },
+  {
+    "id": "vallejo-xpress-color-plasma-red",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Plasma Red",
+    "hex": "#A52822"
+  },
+  {
+    "id": "vallejo-xpress-color-cardinal-purple",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Cardinal Purple",
+    "hex": "#C81928"
+  },
+  {
+    "id": "vallejo-xpress-color-deep-purple",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Deep Purple",
+    "hex": "#6F2B42"
+  },
+  {
+    "id": "vallejo-xpress-color-gloomy-violet",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Gloomy Violet",
+    "hex": "#402F59"
+  },
+  {
+    "id": "vallejo-xpress-color-mystic-blue",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Mystic Blue",
+    "hex": "#004A87"
+  },
+  {
+    "id": "vallejo-xpress-color-storm-blue",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Storm Blue",
+    "hex": "#303A7F"
+  },
+  {
+    "id": "vallejo-xpress-color-omega-blue",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Omega Blue",
+    "hex": "#3A365B"
+  },
+  {
+    "id": "vallejo-xpress-color-caribbean-turquoise",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Caribbean Turquoise",
+    "hex": "#005961"
+  },
+  {
+    "id": "vallejo-xpress-color-orc-skin",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Orc Skin",
+    "hex": "#5E752D"
+  },
+  {
+    "id": "vallejo-xpress-color-snake-green",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Snake Green",
+    "hex": "#015A46"
+  },
+  {
+    "id": "vallejo-xpress-color-lizard-green",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Lizard Green",
+    "hex": "#223A2C"
+  },
+  {
+    "id": "vallejo-xpress-color-plague-green",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Plague Green",
+    "hex": "#4C4D2E"
+  },
+  {
+    "id": "vallejo-xpress-color-copper-brown",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Copper Brown",
+    "hex": "#532C25"
+  },
+  {
+    "id": "vallejo-xpress-color-space-grey",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Space Grey",
+    "hex": "#2D5A5D"
+  },
+  {
+    "id": "vallejo-xpress-color-black-lotus",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Black Lotus",
+    "hex": "#302627"
+  },
+  {
+    "id": "vallejo-xpress-color-mummy-white",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Mummy White",
+    "hex": "#CFB496"
+  },
+  {
+    "id": "vallejo-xpress-color-bag-of-bones",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Bag of Bones",
+    "hex": "#C1A16E"
+  },
+  {
+    "id": "vallejo-xpress-color-khaki-drill",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Khaki Drill",
+    "hex": "#C7945B"
+  },
+  {
+    "id": "vallejo-xpress-color-rotten-flesh",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Rotten Flesh",
+    "hex": "#89763B"
+  },
+  {
+    "id": "vallejo-xpress-color-military-yellow",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Military Yellow",
+    "hex": "#805E30"
+  },
+  {
+    "id": "vallejo-xpress-color-desert-ochre",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Desert Ochre",
+    "hex": "#9D6729"
+  },
+  {
+    "id": "vallejo-xpress-color-chameleon-orange",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Chameleon Orange",
+    "hex": "#CE652E"
+  },
+  {
+    "id": "vallejo-xpress-color-fairy-skin",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Fairy Skin",
+    "hex": "#CA8774"
+  },
+  {
+    "id": "vallejo-xpress-color-demonic-skin",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Demonic Skin",
+    "hex": "#965C58"
+  },
+  {
+    "id": "vallejo-xpress-color-fluid-pink",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Fluid Pink",
+    "hex": "#C06793"
+  },
+  {
+    "id": "vallejo-xpress-color-starship-steel",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Starship Steel",
+    "hex": "#517375"
+  },
+  {
+    "id": "vallejo-xpress-color-iceberg-grey",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Iceberg Grey",
+    "hex": "#42576C"
+  },
+  {
+    "id": "vallejo-xpress-color-forest-green",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Forest Green",
+    "hex": "#11662D"
+  },
+  {
+    "id": "vallejo-xpress-color-armor-green",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Armor Green",
+    "hex": "#1E462B"
+  },
+  {
+    "id": "vallejo-xpress-color-camouflage-green",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Camouflage Green",
+    "hex": "#605D32"
+  },
+  {
+    "id": "vallejo-xpress-color-commando-green",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Commando Green",
+    "hex": "#3E4F3C"
+  },
+  {
+    "id": "vallejo-xpress-color-landser-grey",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Landser Grey",
+    "hex": "#524F48"
+  },
+  {
+    "id": "vallejo-xpress-color-tanned-skin",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Tanned Skin",
+    "hex": "#81452D"
+  },
+  {
+    "id": "vallejo-xpress-color-mahogany",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Mahogany",
+    "hex": "#5A3930"
+  },
+  {
+    "id": "vallejo-xpress-color-battledress-brown",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Battledress Brown",
+    "hex": "#5D4C32"
+  },
+  {
+    "id": "vallejo-xpress-color-muddy-ground",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Muddy Ground",
+    "hex": "#452E28"
+  },
+  {
+    "id": "vallejo-xpress-color-greasy-black",
+    "company": "Vallejo",
+    "brand": "Xpress Color",
+    "name": "Greasy Black",
+    "hex": "#413736"
+  },
+  {
+    "id": "vallejo-squidmar-color-holy-wight",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Holy Wight",
+    "hex": "#F0F2F5"
+  },
+  {
+    "id": "vallejo-squidmar-color-old-skull",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Old Skull",
+    "hex": "#EDE6D3"
+  },
+  {
+    "id": "vallejo-squidmar-color-northern-tan",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Northern Tan",
+    "hex": "#DFC2B0"
+  },
+  {
+    "id": "vallejo-squidmar-color-sun-kissed-skin",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Sun Kissed Skin",
+    "hex": "#E89885"
+  },
+  {
+    "id": "vallejo-squidmar-color-dunsk-r-skin",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Dunskär Skin",
+    "hex": "#D97F6D"
+  },
+  {
+    "id": "vallejo-squidmar-color-steve-flesh",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Steve Flesh",
+    "hex": "#B57863"
+  },
+  {
+    "id": "vallejo-squidmar-color-cursed-skin",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Cursed Skin",
+    "hex": "#8A655D"
+  },
+  {
+    "id": "vallejo-squidmar-color-final-yellow",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Final Yellow",
+    "hex": "#EFEA7E"
+  },
+  {
+    "id": "vallejo-squidmar-color-owls-eye",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Owl's Eye",
+    "hex": "#F2B81D"
+  },
+  {
+    "id": "vallejo-squidmar-color-goldcoin-yellow",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Goldcoin Yellow",
+    "hex": "#EFA110"
+  },
+  {
+    "id": "vallejo-squidmar-color-squid-orange",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Squid Orange",
+    "hex": "#F16722"
+  },
+  {
+    "id": "vallejo-squidmar-color-tetanus-orange",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Tetanus Orange",
+    "hex": "#C95240"
+  },
+  {
+    "id": "vallejo-squidmar-color-deadliest-red",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Deadliest Red",
+    "hex": "#C9242B"
+  },
+  {
+    "id": "vallejo-squidmar-color-murdered",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Murdered",
+    "hex": "#9C1C1C"
+  },
+  {
+    "id": "vallejo-squidmar-color-gut-red",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Gut Red",
+    "hex": "#7A1722"
+  },
+  {
+    "id": "vallejo-squidmar-color-tentacle-pink",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Tentacle Pink",
+    "hex": "#C84A85"
+  },
+  {
+    "id": "vallejo-squidmar-color-hell-pink",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Hell Pink",
+    "hex": "#A82A6B"
+  },
+  {
+    "id": "vallejo-squidmar-color-witches-purple",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Witches Purple",
+    "hex": "#54192E"
+  },
+  {
+    "id": "vallejo-squidmar-color-tulip-fever",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Tulip Fever",
+    "hex": "#9E7BB8"
+  },
+  {
+    "id": "vallejo-squidmar-color-infernal-purple",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Infernal Purple",
+    "hex": "#3F2159"
+  },
+  {
+    "id": "vallejo-squidmar-color-snow-storm",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Snow Storm",
+    "hex": "#C7DAE8"
+  },
+  {
+    "id": "vallejo-squidmar-color-im-blue",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "I'm Blue",
+    "hex": "#104E8B"
+  },
+  {
+    "id": "vallejo-squidmar-color-m-rk-blue",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Mörk Blue",
+    "hex": "#1D264D"
+  },
+  {
+    "id": "vallejo-squidmar-color-ocean-eyes",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Ocean Eyes",
+    "hex": "#6BB3B5"
+  },
+  {
+    "id": "vallejo-squidmar-color-ghastly-turquoise",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Ghastly Turquoise",
+    "hex": "#0D5C63"
+  },
+  {
+    "id": "vallejo-squidmar-color-spearmint",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Spearmint",
+    "hex": "#9CE0B6"
+  },
+  {
+    "id": "vallejo-squidmar-color-gemstone",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Gemstone",
+    "hex": "#1FA65A"
+  },
+  {
+    "id": "vallejo-squidmar-color-corrupted-emerald",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Corrupted Emerald",
+    "hex": "#0F5E38"
+  },
+  {
+    "id": "vallejo-squidmar-color-deep-blue-sea",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Deep Blue Sea",
+    "hex": "#0F382E"
+  },
+  {
+    "id": "vallejo-squidmar-color-cauldron-green",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Cauldron Green",
+    "hex": "#65A629"
+  },
+  {
+    "id": "vallejo-squidmar-color-birch-leaf",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Birch Leaf",
+    "hex": "#3F6623"
+  },
+  {
+    "id": "vallejo-squidmar-color-drachonzah-green",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Drachonzah Green",
+    "hex": "#2C4D27"
+  },
+  {
+    "id": "vallejo-squidmar-color-vomitous-green",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Vomitous Green",
+    "hex": "#737A29"
+  },
+  {
+    "id": "vallejo-squidmar-color-mossback-green",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Mossback Green",
+    "hex": "#5C6342"
+  },
+  {
+    "id": "vallejo-squidmar-color-mehnadi-desert",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Mehnadi Desert",
+    "hex": "#C9AC6B"
+  },
+  {
+    "id": "vallejo-squidmar-color-bone-dust",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Bone Dust",
+    "hex": "#B39359"
+  },
+  {
+    "id": "vallejo-squidmar-color-ancient-tome",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Ancient Tome",
+    "hex": "#855A3A"
+  },
+  {
+    "id": "vallejo-squidmar-color-corpse-yellow",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Corpse Yellow",
+    "hex": "#B88C5E"
+  },
+  {
+    "id": "vallejo-squidmar-color-undead-ochre",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Undead Ochre",
+    "hex": "#736F44"
+  },
+  {
+    "id": "vallejo-squidmar-color-rich-brown",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Rich Brown",
+    "hex": "#8C523D"
+  },
+  {
+    "id": "vallejo-squidmar-color-leathery-brown",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Leathery Brown",
+    "hex": "#6E4229"
+  },
+  {
+    "id": "vallejo-squidmar-color-deep-wood",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Deep Wood",
+    "hex": "#4D3822"
+  },
+  {
+    "id": "vallejo-squidmar-color-blackwood",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Blackwood",
+    "hex": "#332219"
+  },
+  {
+    "id": "vallejo-squidmar-color-cult-brown",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Cult Brown",
+    "hex": "#4D3333"
+  },
+  {
+    "id": "vallejo-squidmar-color-knights-brown",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Knights Brown",
+    "hex": "#4A231E"
+  },
+  {
+    "id": "vallejo-squidmar-color-ume-grey",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Ume Grey",
+    "hex": "#B8B8B8"
+  },
+  {
+    "id": "vallejo-squidmar-color-granite-grey",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Granite Grey",
+    "hex": "#616358"
+  },
+  {
+    "id": "vallejo-squidmar-color-pitch-black",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Pitch Black",
+    "hex": "#1C1818"
+  },
+  {
+    "id": "vallejo-squidmar-color-godly-steel",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Godly Steel",
+    "hex": "#B5BDC4"
+  },
+  {
+    "id": "vallejo-squidmar-color-metallic-metal",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Metallic Metal",
+    "hex": "#858E96"
+  },
+  {
+    "id": "vallejo-squidmar-color-dark-steel",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Dark Steel",
+    "hex": "#484E54"
+  },
+  {
+    "id": "vallejo-squidmar-color-dragon-gold",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Dragon Gold",
+    "hex": "#D4A338"
+  },
+  {
+    "id": "vallejo-squidmar-color-demon-gold",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Demon Gold",
+    "hex": "#A67724"
+  },
+  {
+    "id": "vallejo-squidmar-color-graveyard-copper",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Graveyard Copper",
+    "hex": "#9C5B38"
+  },
+  {
+    "id": "vallejo-squidmar-color-ungodly-copper",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Ungodly Copper",
+    "hex": "#753E24"
+  },
+  {
+    "id": "vallejo-squidmar-color-fluorescent-sun",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Fluorescent Sun",
+    "hex": "#F5F227"
+  },
+  {
+    "id": "vallejo-squidmar-color-fluorescent-fire",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Fluorescent Fire",
+    "hex": "#FF551A"
+  },
+  {
+    "id": "vallejo-squidmar-color-fluorescent-hex",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Fluorescent Hex",
+    "hex": "#E61C7A"
+  },
+  {
+    "id": "vallejo-squidmar-color-fluorescent-ghost",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Fluorescent Ghost",
+    "hex": "#1AE6B5"
+  },
+  {
+    "id": "vallejo-squidmar-color-fluorescent-fae",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Fluorescent Fae",
+    "hex": "#4CE62E"
+  },
+  {
+    "id": "vallejo-squidmar-color-sun-ink",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Sun Ink",
+    "hex": "#F2C811"
+  },
+  {
+    "id": "vallejo-squidmar-color-fire-ink",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Fire Ink",
+    "hex": "#C92424"
+  },
+  {
+    "id": "vallejo-squidmar-color-blood-ink",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Blood Ink",
+    "hex": "#992616"
+  },
+  {
+    "id": "vallejo-squidmar-color-squid-ink",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Squid Ink",
+    "hex": "#8C225E"
+  },
+  {
+    "id": "vallejo-squidmar-color-witch-ink",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Witch Ink",
+    "hex": "#4F1D66"
+  },
+  {
+    "id": "vallejo-squidmar-color-deep-sea-ink",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Deep Sea Ink",
+    "hex": "#0C4A54"
+  },
+  {
+    "id": "vallejo-squidmar-color-ghostly-ink",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Ghostly Ink",
+    "hex": "#247A7A"
+  },
+  {
+    "id": "vallejo-squidmar-color-ork-ink",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Ork Ink",
+    "hex": "#2F6E24"
+  },
+  {
+    "id": "vallejo-squidmar-color-moss-ink",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Moss Ink",
+    "hex": "#5B782A"
+  },
+  {
+    "id": "vallejo-squidmar-color-ancient-ink",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Ancient Ink",
+    "hex": "#7A341C"
+  },
+  {
+    "id": "vallejo-squidmar-color-leather-ink",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Leather Ink",
+    "hex": "#5C4726"
+  },
+  {
+    "id": "vallejo-squidmar-color-pitch-black-ink",
+    "company": "Vallejo",
+    "brand": "Squidmar Color",
+    "name": "Pitch Black Ink",
+    "hex": "#262321"
   }
 ]
